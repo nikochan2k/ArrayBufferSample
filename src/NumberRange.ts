@@ -1,6 +1,8 @@
 import BitsType from "./BitsType";
 
 class NumberRange {
+    private static LOG2: number = Math.log(2);
+
     private min: number;
     private max: number;
     private step: number;
@@ -15,15 +17,19 @@ class NumberRange {
             throw new RangeError("step: " + step + " should be greater than 0.");
         }
         const tempMax = max - min;
-        if ((tempMax / step).toString().indexOf(".") !== -1) {
-            throw new RangeError("Invalid step: " + step);
+        const divided = tempMax / step;
+        if (divided.toString().indexOf(".") !== -1) {
+            throw new RangeError(
+                "Invalid step: " + step + ", the maximum value of the step is "
+                + Math.floor(divided) * step + min + "."
+                );
         }
         this.min = min;
         this.max = max;
         this.step = step;
         this.value = this.min;
         this.bitsMax = tempMax / this.step;
-        this.numOfBits = Math.floor(Math.log(this.bitsMax) / Math.log(2)) + 1;
+        this.numOfBits = Math.floor(Math.log(this.bitsMax) / NumberRange.LOG2) + 1;
         if (this.numOfBits <= 8) {
             this.type = BitsType.uint8;
         } else if (this.numOfBits <= 16) {
