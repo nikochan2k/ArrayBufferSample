@@ -29,7 +29,10 @@
         "placeOpenBraceOnNewLineForControlBlocks": false
     },
     "files": [
-        "src/Sample.ts",
-        "test/Sample.ts"
+        "src/ArrayBufferManager.ts",
+        "src/NumberRange.ts",
+        "src/PrecisionAndScale.ts",
+        "test/ArrayBufferManager.ts",
+        "test/NumberRange.ts"
     ]
 }
