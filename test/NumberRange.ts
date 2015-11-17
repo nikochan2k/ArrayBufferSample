@@ -29,6 +29,24 @@ describe("NumberRange", () => {
             assert.deepEqual(17, range.NumOfBits);
             assert.deepEqual(BitsType.uint32, range.Type);
         });
+
+        it("Valid step", () => {
+            try {
+                new NumberRange(-2, 10, 0.3);
+                assert.ok("Valid step");
+            } catch (e) {
+                assert.fail(e);
+            }
+        });
+
+        it("Invalid step", () => {
+            try {
+                new NumberRange(0, 10, 0.3);
+                assert.fail();
+            } catch (e) {
+                assert.ok("Invalid step");
+            }
+        });
     });
 
     context("Value", () => {

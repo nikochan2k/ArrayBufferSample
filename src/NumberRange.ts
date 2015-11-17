@@ -12,13 +12,16 @@ class NumberRange {
 
     constructor(min: number, max: number, step: number = 1) {
         if (step <= 0) {
-            throw new RangeError("step should be greater than 0.");
+            throw new RangeError("step: " + step + " should be greater than 0.");
+        }
+        const tempMax = max - min;
+        if ((tempMax / step).toString().indexOf(".") !== -1) {
+            throw new RangeError("Invalid step: " + step);
         }
         this.min = min;
         this.max = max;
         this.step = step;
-        this.value = 0;
-        const tempMax = max - min;
+        this.value = this.min;
         this.bitsMax = tempMax / this.step;
         this.numOfBits = Math.floor(Math.log(this.bitsMax) / Math.log(2)) + 1;
         if (this.numOfBits <= 8) {
