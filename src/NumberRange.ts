@@ -1,16 +1,17 @@
 import BitsType from "./BitsType";
 
 class NumberRange {
-    private static LOG2: number = Math.log(2);
+    private static LOG2 = Math.log(2);
+    private static POW_2_53 = Math.pow(2, 53);
 
     private min: number;
     private max: number;
     private step: number;
-    private bitsMax: number;
-    private numOfBits: number;
-    private type: BitsType;
     private value: number;
+    private bitsMax: number;
+    private bitsType: BitsType;
     private bitsValue: number;
+    private numOfBits: number;
 
     constructor(min: number, max: number, step: number = 1) {
         if (max < min) {
@@ -34,13 +35,19 @@ class NumberRange {
         this.bitsMax = difference / step;
         this.numOfBits = Math.floor(Math.log(this.bitsMax) / NumberRange.LOG2) + 1;
         if (this.numOfBits <= 8) {
-            this.type = BitsType.uint8;
+            this.bitsType = BitsType.uint8;
         } else if (this.numOfBits <= 16) {
-            this.type = BitsType.uint16;
+            this.bitsType = BitsType.uint16;
         } else if (this.numOfBits <= 32) {
-            this.type = BitsType.uint32;
+            this.bitsType = BitsType.uint32;
+        } else if (this.bitsMax < NumberRange.POW_2_53) {
+            if (53 < this.numOfBits) {
+                this.numOfBits = 53;
+            }
+            this.bitsType = BitsType.float64;
         } else {
-            this.type = BitsType.float64;
+            throw new RangeError("bitsMax: " + this.bitsMax
+                + " sould be less than " + POW_2_53 + ".");
         }
         this.bitsValue = 0;
     }
@@ -57,8 +64,8 @@ class NumberRange {
         return this.numOfBits;
     }
 
-    public get Type(): BitsType {
-        return this.type;
+    public get BitsType(): BitsType {
+        return this.bitsType;
     }
 
     public set Value(value: number) {

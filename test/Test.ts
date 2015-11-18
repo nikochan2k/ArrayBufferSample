@@ -1,5 +1,4 @@
 import NumberRange from "../src/NumberRange";
 
-const range = new NumberRange(-32768, 32767);
-console.log(range.BitsMax);
+const range = new NumberRange(0, 9007199254740991);
 console.log(range.NumOfBits);
