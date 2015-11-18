@@ -13,6 +13,9 @@ class NumberRange {
     private bitsValue: number;
 
     constructor(min: number, max: number, step: number = 1) {
+        if (max < min) {
+            throw new RangeError("max: " + max + " < min: " + min);
+        }
         if (step <= 0) {
             throw new RangeError("step: " + step + " should be greater than 0.");
         }

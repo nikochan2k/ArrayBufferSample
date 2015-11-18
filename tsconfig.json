@@ -30,9 +30,10 @@
     },
     "files": [
         "src/ArrayBufferManager.ts",
+        "src/BitsType.ts",
         "src/NumberRange.ts",
-        "src/PrecisionAndScale.ts",
         "test/ArrayBufferManager.ts",
-        "test/NumberRange.ts"
+        "test/NumberRange.ts",
+        "test/Test.ts"
     ]
 }
