@@ -19,8 +19,8 @@ class NumberRange {
         if (step <= 0) {
             throw new RangeError("step: " + step + " should be greater than 0.");
         }
-        const tempMax = max - min;
-        const divided = tempMax / step;
+        const difference = max - min;
+        const divided = difference / step;
         if (divided.toString().indexOf(".") !== -1) {
             throw new RangeError(
                 "Invalid step: " + step + ", the maximum value of the step is "
@@ -30,8 +30,8 @@ class NumberRange {
         this.min = min;
         this.max = max;
         this.step = step;
-        this.value = this.min;
-        this.bitsMax = tempMax / this.step;
+        this.value = min;
+        this.bitsMax = difference / step;
         this.numOfBits = Math.floor(Math.log(this.bitsMax) / NumberRange.LOG2) + 1;
         if (this.numOfBits <= 8) {
             this.type = BitsType.uint8;
@@ -57,10 +57,6 @@ class NumberRange {
         return this.numOfBits;
     }
 
-    public get BitsMax(): number {
-        return this.bitsMax;
-    }
-
     public get Type(): BitsType {
         return this.type;
     }
@@ -78,6 +74,18 @@ class NumberRange {
 
     public get Value(): number {
         return this.value;
+    }
+
+    public set BitsValue(bitsValue: number) {
+        if (bitsValue < 0) {
+            throw new RangeError("bitsValue should be greater equal than 0.");
+        }
+        if (this.bitsMax < bitsValue) {
+            throw new RangeError("bitsValue should be less equal than "
+                + this.bitsMax + ".");
+        }
+        this.bitsValue = bitsValue;
+        this.value = bitsValue * this.step + this.min;
     }
 
     public get BitsValue(): number {
