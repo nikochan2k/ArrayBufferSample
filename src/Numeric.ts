@@ -1,19 +1,17 @@
+import Bits from "./Bits";
 import BitsType from "./BitsType";
 
-class NumberRange {
+class Numeric extends Bits {
     private static LOG2 = Math.log(2);
     private static POW_2_53 = Math.pow(2, 53);
 
     private min: number;
     private max: number;
     private step: number;
-    private value: number;
     private bitsMax: number;
-    private bitsType: BitsType;
-    private bitsValue: number;
-    private numOfBits: number;
 
     constructor(min: number, max: number, step: number = 1) {
+        super();
         if (max < min) {
             throw new RangeError("max: " + max + " < min: " + min);
         }
@@ -24,7 +22,7 @@ class NumberRange {
         const divided = difference / step;
         if (divided.toString().indexOf(".") !== -1) {
             throw new RangeError(
-                "Invalid step: " + step + ", the maximum value of the step is "
+                "Invalid step: " + step + ", the maximum value of the step should be "
                 + Math.floor(divided) * step + min + "."
                 );
         }
@@ -33,21 +31,21 @@ class NumberRange {
         this.step = step;
         this.value = min;
         this.bitsMax = difference / step;
-        this.numOfBits = Math.floor(Math.log(this.bitsMax) / NumberRange.LOG2) + 1;
+        this.numOfBits = Math.floor(Math.log(this.bitsMax) / Numeric.LOG2) + 1;
         if (this.numOfBits <= 8) {
             this.bitsType = BitsType.uint8;
         } else if (this.numOfBits <= 16) {
             this.bitsType = BitsType.uint16;
         } else if (this.numOfBits <= 32) {
             this.bitsType = BitsType.uint32;
-        } else if (this.bitsMax < NumberRange.POW_2_53) {
+        } else if (this.bitsMax < Numeric.POW_2_53) {
             if (53 < this.numOfBits) {
                 this.numOfBits = 53;
             }
             this.bitsType = BitsType.float64;
         } else {
             throw new RangeError("bitsMax: " + this.bitsMax
-                + " sould be less than " + POW_2_53 + ".");
+                + " sould be less than " + Numeric.POW_2_53 + ".");
         }
         this.bitsValue = 0;
     }
@@ -60,12 +58,8 @@ class NumberRange {
         return this.max;
     }
 
-    public get NumOfBits(): number {
-        return this.numOfBits;
-    }
-
-    public get BitsType(): BitsType {
-        return this.bitsType;
+    public get Value(): number {
+        return this.value;
     }
 
     public set Value(value: number) {
@@ -79,8 +73,8 @@ class NumberRange {
         this.bitsValue = Math.floor((value - this.min) / this.step);
     }
 
-    public get Value(): number {
-        return this.value;
+    public get BitsValue(): number {
+        return this.bitsValue;
     }
 
     public set BitsValue(bitsValue: number) {
@@ -94,10 +88,6 @@ class NumberRange {
         this.bitsValue = bitsValue;
         this.value = bitsValue * this.step + this.min;
     }
-
-    public get BitsValue(): number {
-        return this.bitsValue;
-    }
 }
 
-export default NumberRange;
+export default Numeric;

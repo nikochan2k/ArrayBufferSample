@@ -1,14 +1,15 @@
 /// <reference path="../typings/tsd.d.ts" />
 
 import assert from "power-assert";
-import NumberRange from "../src/NumberRange";
+import Numeric from "../src/Numeric";
+import Float from "../src/Float";
 import BitsType from "../src/BitsType";
 
-describe("NumberRange", () => {
+describe("Numeric", () => {
     context("constructor()", () => {
         it("max < min", () => {
             try {
-                new NumberRange(1, 0);
+                new Numeric(1, 0);
                 assert.fail();
             } catch (e) {
                 assert.ok("max < min");
@@ -17,7 +18,7 @@ describe("NumberRange", () => {
 
         it("Valid step", () => {
             try {
-                new NumberRange(-2, 10, 0.3);
+                new Numeric(-2, 10, 0.3);
                 assert.ok("Valid step");
             } catch (e) {
                 assert.fail(e);
@@ -26,7 +27,7 @@ describe("NumberRange", () => {
 
         it("Invalid step", () => {
             try {
-                new NumberRange(0, 10, 0.3);
+                new Numeric(0, 10, 0.3);
                 assert.fail();
             } catch (e) {
                 assert.ok("Invalid step");
@@ -35,7 +36,7 @@ describe("NumberRange", () => {
 
         it("Valid bits", () => {
             try {
-                new NumberRange(0, 9007199254740991);
+                new Numeric(0, 9007199254740991);
                 assert.ok("Valid step");
             } catch (e) {
                 assert.fail(e);
@@ -44,7 +45,7 @@ describe("NumberRange", () => {
 
         it("Invalid step", () => {
             try {
-                new NumberRange(0, 9007199254740992);
+                new Numeric(0, 9007199254740992);
                 assert.fail();
             } catch (e) {
                 assert.ok("Invalid step");
@@ -54,43 +55,43 @@ describe("NumberRange", () => {
 
     context("NumOfBits", () => {
         it("from 0 to 1", () => {
-            const range = new NumberRange(0, 1);
+            const range = new Numeric(0, 1);
             assert.deepEqual(1, range.NumOfBits);
             assert.deepEqual(BitsType.uint8, range.BitsType);
         });
 
         it("from 0 to 2", () => {
-            const range = new NumberRange(0, 2);
+            const range = new Numeric(0, 2);
             assert.deepEqual(2, range.NumOfBits);
             assert.deepEqual(BitsType.uint8, range.BitsType);
         });
 
         it("from -32768 to 32767", () => {
-            const range = new NumberRange(-32768, 32767);
+            const range = new Numeric(-32768, 32767);
             assert.deepEqual(16, range.NumOfBits);
             assert.deepEqual(BitsType.uint16, range.BitsType);
         });
 
         it("from -32768 to 32768", () => {
-            const range = new NumberRange(-32768, 32768);
+            const range = new Numeric(-32768, 32768);
             assert.deepEqual(17, range.NumOfBits);
             assert.deepEqual(BitsType.uint32, range.BitsType);
         });
 
         it("from -2147483648 to 2147483647", () => {
-            const range = new NumberRange(-2147483648, 2147483647);
+            const range = new Numeric(-2147483648, 2147483647);
             assert.deepEqual(32, range.NumOfBits);
             assert.deepEqual(BitsType.uint32, range.BitsType);
         });
 
         it("from -2147483648 to 2147483648", () => {
-            const range = new NumberRange(-2147483648, 2147483648);
+            const range = new Numeric(-2147483648, 2147483648);
             assert.deepEqual(33, range.NumOfBits);
             assert.deepEqual(BitsType.float64, range.BitsType);
         });
 
         it("the max of float64", () => {
-            const range = new NumberRange(0, 9007199254740991);
+            const range = new Numeric(0, 9007199254740991);
             assert.deepEqual(53, range.NumOfBits);
             assert.deepEqual(BitsType.float64, range.BitsType);
         });
@@ -98,25 +99,25 @@ describe("NumberRange", () => {
 
     context("Value", () => {
         it("8bit, center value", () => {
-            const range = new NumberRange(-128, 127);
+            const range = new Numeric(-128, 127);
             range.Value = 0;
             assert.deepEqual(128, range.BitsValue);
         });
 
         it("8bit, minimum value", () => {
-            const range = new NumberRange(-128, 127);
+            const range = new Numeric(-128, 127);
             range.Value = -128;
             assert.deepEqual(0, range.BitsValue);
         });
 
         it("8bit, maximum value", () => {
-            const range = new NumberRange(-128, 127);
+            const range = new Numeric(-128, 127);
             range.Value = 127;
             assert.deepEqual(255, range.BitsValue);
         });
 
         it("8bit, less than minimum value", () => {
-            const range = new NumberRange(-128, 127);
+            const range = new Numeric(-128, 127);
             try {
                 range.Value = -129;
                 assert.fail();
@@ -126,7 +127,7 @@ describe("NumberRange", () => {
         });
 
         it("8bit, more than maximum value", () => {
-            const range = new NumberRange(-128, 127);
+            const range = new Numeric(-128, 127);
             try {
                 range.Value = 128;
                 assert.fail();
@@ -136,7 +137,7 @@ describe("NumberRange", () => {
         });
 
         it("With step", () => {
-            const range = new NumberRange(-1, 100, 0.1);
+            const range = new Numeric(-1, 100, 0.1);
             range.Value = 100;
             assert.deepEqual(1010, range.BitsValue);
         });
@@ -144,27 +145,57 @@ describe("NumberRange", () => {
 
     context("BitsValue", () => {
         it("8bit, max", () => {
-            const range = new NumberRange(-128, 127);
+            const range = new Numeric(-128, 127);
             range.BitsValue = 255;
             assert.deepEqual(127, range.Value);
         });
 
         it("8bit, min", () => {
-            const range = new NumberRange(-128, 127);
+            const range = new Numeric(-128, 127);
             range.BitsValue = 0;
             assert.deepEqual(-128, range.Value);
         });
 
         it("With step, max", () => {
-            const range = new NumberRange(-128, 127, 0.1);
+            const range = new Numeric(-128, 127, 0.1);
             range.BitsValue = 2550;
             assert.deepEqual(127, range.Value)
         });
 
         it("With step, min", () => {
-            const range = new NumberRange(-128, 127, 0.1);
+            const range = new Numeric(-128, 127, 0.1);
             range.BitsValue = 0;
             assert.deepEqual(-128, range.Value)
+        });
+    });
+
+    describe("Float", () => {
+        context("constructor()", () => {
+            it("double", () => {
+                const float = new Float();
+                assert.equal(BitsType.float64, float.BitsType);
+                assert.equal(64, float.NumOfBits);
+            });
+
+            it("single", () => {
+                const float = new Float(false);
+                assert.equal(BitsType.float32, float.BitsType);
+                assert.equal(32, float.NumOfBits);
+            });
+        });
+
+        context("value", () => {
+            it("double", () => {
+                const float = new Float();
+                float.Value = 1234567890;
+                assert.equal(float.Value, float.BitsValue);
+            });
+
+            it("single", () => {
+                const float = new Float();
+                float.Value = 1234567;
+                assert.equal(float.Value, float.BitsValue);
+            });
         });
     });
 
