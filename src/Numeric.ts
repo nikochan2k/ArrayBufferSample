@@ -29,7 +29,6 @@ class Numeric extends Bits {
         this.min = min;
         this.max = max;
         this.step = step;
-        this.value = min;
         this.bitsMax = difference / step;
         this.numOfBits = Math.floor(Math.log(this.bitsMax) / Numeric.LOG2) + 1;
         if (this.numOfBits <= 8) {

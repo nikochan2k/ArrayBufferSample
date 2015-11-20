@@ -159,13 +159,13 @@ describe("Numeric", () => {
         it("With step, max", () => {
             const range = new Numeric(-128, 127, 0.1);
             range.BitsValue = 2550;
-            assert.deepEqual(127, range.Value)
+            assert.deepEqual(127, range.Value);
         });
 
         it("With step, min", () => {
             const range = new Numeric(-128, 127, 0.1);
             range.BitsValue = 0;
-            assert.deepEqual(-128, range.Value)
+            assert.deepEqual(-128, range.Value);
         });
     });
 
