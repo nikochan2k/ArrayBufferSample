@@ -6,7 +6,6 @@ abstract class Bits {
     public get BitsType(): BitsType {
         return this.bitsType;
     }
-
 }
 
 export default Bits;
