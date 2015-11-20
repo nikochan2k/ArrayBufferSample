@@ -1,7 +1,7 @@
-import Bits from "./Bits";
+import Number from "./Number";
 import BitsType from "./BitsType";
 
-class Numeric extends Bits {
+class Decimal extends Number {
     private static LOG2 = Math.log(2);
     private static POW_2_53 = Math.pow(2, 53);
 
@@ -30,21 +30,21 @@ class Numeric extends Bits {
         this.max = max;
         this.step = step;
         this.bitsMax = difference / step;
-        this.numOfBits = Math.floor(Math.log(this.bitsMax) / Numeric.LOG2) + 1;
+        this.numOfBits = Math.floor(Math.log(this.bitsMax) / Decimal.LOG2) + 1;
         if (this.numOfBits <= 8) {
             this.bitsType = BitsType.uint8;
         } else if (this.numOfBits <= 16) {
             this.bitsType = BitsType.uint16;
         } else if (this.numOfBits <= 32) {
             this.bitsType = BitsType.uint32;
-        } else if (this.bitsMax < Numeric.POW_2_53) {
+        } else if (this.bitsMax < Decimal.POW_2_53) {
             if (53 < this.numOfBits) {
                 this.numOfBits = 53;
             }
             this.bitsType = BitsType.float64;
         } else {
             throw new RangeError("bitsMax: " + this.bitsMax
-                + " sould be less than " + Numeric.POW_2_53 + ".");
+                + " sould be less than " + Decimal.POW_2_53 + ".");
         }
         this.bitsValue = 0;
     }
@@ -89,4 +89,4 @@ class Numeric extends Bits {
     }
 }
 
-export default Numeric;
+export default Decimal;

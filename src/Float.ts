@@ -1,7 +1,7 @@
-import Bits from "./Bits";
+import Number from "./Number";
 import BitsType from "./BitsType";
 
-class Float extends Bits {
+class Float extends Number {
 
     constructor(double: boolean = true) {
         super();

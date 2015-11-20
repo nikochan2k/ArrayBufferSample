@@ -32,10 +32,11 @@
         "src/ArrayBufferManager.ts",
         "src/Bits.ts",
         "src/BitsType.ts",
+        "src/Decimal.ts",
         "src/Float.ts",
-        "src/Numeric.ts",
+        "src/Number.ts",
         "test/ArrayBufferManager.ts",
-        "test/Numeric.ts",
+        "test/Decimal.ts",
         "test/Test.ts"
     ]
 }
