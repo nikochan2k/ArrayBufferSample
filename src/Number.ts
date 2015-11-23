@@ -1,27 +1,25 @@
 import Bits from "./Bits";
 
 abstract class Number extends Bits {
-    protected numOfBits: number;
-    protected value: number;
-    protected bitsValue: number;
+    public bitLength: number;
+    protected _value: number;
+    protected _bitsValue: number;
 
-    public get NumOfBits(): number {
-        return this.numOfBits;
-    }
-
-    protected handleEndian(buf: ArrayBuffer): void {
+    protected swap(buffer: ArrayBuffer): void {
         if (Bits.isBigEndian) {
             return;
         }
 
-        this.swap(buf, 0, 7);
-        this.swap(buf, 1, 6);
-        this.swap(buf, 2, 5);
-        this.swap(buf, 3, 4);
+        const byteLength = buffer.byteLength;
+        const end = byteLength / 2;
+        for (let lhs = 0; lhs < end; lhs++) {
+            const rhs = byteLength - lhs - 1;
+            this.swapByte(buffer, lhs, rhs);
+        }
     }
 
-    private swap(buf: ArrayBuffer, lhs: number, rhs: number): void {
-        const u8 = new Uint8Array(buf);
+    private swapByte(buffer: ArrayBuffer, lhs: number, rhs: number): void {
+        const u8 = new Uint8Array(buffer);
         const temp = u8[lhs];
         u8[lhs] = u8[rhs];
         u8[rhs] = temp;

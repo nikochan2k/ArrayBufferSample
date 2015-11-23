@@ -4,10 +4,10 @@ class Decimal extends Number {
     private static LOG2 = Math.log(2);
     private static POW_2_53 = Math.pow(2, 53);
 
-    private min: number;
-    private max: number;
-    private step: number;
-    private bitsMax: number;
+    public min: number;
+    public max: number;
+    public step: number;
+    protected _bitsMax: number;
 
     constructor(min: number, max: number, step: number = 1) {
         super();
@@ -18,65 +18,57 @@ class Decimal extends Number {
             throw new RangeError("step: " + step + " should be greater than 0.");
         }
         const difference = max - min;
-        this.bitsMax = difference / step;
-        if (this.bitsMax.toString().indexOf(".") !== -1) {
+        this._bitsMax = difference / step;
+        if (this._bitsMax.toString().indexOf(".") !== -1) {
             throw new RangeError(
                 "Invalid step: " + step + ", the maximum value of the step should be "
-                + Math.floor(this.bitsMax) * step + min + "."
+                + Math.floor(this._bitsMax) * step + min + "."
                 );
         }
         this.min = min;
         this.max = max;
         this.step = step;
-        this.numOfBits = Math.floor(Math.log(this.bitsMax) / Decimal.LOG2) + 1;
-        if (this.bitsMax < Decimal.POW_2_53) {
-            if (53 < this.numOfBits) {
-                this.numOfBits = 53;
+        this.bitLength = Math.floor(Math.log(this._bitsMax) / Decimal.LOG2) + 1;
+        if (this._bitsMax < Decimal.POW_2_53) {
+            if (53 < this.bitLength) {
+                this.bitLength = 53;
             }
         } else {
-            throw new RangeError("bitsMax: " + this.bitsMax
+            throw new RangeError("bitsMax: " + this._bitsMax
                 + " sould be less than " + Decimal.POW_2_53 + ".");
         }
-        this.numOfBytes = Math.ceil(this.numOfBits / 8);
+        this.byteLength = Math.ceil(this.bitLength / 8);
     }
 
-    public get Min(): number {
-        return this.min;
+    public get value(): number {
+        return this._value;
     }
 
-    public get Max(): number {
-        return this.max;
-    }
-
-    public get Value(): number {
-        return this.value;
-    }
-
-    public set Value(value: number) {
+    public set value(value: number) {
         if (value < this.min) {
             throw new RangeError("value is less than minimum value \"" + this.min + "\".");
         }
         if (this.max < value) {
             throw new RangeError("value is greater than maximum value \"" + this.max + "\".");
         }
-        this.value = value;
-        this.bitsValue = Math.floor((value - this.min) / this.step);
+        this._value = value;
+        this._bitsValue = Math.floor((value - this.min) / this.step);
     }
 
-    public get BitsValue(): number {
-        return this.bitsValue;
+    public get bitsValue(): number {
+        return this._bitsValue;
     }
 
-    public set BitsValue(bitsValue: number) {
+    public set bitsValue(bitsValue: number) {
         if (bitsValue < 0) {
             throw new RangeError("bitsValue should be greater equal than 0.");
         }
-        if (this.bitsMax < bitsValue) {
+        if (this._bitsMax < bitsValue) {
             throw new RangeError("bitsValue should be less equal than "
-                + this.bitsMax + ".");
+                + this._bitsMax + ".");
         }
-        this.bitsValue = bitsValue;
-        this.value = bitsValue * this.step + this.min;
+        this._bitsValue = bitsValue;
+        this._value = bitsValue * this.step + this.min;
     }
 }
 

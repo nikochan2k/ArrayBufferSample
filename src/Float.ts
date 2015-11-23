@@ -4,26 +4,26 @@ class Float extends Number {
 
     constructor(double: boolean = true) {
         super();
-        this.numOfBytes = double ? 8 : 4;
-        this.numOfBits = this.numOfBytes * 8;
+        this.byteLength = double ? 8 : 4;
+        this.bitLength = this.byteLength * 8;
     }
 
-    public get Value(): number {
-        return this.value;
+    public get value(): number {
+        return this._value;
     }
 
-    public set Value(value: number) {
-        this.value = value;
-        this.bitsValue = value;
+    public set value(value: number) {
+        this._value = value;
+        this._bitsValue = value;
     }
 
-    public get BitsValue(): number {
-        return this.bitsValue;
+    public get bitsValue(): number {
+        return this._bitsValue;
     }
 
-    public set BitsValue(bitsValue: number) {
-        this.value = bitsValue;
-        this.bitsValue = bitsValue;
+    public set bitsValue(bitsValue: number) {
+        this._value = bitsValue;
+        this._bitsValue = bitsValue;
     }
 }
 

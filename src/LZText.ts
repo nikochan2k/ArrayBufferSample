@@ -8,14 +8,14 @@ class LZText extends Text {
         super();
     }
 
-    public get Text(): string {
-        return this.value;
+    public get text(): string {
+        return this._text;
     }
 
-    public set Text(value: string) {
-        this.value = value;
-        this.buffer = LZString.compressToUint8Array(value);
-        this.numOfBytes = buffer.byteLength;
+    public set text(text: string) {
+        this._text = text;
+        this.buffer = LZString.compressToUint8Array(text);
+        this.byteLength = buffer.byteLength;
     }
 
     public get Buffer(): ArrayBuffer {
@@ -24,7 +24,7 @@ class LZText extends Text {
 
     public set Buffer(buffer: ArrayBuffer) {
         this.buffer = buffer;
-        this.value = LZString.decompressFromUint8Array(this.u8);
+        this._text = LZString.decompressFromUint8Array(this.u8);
     }
 }
 

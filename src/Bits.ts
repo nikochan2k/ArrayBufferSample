@@ -9,12 +9,8 @@ abstract class Bits {
         Bits.isBigEndian = (u8[0] === 0);
     }
 
-    protected numOfBytes: number;
-    protected buffer: ArrayBuffer;
-
-    public get Buffer() {
-        return this.buffer;
-    }
+    public byteLength: number;
+    public buffer: ArrayBuffer;
 }
 Bits.initialize();
 
