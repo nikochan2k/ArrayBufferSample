@@ -1,9 +1,6 @@
-/// <reference path="../typings/tsd.d.ts" />
-
 import assert from "power-assert";
 import Decimal from "../src/Decimal";
 import Float from "../src/Float";
-import BitsType from "../src/BitsType";
 
 describe("Decimal", () => {
     context("constructor()", () => {
@@ -57,43 +54,36 @@ describe("Decimal", () => {
         it("from 0 to 1", () => {
             const range = new Decimal(0, 1);
             assert.deepEqual(1, range.NumOfBits);
-            assert.deepEqual(BitsType.uint8, range.BitsType);
         });
 
         it("from 0 to 2", () => {
             const range = new Decimal(0, 2);
             assert.deepEqual(2, range.NumOfBits);
-            assert.deepEqual(BitsType.uint8, range.BitsType);
         });
 
         it("from -32768 to 32767", () => {
             const range = new Decimal(-32768, 32767);
             assert.deepEqual(16, range.NumOfBits);
-            assert.deepEqual(BitsType.uint16, range.BitsType);
         });
 
         it("from -32768 to 32768", () => {
             const range = new Decimal(-32768, 32768);
             assert.deepEqual(17, range.NumOfBits);
-            assert.deepEqual(BitsType.uint32, range.BitsType);
         });
 
         it("from -2147483648 to 2147483647", () => {
             const range = new Decimal(-2147483648, 2147483647);
             assert.deepEqual(32, range.NumOfBits);
-            assert.deepEqual(BitsType.uint32, range.BitsType);
         });
 
         it("from -2147483648 to 2147483648", () => {
             const range = new Decimal(-2147483648, 2147483648);
             assert.deepEqual(33, range.NumOfBits);
-            assert.deepEqual(BitsType.float64, range.BitsType);
         });
 
         it("the max of float64", () => {
             const range = new Decimal(0, 9007199254740991);
             assert.deepEqual(53, range.NumOfBits);
-            assert.deepEqual(BitsType.float64, range.BitsType);
         });
     });
 
@@ -173,13 +163,11 @@ describe("Decimal", () => {
         context("constructor()", () => {
             it("double", () => {
                 const float = new Float();
-                assert.equal(BitsType.float64, float.BitsType);
                 assert.equal(64, float.NumOfBits);
             });
 
             it("single", () => {
                 const float = new Float(false);
-                assert.equal(BitsType.float32, float.BitsType);
                 assert.equal(32, float.NumOfBits);
             });
         });

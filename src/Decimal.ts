@@ -1,5 +1,4 @@
 import Number from "./Number";
-import BitsType from "./BitsType";
 
 class Decimal extends Number {
     private static LOG2 = Math.log(2);
@@ -19,34 +18,26 @@ class Decimal extends Number {
             throw new RangeError("step: " + step + " should be greater than 0.");
         }
         const difference = max - min;
-        const divided = difference / step;
-        if (divided.toString().indexOf(".") !== -1) {
+        this.bitsMax = difference / step;
+        if (this.bitsMax.toString().indexOf(".") !== -1) {
             throw new RangeError(
                 "Invalid step: " + step + ", the maximum value of the step should be "
-                + Math.floor(divided) * step + min + "."
+                + Math.floor(this.bitsMax) * step + min + "."
                 );
         }
         this.min = min;
         this.max = max;
         this.step = step;
-        this.bitsMax = difference / step;
         this.numOfBits = Math.floor(Math.log(this.bitsMax) / Decimal.LOG2) + 1;
-        if (this.numOfBits <= 8) {
-            this.bitsType = BitsType.uint8;
-        } else if (this.numOfBits <= 16) {
-            this.bitsType = BitsType.uint16;
-        } else if (this.numOfBits <= 32) {
-            this.bitsType = BitsType.uint32;
-        } else if (this.bitsMax < Decimal.POW_2_53) {
+        if (this.bitsMax < Decimal.POW_2_53) {
             if (53 < this.numOfBits) {
                 this.numOfBits = 53;
             }
-            this.bitsType = BitsType.float64;
         } else {
             throw new RangeError("bitsMax: " + this.bitsMax
                 + " sould be less than " + Decimal.POW_2_53 + ".");
         }
-        this.bitsValue = 0;
+        this.numOfBytes = Math.ceil(this.numOfBits / 8);
     }
 
     public get Min(): number {

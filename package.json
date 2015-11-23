@@ -24,5 +24,8 @@
     "power-assert": "^1.2.0",
     "sinon": "^1.17.2",
     "typescript": "^1.6.2"
+  },
+  "dependencies": {
+    "lz-string": "^1.4.4"
   }
 }
