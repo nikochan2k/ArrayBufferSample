@@ -3,7 +3,7 @@ import Bits from "./Bits";
 abstract class Number extends Bits {
     protected static isBigEndian: boolean;
 
-    private value: number;
+    public value: number;
     public bitLength: number;
 
     constructor() {
@@ -20,13 +20,7 @@ abstract class Number extends Bits {
         Number.isBigEndian = (u8[0] === 0);
     }
 
-    public getValue(): number {
-        return this.value;
-    }
-
-    public setValue(value: number) {
-        this.value = value;
-    }
+    public abstract setValue(value: number): void;
 }
 
 export default Number;

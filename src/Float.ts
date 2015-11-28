@@ -11,18 +11,18 @@ class Float extends Number {
     }
 
     public setValue(value: number) {
-        super.setValue(value);
+        this.value = value;
         const buffer = new ArrayBuffer(this.byteLength);
         const f = this.isDouble ? new Float64Array(buffer) : new Float32Array(buffer);
         f[0] = value;
         this.swap(buffer);
-        super.setBuffer(buffer);
+        this.buffer = buffer;
     }
 
     public setBuffer(buffer: ArrayBuffer) {
         this.swap(buffer);
         const f = this.isDouble ? new Float64Array(buffer) : new Float32Array(buffer);
-        super.setValue(f[0]);
+        this.value = f[0];
     }
 
     protected swap(buffer: ArrayBuffer): void {

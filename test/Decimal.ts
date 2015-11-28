@@ -136,30 +136,30 @@ describe("Decimal", () => {
     context("BitsValue", () => {
         it("8bit, max", () => {
             const decimal = new Decimal(-128, 127);
-            const buffer = Decimal.fromValueToBufferBy(255, decimal.byteLength);
+            const buffer = Decimal.fromRawValueToBufferBy(255, decimal.byteLength);
             decimal.setBuffer(buffer);
-            assert.deepEqual(127, decimal.getValue());
+            assert.deepEqual(127, decimal.value);
         });
 
         it("8bit, min", () => {
             const decimal = new Decimal(-128, 127);
-            const buffer = Decimal.fromValueToBufferBy(0, decimal.byteLength);
+            const buffer = Decimal.fromRawValueToBufferBy(0, decimal.byteLength);
             decimal.setBuffer(buffer);
-            assert.deepEqual(-128, decimal.getValue());
+            assert.deepEqual(-128, decimal.value);
         });
 
         it("With step, max", () => {
             const decimal = new Decimal(-128, 127, 0.1);
-            const buffer = Decimal.fromValueToBufferBy(2550, decimal.byteLength);
+            const buffer = Decimal.fromRawValueToBufferBy(2550, decimal.byteLength);
             decimal.setBuffer(buffer);
-            assert.deepEqual(127, decimal.getValue());
+            assert.deepEqual(127, decimal.value);
         });
 
         it("With step, min", () => {
             const decimal = new Decimal(-128, 127, 0.1);
-            const buffer = Decimal.fromValueToBufferBy(0, decimal.byteLength);
+            const buffer = Decimal.fromRawValueToBufferBy(0, decimal.byteLength);
             decimal.setBuffer(buffer);
-            assert.deepEqual(-128, decimal.getValue());
+            assert.deepEqual(-128, decimal.value);
         });
     });
 
@@ -180,15 +180,15 @@ describe("Decimal", () => {
             it("double", () => {
                 const float = new Float();
                 float.setValue(1234567890);
-                float.setBuffer(float.getBuffer());
-                assert.equal(float.getValue(), 1234567890);
+                float.setBuffer(float.buffer);
+                assert.equal(float.value, 1234567890);
             });
 
             it("single", () => {
                 const float = new Float();
                 float.setValue(1234567);
-                float.setBuffer(float.getBuffer());
-                assert.equal(float.getValue(), 1234567);
+                float.setBuffer(float.buffer);
+                assert.equal(float.value, 1234567);
             });
         });
     });
