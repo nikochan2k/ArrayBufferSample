@@ -2,29 +2,21 @@ import Text from "./Text";
 import LZString from "lz-string";
 
 class LZText extends Text {
-    private u8: Uint8Array;
-
     constructor() {
         super();
     }
 
-    public get text(): string {
-        return this._text;
+    public setText(text: string): void {
+        super.setText(text);
+        const u8 = LZString.compressToUint8Array(text);
+        super.setBuffer(u8.buffer);
     }
 
-    public set text(text: string) {
-        this._text = text;
-        this.buffer = LZString.compressToUint8Array(text);
-        this.byteLength = buffer.byteLength;
-    }
-
-    public get Buffer(): ArrayBuffer {
-        return this.buffer;
-    }
-
-    public set Buffer(buffer: ArrayBuffer) {
-        this.buffer = buffer;
-        this._text = LZString.decompressFromUint8Array(this.u8);
+    public setBuffer(buffer: ArrayBuffer): void {
+        super.setBuffer(buffer);
+        const u8 = new Uint8Array(buffer);
+        const text = LZString.decompressFromUint8Array(u8);
+        super.setText(text);
     }
 }
 

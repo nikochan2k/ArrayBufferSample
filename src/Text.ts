@@ -1,7 +1,15 @@
 import Bits from "./Bits";
 
-class Text extends Bits {
-    protected _text: string;
+abstract class Text extends Bits {
+    private text: string;
+
+    public getText(): string {
+        return this.text;
+    }
+
+    public setText(text: string): void {
+        this.text = text;
+    }
 }
 
 export default Text;

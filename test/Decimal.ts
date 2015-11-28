@@ -52,64 +52,64 @@ describe("Decimal", () => {
 
     context("NumOfBits", () => {
         it("from 0 to 1", () => {
-            const range = new Decimal(0, 1);
-            assert.deepEqual(1, range.bitLength);
+            const decimal = new Decimal(0, 1);
+            assert.deepEqual(1, decimal.bitLength);
         });
 
         it("from 0 to 2", () => {
-            const range = new Decimal(0, 2);
-            assert.deepEqual(2, range.bitLength);
+            const decimal = new Decimal(0, 2);
+            assert.deepEqual(2, decimal.bitLength);
         });
 
         it("from -32768 to 32767", () => {
-            const range = new Decimal(-32768, 32767);
-            assert.deepEqual(16, range.bitLength);
+            const decimal = new Decimal(-32768, 32767);
+            assert.deepEqual(16, decimal.bitLength);
         });
 
         it("from -32768 to 32768", () => {
-            const range = new Decimal(-32768, 32768);
-            assert.deepEqual(17, range.bitLength);
+            const decimal = new Decimal(-32768, 32768);
+            assert.deepEqual(17, decimal.bitLength);
         });
 
         it("from -2147483648 to 2147483647", () => {
-            const range = new Decimal(-2147483648, 2147483647);
-            assert.deepEqual(32, range.bitLength);
+            const decimal = new Decimal(-2147483648, 2147483647);
+            assert.deepEqual(32, decimal.bitLength);
         });
 
         it("from -2147483648 to 2147483648", () => {
-            const range = new Decimal(-2147483648, 2147483648);
-            assert.deepEqual(33, range.bitLength);
+            const decimal = new Decimal(-2147483648, 2147483648);
+            assert.deepEqual(33, decimal.bitLength);
         });
 
         it("the max of float64", () => {
-            const range = new Decimal(0, 9007199254740991);
-            assert.deepEqual(53, range.bitLength);
+            const decimal = new Decimal(0, 9007199254740991);
+            assert.deepEqual(53, decimal.bitLength);
         });
     });
 
     context("Value", () => {
         it("8bit, center value", () => {
-            const range = new Decimal(-128, 127);
-            range.value = 0;
-            assert.deepEqual(128, range.bitsValue);
+            const decimal = new Decimal(-128, 127);
+            decimal.setValue(0);
+            assert.deepEqual(128, decimal.fromValueToRawValue());
         });
 
         it("8bit, minimum value", () => {
-            const range = new Decimal(-128, 127);
-            range.value = -128;
-            assert.deepEqual(0, range.bitsValue);
+            const decimal = new Decimal(-128, 127);
+            decimal.setValue(-128);
+            assert.deepEqual(0, decimal.fromValueToRawValue());
         });
 
         it("8bit, maximum value", () => {
-            const range = new Decimal(-128, 127);
-            range.value = 127;
-            assert.deepEqual(255, range.bitsValue);
+            const decimal = new Decimal(-128, 127);
+            decimal.setValue(127);
+            assert.deepEqual(255, decimal.fromValueToRawValue());
         });
 
         it("8bit, less than minimum value", () => {
-            const range = new Decimal(-128, 127);
+            const decimal = new Decimal(-128, 127);
             try {
-                range.value = -129;
+                decimal.setValue(-129);
                 assert.fail();
             } catch (e) {
                 assert.ok("Catch exception");
@@ -117,9 +117,9 @@ describe("Decimal", () => {
         });
 
         it("8bit, more than maximum value", () => {
-            const range = new Decimal(-128, 127);
+            const decimal = new Decimal(-128, 127);
             try {
-                range.value = 128;
+                decimal.setValue(128);
                 assert.fail();
             } catch (e) {
                 assert.ok("Catch exception");
@@ -127,35 +127,39 @@ describe("Decimal", () => {
         });
 
         it("With step", () => {
-            const range = new Decimal(-1, 100, 0.1);
-            range.value = 100;
-            assert.deepEqual(1010, range.bitsValue);
+            const decimal = new Decimal(-1, 100, 0.1);
+            decimal.setValue(100);
+            assert.deepEqual(1010, decimal.fromValueToRawValue());
         });
     });
 
     context("BitsValue", () => {
         it("8bit, max", () => {
-            const range = new Decimal(-128, 127);
-            range.bitsValue = 255;
-            assert.deepEqual(127, range.value);
+            const decimal = new Decimal(-128, 127);
+            const buffer = Decimal.fromValueToBufferBy(255, decimal.byteLength);
+            decimal.setBuffer(buffer);
+            assert.deepEqual(127, decimal.getValue());
         });
 
         it("8bit, min", () => {
-            const range = new Decimal(-128, 127);
-            range.bitsValue = 0;
-            assert.deepEqual(-128, range.value);
+            const decimal = new Decimal(-128, 127);
+            const buffer = Decimal.fromValueToBufferBy(0, decimal.byteLength);
+            decimal.setBuffer(buffer);
+            assert.deepEqual(-128, decimal.getValue());
         });
 
         it("With step, max", () => {
-            const range = new Decimal(-128, 127, 0.1);
-            range.bitsValue = 2550;
-            assert.deepEqual(127, range.value);
+            const decimal = new Decimal(-128, 127, 0.1);
+            const buffer = Decimal.fromValueToBufferBy(2550, decimal.byteLength);
+            decimal.setBuffer(buffer);
+            assert.deepEqual(127, decimal.getValue());
         });
 
         it("With step, min", () => {
-            const range = new Decimal(-128, 127, 0.1);
-            range.bitsValue = 0;
-            assert.deepEqual(-128, range.value);
+            const decimal = new Decimal(-128, 127, 0.1);
+            const buffer = Decimal.fromValueToBufferBy(0, decimal.byteLength);
+            decimal.setBuffer(buffer);
+            assert.deepEqual(-128, decimal.getValue());
         });
     });
 
@@ -175,14 +179,16 @@ describe("Decimal", () => {
         context("value", () => {
             it("double", () => {
                 const float = new Float();
-                float.value = 1234567890;
-                assert.equal(float.value, float.bitsValue);
+                float.setValue(1234567890);
+                float.setBuffer(float.getBuffer());
+                assert.equal(float.getValue(), 1234567890);
             });
 
             it("single", () => {
                 const float = new Float();
-                float.value = 1234567;
-                assert.equal(float.value, float.bitsValue);
+                float.setValue(1234567);
+                float.setBuffer(float.getBuffer());
+                assert.equal(float.getValue(), 1234567);
             });
         });
     });

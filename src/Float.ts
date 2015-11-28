@@ -1,29 +1,48 @@
 import Number from "./Number";
 
 class Float extends Number {
+    private isDouble: boolean;
 
-    constructor(double: boolean = true) {
+    constructor(isDouble: boolean = true) {
         super();
-        this.byteLength = double ? 8 : 4;
+        this.isDouble = isDouble;
+        this.byteLength = isDouble ? 8 : 4;
         this.bitLength = this.byteLength * 8;
     }
 
-    public get value(): number {
-        return this._value;
+    public setValue(value: number) {
+        super.setValue(value);
+        const buffer = new ArrayBuffer(this.byteLength);
+        const f = this.isDouble ? new Float64Array(buffer) : new Float32Array(buffer);
+        f[0] = value;
+        this.swap(buffer);
+        super.setBuffer(buffer);
     }
 
-    public set value(value: number) {
-        this._value = value;
-        this._bitsValue = value;
+    public setBuffer(buffer: ArrayBuffer) {
+        this.swap(buffer);
+        const f = this.isDouble ? new Float64Array(buffer) : new Float32Array(buffer);
+        super.setValue(f[0]);
     }
 
-    public get bitsValue(): number {
-        return this._bitsValue;
+    protected swap(buffer: ArrayBuffer): void {
+        if (Number.isBigEndian) {
+            return;
+        }
+
+        const byteLength = buffer.byteLength;
+        const end = byteLength / 2;
+        for (let lhs = 0; lhs < end; lhs++) {
+            const rhs = byteLength - lhs - 1;
+            this.swapByte(buffer, lhs, rhs);
+        }
     }
 
-    public set bitsValue(bitsValue: number) {
-        this._value = bitsValue;
-        this._bitsValue = bitsValue;
+    private swapByte(buffer: ArrayBuffer, lhs: number, rhs: number): void {
+        const u8 = new Uint8Array(buffer);
+        const temp = u8[lhs];
+        u8[lhs] = u8[rhs];
+        u8[rhs] = temp;
     }
 }
 
