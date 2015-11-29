@@ -91,19 +91,19 @@ describe("Decimal", () => {
         it("8bit, center value", () => {
             const decimal = new Decimal(-128, 127);
             decimal.setValue(0);
-            assert.deepEqual(128, decimal.uint8ArrayToRawValue());
+            assert.deepEqual(128, decimal._u8ToRawValue());
         });
 
         it("8bit, minimum value", () => {
             const decimal = new Decimal(-128, 127);
             decimal.setValue(-128);
-            assert.deepEqual(0, decimal.uint8ArrayToRawValue());
+            assert.deepEqual(0, decimal._u8ToRawValue());
         });
 
         it("8bit, maximum value", () => {
             const decimal = new Decimal(-128, 127);
             decimal.setValue(127);
-            assert.deepEqual(255, decimal.uint8ArrayToRawValue());
+            assert.deepEqual(255, decimal._u8ToRawValue());
         });
 
         it("8bit, less than minimum value", () => {
@@ -129,35 +129,35 @@ describe("Decimal", () => {
         it("With step", () => {
             const decimal = new Decimal(-1, 100, 0.1);
             decimal.setValue(100);
-            assert.deepEqual(1010, decimal.uint8ArrayToRawValue());
+            assert.deepEqual(1010, decimal._u8ToRawValue());
         });
     });
 
     context("BitsValue", () => {
         it("8bit, max", () => {
             const decimal = new Decimal(-128, 127);
-            const u8 = Decimal.toBuffer(255, decimal._byteLength);
+            const u8 = Decimal._toBuffer(255, decimal._byteLength);
             decimal.setBuffer(u8.buffer);
             assert.deepEqual(decimal._value, 127);
         });
 
         it("8bit, min", () => {
             const decimal = new Decimal(-128, 127);
-            const u8 = Decimal.toBuffer(0, decimal._byteLength);
+            const u8 = Decimal._toBuffer(0, decimal._byteLength);
             decimal.setBuffer(u8.buffer);
             assert.deepEqual(-128, decimal._value);
         });
 
         it("With step, max", () => {
             const decimal = new Decimal(-128, 127, 0.1);
-            const u8 = Decimal.toBuffer(2550, decimal._byteLength);
+            const u8 = Decimal._toBuffer(2550, decimal._byteLength);
             decimal.setBuffer(u8.buffer);
             assert.deepEqual(127, decimal._value);
         });
 
         it("With step, min", () => {
             const decimal = new Decimal(-128, 127, 0.1);
-            const u8 = Decimal.toBuffer(0, decimal._byteLength);
+            const u8 = Decimal._toBuffer(0, decimal._byteLength);
             decimal.setBuffer(u8.buffer);
             assert.deepEqual(-128, decimal._value);
         });
