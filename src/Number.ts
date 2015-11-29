@@ -6,8 +6,10 @@ abstract class Number extends Bits {
     public value: number;
     public bitLength: number;
 
-    constructor() {
+    constructor(bitLength: number) {
         super();
+        this.bitLength = bitLength;
+        this.byteLength = Math.ceil(bitLength / 8);
 
         if (Number.isBigEndian == null) {
             return;
@@ -19,8 +21,6 @@ abstract class Number extends Bits {
         const u8 = new Uint8Array(buf);
         Number.isBigEndian = (u8[0] === 0);
     }
-
-    public abstract setValue(value: number): void;
 }
 
 export default Number;

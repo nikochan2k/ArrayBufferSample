@@ -8,15 +8,12 @@ class LZText extends Text {
 
     public setText(text: string): void {
         this.text = text;
-        const u8 = LZString.compressToUint8Array(text);
-        this.buffer = u8.buffer;
+        this.u8 = LZString.compressToUint8Array(text);
     }
 
     public setBuffer(buffer: ArrayBuffer): void {
-        this.buffer = buffer;
-        const u8 = new Uint8Array(buffer);
-        const text = LZString.decompressFromUint8Array(u8);
-        this.text = text;
+        this.u8 = new Uint8Array(buffer);
+        this.text = LZString.decompressFromUint8Array(this.u8);
     }
 }
 

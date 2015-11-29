@@ -1,48 +1,45 @@
 import Number from "./Number";
 
 class Float extends Number {
-    private isDouble: boolean;
-
     constructor(isDouble: boolean = true) {
-        super();
-        this.isDouble = isDouble;
-        this.byteLength = isDouble ? 8 : 4;
-        this.bitLength = this.byteLength * 8;
+        super(isDouble ? 64 : 32);
     }
 
     public setValue(value: number) {
         this.value = value;
-        const buffer = new ArrayBuffer(this.byteLength);
-        const f = this.isDouble ? new Float64Array(buffer) : new Float32Array(buffer);
+        const platform = new ArrayBuffer(this.byteLength);
+        const f = this.byteLength === 8
+            ? new Float64Array(platform) : new Float32Array(platform);
         f[0] = value;
-        this.swap(buffer);
-        this.buffer = buffer;
+        const u8platform = new Uint8Array(platform);
+        this.u8 = this.swap(u8platform);
     }
 
     public setBuffer(buffer: ArrayBuffer) {
-        this.swap(buffer);
-        const f = this.isDouble ? new Float64Array(buffer) : new Float32Array(buffer);
+        this.u8 = new Uint8Array(buffer);
+        const u8platform = this.swap(this.u8);
+        const f = this.byteLength === 8
+            ? new Float64Array(u8platform.buffer) : new Float32Array(u8platform.buffer);
         this.value = f[0];
     }
 
-    protected swap(buffer: ArrayBuffer): void {
+    protected swap(u8platform: Uint8Array): Uint8Array {
         if (Number.isBigEndian) {
-            return;
+            return u8platform;
         }
 
-        const byteLength = buffer.byteLength;
-        const end = byteLength / 2;
+        const end = this.byteLength / 2;
         for (let lhs = 0; lhs < end; lhs++) {
-            const rhs = byteLength - lhs - 1;
-            this.swapByte(buffer, lhs, rhs);
+            const rhs = this.byteLength - lhs - 1;
+            this.swapByte(u8platform, lhs, rhs);
         }
+        return u8platform;
     }
 
-    private swapByte(buffer: ArrayBuffer, lhs: number, rhs: number): void {
-        const u8 = new Uint8Array(buffer);
-        const temp = u8[lhs];
-        u8[lhs] = u8[rhs];
-        u8[rhs] = temp;
+    private swapByte(u8platform: Uint8Array, lhs: number, rhs: number): void {
+        const temp = u8platform[lhs];
+        u8platform[lhs] = u8platform[rhs];
+        u8platform[rhs] = temp;
     }
 }
 
