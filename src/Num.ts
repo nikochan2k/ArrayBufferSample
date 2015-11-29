@@ -1,6 +1,6 @@
 import Bits from "./Bits";
 
-abstract class Number extends Bits {
+abstract class Num extends Bits {
     static _isBigEndian: boolean;
 
     _value: number;
@@ -12,7 +12,7 @@ abstract class Number extends Bits {
         this._bitLength = bitLength;
         this._byteLength = Math.ceil(bitLength / 8);
 
-        if (Number._isBigEndian == null) {
+        if (Num._isBigEndian == null) {
             return;
         }
 
@@ -20,7 +20,7 @@ abstract class Number extends Bits {
         const u16 = new Uint16Array(buf);
         u16[0] = 1;
         const u8 = new Uint8Array(buf);
-        Number._isBigEndian = (u8[0] === 0);
+        Num._isBigEndian = (u8[0] === 0);
     }
 
     abstract setValue(value: number): void;
@@ -30,4 +30,4 @@ abstract class Number extends Bits {
     }
 }
 
-export default Number;
+export default Num;

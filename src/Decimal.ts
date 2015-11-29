@@ -1,6 +1,6 @@
-import Number from "./Number";
+import Num from "./Num";
 
-class Decimal extends Number {
+class Decimal extends Num {
     static _LOG2 = Math.log(2);
     static _POW_2_53 = Math.pow(2, 53);
 

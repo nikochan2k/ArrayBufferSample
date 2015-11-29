@@ -31,13 +31,15 @@
     "files": [
         "src/ArrayBufferManager.ts",
         "src/Bits.ts",
+        "src/Bool.ts",
         "src/Decimal.ts",
         "src/Float.ts",
         "src/LZText.ts",
-        "src/Number.ts",
+        "src/Num.ts",
         "src/Text.ts",
         "test/ArrayBufferManager.ts",
         "test/Decimal.ts",
-        "test/Test.ts"
+        "test/Test.ts",
+        "test/Test2.ts"
     ]
 }

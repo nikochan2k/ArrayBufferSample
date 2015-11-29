@@ -194,7 +194,7 @@ describe("Decimal", () => {
         });
     });
 
-    describe("Boolean", () => {
+    describe("Bool", () => {
         context("constructor()", () => {
             it("double", () => {
                 const b = new Bool(false);

@@ -1,6 +1,6 @@
-import Number from "./Number";
+import Num from "./Num";
 
-class Float extends Number {
+class Float extends Num {
     constructor(optional: boolean, isDouble: boolean = true) {
         super(optional, isDouble ? 64 : 32);
     }
@@ -24,7 +24,7 @@ class Float extends Number {
     }
 
     protected _toNetworkByteOrder(u8platform: Uint8Array): Uint8Array {
-        if (Number._isBigEndian) {
+        if (Num._isBigEndian) {
             return u8platform;
         }
 

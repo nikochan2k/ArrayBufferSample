@@ -90,13 +90,13 @@ gulp.task("watch", function() {
     watcher.on("change", function(event) {
         switch (event.type) {
             case "added":
-                gulp.start("compile", "tslint", "tsconfig");
+                gulp.start("tsconfig", "compile", "tslint");
                 break;
             case "changed":
                 gulp.start("compile", "tslint");
                 break;
             case "deleted":
-                gulp.start("compile", "tsconfig");
+                gulp.start("tsconfig", "compile");
                 break;
         }
         console.log("File \"" + event.path + "\" was " + event.type + ", running tasks...");
