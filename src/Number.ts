@@ -3,8 +3,8 @@ import Bits from "./Bits";
 abstract class Number extends Bits {
     protected static isBigEndian: boolean;
 
-    public value: number;
-    public bitLength: number;
+    value: number;
+    bitLength: number;
 
     constructor(bitLength: number) {
         super();
@@ -21,6 +21,8 @@ abstract class Number extends Bits {
         const u8 = new Uint8Array(buf);
         Number.isBigEndian = (u8[0] === 0);
     }
+
+    abstract setValue(value: number): void;
 }
 
 export default Number;

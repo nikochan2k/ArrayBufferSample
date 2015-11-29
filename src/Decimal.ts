@@ -4,7 +4,7 @@ class Decimal extends Number {
     private static LOG2 = Math.log(2);
     private static POW_2_53 = Math.pow(2, 53);
 
-    public static toBuffer(value: number, byteLength: number): Uint8Array {
+    static toBuffer(value: number, byteLength: number): Uint8Array {
         const buffer = new ArrayBuffer(byteLength);
         const u8 = new Uint8Array(buffer);
         for (let i = u8.byteLength - 1; 0 <= i; i--) {
@@ -15,7 +15,7 @@ class Decimal extends Number {
         return u8;
     }
 
-    public static toValue(u8: Uint8Array): number {
+    static toValue(u8: Uint8Array): number {
         let rawValue = 0;
         for (let bitShift = 0; bitShift < u8.byteLength; bitShift++) {
             const idx = u8.byteLength - bitShift - 1;
@@ -25,10 +25,10 @@ class Decimal extends Number {
         return rawValue;
     }
 
-    public min: number;
-    public max: number;
-    public step: number;
-    private rawMax: number;
+    min: number;
+    max: number;
+    step: number;
+    rawMax: number;
 
     constructor(min: number, max: number, step: number = 1) {
         if (max < min) {
@@ -60,7 +60,7 @@ class Decimal extends Number {
         super(bitLength);
     }
 
-    public setValue(value: number) {
+    setValue(value: number) {
         if (value < this.min) {
             throw new RangeError("value is less than minimum value \"" + this.min + "\".");
         }
@@ -68,21 +68,25 @@ class Decimal extends Number {
             throw new RangeError("value is greater than maximum value \"" + this.max + "\".");
         }
         this.value = value;
-        const rawValue = this.fromValueToRawValue();
-        this.u8 = Decimal.toBuffer(rawValue, this.byteLength);
+        this.u8 = this.valueToUint8Array(value);
     }
 
-    public fromValueToRawValue(): number {
+    valueToUint8Array(value: number): Uint8Array {
+        const rawValue = this.valueToRawValue();
+        return Decimal.toBuffer(rawValue, this.byteLength);
+    }
+
+    valueToRawValue(): number {
         return Math.floor((this.value - this.min) / this.step);
     }
 
-    public setBuffer(buffer: ArrayBuffer) {
+    setBuffer(buffer: ArrayBuffer) {
         this.u8 = new Uint8Array(buffer);
-        this.value = this.fromBufferToValue();
+        this.value = this.uint8ArrayToValue();
     }
 
-    public fromBufferToValue(): number {
-        const rawValue = this.fromBufferToRawValue();
+    uint8ArrayToValue(): number {
+        const rawValue = this.uint8ArrayToRawValue();
         if (this.rawMax < rawValue) {
             throw new RangeError("bitsValue should be less equal than "
                 + this.rawMax + ".");
@@ -90,11 +94,7 @@ class Decimal extends Number {
         return rawValue * this.step + this.min;
     }
 
-    public fromBufferToRawValue(): number {
-        if (this.byteLength < this.byteLength) {
-            throw new RangeError("buffer.byteLength should be less equal than "
-                + this.byteLength + ".");
-        }
+    uint8ArrayToRawValue(): number {
         return Decimal.toValue(this.u8);
     }
 }

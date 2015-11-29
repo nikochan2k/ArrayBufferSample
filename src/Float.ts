@@ -5,7 +5,7 @@ class Float extends Number {
         super(isDouble ? 64 : 32);
     }
 
-    public setValue(value: number) {
+    setValue(value: number) {
         this.value = value;
         const platform = new ArrayBuffer(this.byteLength);
         const f = this.byteLength === 8
@@ -15,7 +15,7 @@ class Float extends Number {
         this.u8 = this.swap(u8platform);
     }
 
-    public setBuffer(buffer: ArrayBuffer) {
+    setBuffer(buffer: ArrayBuffer) {
         this.u8 = new Uint8Array(buffer);
         const u8platform = this.swap(this.u8);
         const f = this.byteLength === 8
@@ -36,7 +36,7 @@ class Float extends Number {
         return u8platform;
     }
 
-    private swapByte(u8platform: Uint8Array, lhs: number, rhs: number): void {
+    protected swapByte(u8platform: Uint8Array, lhs: number, rhs: number): void {
         const temp = u8platform[lhs];
         u8platform[lhs] = u8platform[rhs];
         u8platform[rhs] = temp;

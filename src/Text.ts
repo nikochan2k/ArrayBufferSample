@@ -1,9 +1,9 @@
 import Bits from "./Bits";
 
 abstract class Text extends Bits {
-    public text: string;
+    text: string;
 
-    public abstract setText(text: string): void;
+    abstract setText(text: string): void;
 }
 
 export default Text;

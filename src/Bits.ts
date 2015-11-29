@@ -1,6 +1,7 @@
 abstract class Bits {
-    public byteLength: number;
-    public u8: Uint8Array;
+    byteLength: number;
+    u8: Uint8Array;
+    abstract setBuffer(buffer: ArrayBuffer): void;
 }
 
 export default Bits;
