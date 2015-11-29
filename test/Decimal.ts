@@ -1,6 +1,7 @@
 import assert from "power-assert";
 import Decimal from "../src/Decimal";
 import Float from "../src/Float";
+import Bool from "../src/Bool";
 
 describe("Decimal", () => {
     context("constructor()", () => {
@@ -53,37 +54,37 @@ describe("Decimal", () => {
     context("NumOfBits", () => {
         it("from 0 to 1", () => {
             const decimal = new Decimal(false, 0, 1);
-            assert.deepEqual(1, decimal._bitLength);
+            assert.deepEqual(decimal._bitLength, 1);
         });
 
         it("from 0 to 2", () => {
             const decimal = new Decimal(false, 0, 2);
-            assert.deepEqual(2, decimal._bitLength);
+            assert.deepEqual(decimal._bitLength, 2);
         });
 
         it("from -32768 to 32767", () => {
             const decimal = new Decimal(false, -32768, 32767);
-            assert.deepEqual(16, decimal._bitLength);
+            assert.deepEqual(decimal._bitLength, 16);
         });
 
         it("from -32768 to 32768", () => {
             const decimal = new Decimal(false, -32768, 32768);
-            assert.deepEqual(17, decimal._bitLength);
+            assert.deepEqual(decimal._bitLength, 17);
         });
 
         it("from -2147483648 to 2147483647", () => {
             const decimal = new Decimal(false, -2147483648, 2147483647);
-            assert.deepEqual(32, decimal._bitLength);
+            assert.deepEqual(decimal._bitLength, 32);
         });
 
         it("from -2147483648 to 2147483648", () => {
             const decimal = new Decimal(false, -2147483648, 2147483648);
-            assert.deepEqual(33, decimal._bitLength);
+            assert.deepEqual(decimal._bitLength, 33);
         });
 
         it("the max of float64", () => {
             const decimal = new Decimal(false, 0, 9007199254740991);
-            assert.deepEqual(53, decimal._bitLength);
+            assert.deepEqual(decimal._bitLength, 53);
         });
     });
 
@@ -91,19 +92,19 @@ describe("Decimal", () => {
         it("8bit, center value", () => {
             const decimal = new Decimal(false, -128, 127);
             decimal.setValue(0);
-            assert.deepEqual(128, decimal._u8ToRawValue());
+            assert.deepEqual(decimal._u8ToRawValue(), 128);
         });
 
         it("8bit, minimum value", () => {
             const decimal = new Decimal(false, -128, 127);
             decimal.setValue(-128);
-            assert.deepEqual(0, decimal._u8ToRawValue());
+            assert.deepEqual(decimal._u8ToRawValue(), 0);
         });
 
         it("8bit, maximum value", () => {
             const decimal = new Decimal(false, -128, 127);
             decimal.setValue(127);
-            assert.deepEqual(255, decimal._u8ToRawValue());
+            assert.deepEqual(decimal._u8ToRawValue(), 255);
         });
 
         it("8bit, less than minimum value", () => {
@@ -129,7 +130,7 @@ describe("Decimal", () => {
         it("With step", () => {
             const decimal = new Decimal(false, -1, 100, 0.1);
             decimal.setValue(100);
-            assert.deepEqual(1010, decimal._u8ToRawValue());
+            assert.deepEqual(decimal._u8ToRawValue(), 1010);
         });
     });
 
@@ -145,21 +146,21 @@ describe("Decimal", () => {
             const decimal = new Decimal(false, -128, 127);
             const u8 = Decimal._toBuffer(0, decimal._byteLength);
             decimal.setBuffer(u8.buffer);
-            assert.deepEqual(-128, decimal._value);
+            assert.deepEqual(decimal._value, -128);
         });
 
         it("With step, max", () => {
             const decimal = new Decimal(false, -128, 127, 0.1);
             const u8 = Decimal._toBuffer(2550, decimal._byteLength);
             decimal.setBuffer(u8.buffer);
-            assert.deepEqual(127, decimal._value);
+            assert.deepEqual(decimal._value, 127);
         });
 
         it("With step, min", () => {
             const decimal = new Decimal(false, -128, 127, 0.1);
             const u8 = Decimal._toBuffer(0, decimal._byteLength);
             decimal.setBuffer(u8.buffer);
-            assert.deepEqual(-128, decimal._value);
+            assert.deepEqual(decimal._value, -128);
         });
     });
 
@@ -167,12 +168,12 @@ describe("Decimal", () => {
         context("constructor()", () => {
             it("double", () => {
                 const float = new Float(false);
-                assert.equal(64, float._bitLength);
+                assert.equal(float._bitLength, 64);
             });
 
             it("single", () => {
                 const float = new Float(false, false);
-                assert.equal(32, float._bitLength);
+                assert.equal(float._bitLength, 32);
             });
         });
 
@@ -193,4 +194,16 @@ describe("Decimal", () => {
         });
     });
 
+    describe("Boolean", () => {
+        context("constructor()", () => {
+            it("double", () => {
+                const b = new Bool(false);
+                b.setValue(true);
+                const buffer = b.getBuffer();
+                const u8 = new Uint8Array(buffer);
+                assert.equal(u8[0], 1);
+            });
+        });
+
+    });
 });
