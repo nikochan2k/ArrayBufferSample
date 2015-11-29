@@ -53,37 +53,37 @@ describe("Decimal", () => {
     context("NumOfBits", () => {
         it("from 0 to 1", () => {
             const decimal = new Decimal(0, 1);
-            assert.deepEqual(1, decimal.bitLength);
+            assert.deepEqual(1, decimal._bitLength);
         });
 
         it("from 0 to 2", () => {
             const decimal = new Decimal(0, 2);
-            assert.deepEqual(2, decimal.bitLength);
+            assert.deepEqual(2, decimal._bitLength);
         });
 
         it("from -32768 to 32767", () => {
             const decimal = new Decimal(-32768, 32767);
-            assert.deepEqual(16, decimal.bitLength);
+            assert.deepEqual(16, decimal._bitLength);
         });
 
         it("from -32768 to 32768", () => {
             const decimal = new Decimal(-32768, 32768);
-            assert.deepEqual(17, decimal.bitLength);
+            assert.deepEqual(17, decimal._bitLength);
         });
 
         it("from -2147483648 to 2147483647", () => {
             const decimal = new Decimal(-2147483648, 2147483647);
-            assert.deepEqual(32, decimal.bitLength);
+            assert.deepEqual(32, decimal._bitLength);
         });
 
         it("from -2147483648 to 2147483648", () => {
             const decimal = new Decimal(-2147483648, 2147483648);
-            assert.deepEqual(33, decimal.bitLength);
+            assert.deepEqual(33, decimal._bitLength);
         });
 
         it("the max of float64", () => {
             const decimal = new Decimal(0, 9007199254740991);
-            assert.deepEqual(53, decimal.bitLength);
+            assert.deepEqual(53, decimal._bitLength);
         });
     });
 
@@ -138,28 +138,28 @@ describe("Decimal", () => {
             const decimal = new Decimal(-128, 127);
             const u8 = Decimal.toBuffer(255, decimal._byteLength);
             decimal.setBuffer(u8.buffer);
-            assert.deepEqual(decimal.value, 127);
+            assert.deepEqual(decimal._value, 127);
         });
 
         it("8bit, min", () => {
             const decimal = new Decimal(-128, 127);
             const u8 = Decimal.toBuffer(0, decimal._byteLength);
             decimal.setBuffer(u8.buffer);
-            assert.deepEqual(-128, decimal.value);
+            assert.deepEqual(-128, decimal._value);
         });
 
         it("With step, max", () => {
             const decimal = new Decimal(-128, 127, 0.1);
             const u8 = Decimal.toBuffer(2550, decimal._byteLength);
             decimal.setBuffer(u8.buffer);
-            assert.deepEqual(127, decimal.value);
+            assert.deepEqual(127, decimal._value);
         });
 
         it("With step, min", () => {
             const decimal = new Decimal(-128, 127, 0.1);
             const u8 = Decimal.toBuffer(0, decimal._byteLength);
             decimal.setBuffer(u8.buffer);
-            assert.deepEqual(-128, decimal.value);
+            assert.deepEqual(-128, decimal._value);
         });
     });
 
@@ -167,12 +167,12 @@ describe("Decimal", () => {
         context("constructor()", () => {
             it("double", () => {
                 const float = new Float();
-                assert.equal(64, float.bitLength);
+                assert.equal(64, float._bitLength);
             });
 
             it("single", () => {
                 const float = new Float(false);
-                assert.equal(32, float.bitLength);
+                assert.equal(32, float._bitLength);
             });
         });
 
@@ -181,14 +181,14 @@ describe("Decimal", () => {
                 const float = new Float();
                 float.setValue(1234567890);
                 float.setBuffer(float.getBuffer());
-                assert.equal(float.value, 1234567890);
+                assert.equal(float._value, 1234567890);
             });
 
             it("single", () => {
                 const float = new Float();
                 float.setValue(1234567);
                 float.setBuffer(float.getBuffer());
-                assert.equal(float.value, 1234567);
+                assert.equal(float._value, 1234567);
             });
         });
     });

@@ -67,7 +67,7 @@ class Decimal extends Number {
         if (this.max < value) {
             throw new RangeError("value is greater than maximum value \"" + this.max + "\".");
         }
-        this.value = value;
+        this._value = value;
         this._u8 = this.valueToUint8Array(value);
     }
 
@@ -77,12 +77,12 @@ class Decimal extends Number {
     }
 
     valueToRawValue(): number {
-        return Math.floor((this.value - this.min) / this.step);
+        return Math.floor((this._value - this.min) / this.step);
     }
 
     setBuffer(buffer: ArrayBuffer) {
         this._u8 = new Uint8Array(buffer);
-        this.value = this.uint8ArrayToValue();
+        this._value = this.uint8ArrayToValue();
     }
 
     uint8ArrayToValue(): number {

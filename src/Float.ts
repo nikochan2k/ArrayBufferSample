@@ -6,7 +6,7 @@ class Float extends Number {
     }
 
     setValue(value: number) {
-        this.value = value;
+        this._value = value;
         const platform = new ArrayBuffer(this._byteLength);
         const f = this._byteLength === 8
             ? new Float64Array(platform) : new Float32Array(platform);
@@ -20,11 +20,11 @@ class Float extends Number {
         const u8platform = this.swap(this._u8);
         const f = this._byteLength === 8
             ? new Float64Array(u8platform.buffer) : new Float32Array(u8platform.buffer);
-        this.value = f[0];
+        this._value = f[0];
     }
 
     protected swap(u8platform: Uint8Array): Uint8Array {
-        if (Number.isBigEndian) {
+        if (Number._isBigEndian) {
             return u8platform;
         }
 
