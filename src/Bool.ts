@@ -4,7 +4,7 @@ class Bool extends Bits {
     _value: boolean;
 
     constructor(optional: boolean) {
-        super(optional);
+        super(optional, 1);
     }
 
     setValue(value: boolean): void {

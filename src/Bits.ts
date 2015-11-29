@@ -1,15 +1,11 @@
-abstract class Bits {
-    _u8: Uint8Array;
-    _optional: boolean;
+import Particle from "./Particle";
 
-    constructor(optional: boolean) {
-        this._optional = optional;
-    }
+abstract class Bits extends Particle {
+    _bitLength: number;
 
-    abstract setBuffer(buffer: ArrayBuffer): void;
-
-    getBuffer(): ArrayBuffer {
-        return this._u8.buffer;
+    constructor(optional: boolean, bitLength: number) {
+        super(optional);
+        this._bitLength = bitLength;
     }
 }
 

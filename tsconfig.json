@@ -36,6 +36,7 @@
         "src/Float.ts",
         "src/LZText.ts",
         "src/Num.ts",
+        "src/Particle.ts",
         "src/Text.ts",
         "test/ArrayBufferManager.ts",
         "test/Decimal.ts",

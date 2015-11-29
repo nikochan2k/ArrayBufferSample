@@ -1,6 +1,6 @@
-import Bits from "./Bits";
+import Particle from "./Particle";
 
-abstract class Text extends Bits {
+abstract class Text extends Particle {
     _byteLength: number;
     _text: string;
 

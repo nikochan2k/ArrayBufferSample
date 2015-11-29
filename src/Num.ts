@@ -5,10 +5,9 @@ abstract class Num extends Bits {
 
     _value: number;
     _byteLength: number;
-    _bitLength: number;
 
     constructor(optional: boolean, bitLength: number) {
-        super(optional);
+        super(optional, bitLength);
         this._bitLength = bitLength;
         this._byteLength = Math.ceil(bitLength / 8);
 
