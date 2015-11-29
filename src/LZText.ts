@@ -7,13 +7,13 @@ class LZText extends Text {
     }
 
     setText(text: string): void {
-        this.text = text;
+        this._text = text;
         this._u8 = LZString.compressToUint8Array(text);
     }
 
     setBuffer(buffer: ArrayBuffer): void {
         this._u8 = new Uint8Array(buffer);
-        this.text = LZString.decompressFromUint8Array(this._u8);
+        this._text = LZString.decompressFromUint8Array(this._u8);
     }
 }
 
