@@ -1,7 +1,12 @@
 abstract class Bits {
-    byteLength: number;
-    u8: Uint8Array;
+    _byteLength: number;
+    _u8: Uint8Array;
+
     abstract setBuffer(buffer: ArrayBuffer): void;
+
+    getBuffer(): ArrayBuffer {
+        return this._u8.buffer;
+    }
 }
 
 export default Bits;

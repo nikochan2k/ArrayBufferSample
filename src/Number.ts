@@ -9,7 +9,7 @@ abstract class Number extends Bits {
     constructor(bitLength: number) {
         super();
         this.bitLength = bitLength;
-        this.byteLength = Math.ceil(bitLength / 8);
+        this._byteLength = Math.ceil(bitLength / 8);
 
         if (Number.isBigEndian == null) {
             return;

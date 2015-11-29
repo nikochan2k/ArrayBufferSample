@@ -68,12 +68,12 @@ class Decimal extends Number {
             throw new RangeError("value is greater than maximum value \"" + this.max + "\".");
         }
         this.value = value;
-        this.u8 = this.valueToUint8Array(value);
+        this._u8 = this.valueToUint8Array(value);
     }
 
     valueToUint8Array(value: number): Uint8Array {
         const rawValue = this.valueToRawValue();
-        return Decimal.toBuffer(rawValue, this.byteLength);
+        return Decimal.toBuffer(rawValue, this._byteLength);
     }
 
     valueToRawValue(): number {
@@ -81,7 +81,7 @@ class Decimal extends Number {
     }
 
     setBuffer(buffer: ArrayBuffer) {
-        this.u8 = new Uint8Array(buffer);
+        this._u8 = new Uint8Array(buffer);
         this.value = this.uint8ArrayToValue();
     }
 
@@ -95,7 +95,7 @@ class Decimal extends Number {
     }
 
     uint8ArrayToRawValue(): number {
-        return Decimal.toValue(this.u8);
+        return Decimal.toValue(this._u8);
     }
 }
 

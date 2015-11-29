@@ -136,28 +136,28 @@ describe("Decimal", () => {
     context("BitsValue", () => {
         it("8bit, max", () => {
             const decimal = new Decimal(-128, 127);
-            const u8 = Decimal.toBuffer(255, decimal.byteLength);
+            const u8 = Decimal.toBuffer(255, decimal._byteLength);
             decimal.setBuffer(u8.buffer);
             assert.deepEqual(decimal.value, 127);
         });
 
         it("8bit, min", () => {
             const decimal = new Decimal(-128, 127);
-            const u8 = Decimal.toBuffer(0, decimal.byteLength);
+            const u8 = Decimal.toBuffer(0, decimal._byteLength);
             decimal.setBuffer(u8.buffer);
             assert.deepEqual(-128, decimal.value);
         });
 
         it("With step, max", () => {
             const decimal = new Decimal(-128, 127, 0.1);
-            const u8 = Decimal.toBuffer(2550, decimal.byteLength);
+            const u8 = Decimal.toBuffer(2550, decimal._byteLength);
             decimal.setBuffer(u8.buffer);
             assert.deepEqual(127, decimal.value);
         });
 
         it("With step, min", () => {
             const decimal = new Decimal(-128, 127, 0.1);
-            const u8 = Decimal.toBuffer(0, decimal.byteLength);
+            const u8 = Decimal.toBuffer(0, decimal._byteLength);
             decimal.setBuffer(u8.buffer);
             assert.deepEqual(-128, decimal.value);
         });
@@ -180,14 +180,14 @@ describe("Decimal", () => {
             it("double", () => {
                 const float = new Float();
                 float.setValue(1234567890);
-                float.setBuffer(float.u8);
+                float.setBuffer(float.getBuffer());
                 assert.equal(float.value, 1234567890);
             });
 
             it("single", () => {
                 const float = new Float();
                 float.setValue(1234567);
-                float.setBuffer(float.u8);
+                float.setBuffer(float.getBuffer());
                 assert.equal(float.value, 1234567);
             });
         });
