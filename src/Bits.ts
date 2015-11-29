@@ -1,6 +1,10 @@
 abstract class Bits {
-    _byteLength: number;
     _u8: Uint8Array;
+    _optional: boolean;
+
+    constructor(optional: boolean) {
+        this._optional = optional;
+    }
 
     abstract setBuffer(buffer: ArrayBuffer): void;
 

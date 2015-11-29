@@ -4,10 +4,11 @@ abstract class Number extends Bits {
     static _isBigEndian: boolean;
 
     _value: number;
+    _byteLength: number;
     _bitLength: number;
 
-    constructor(bitLength: number) {
-        super();
+    constructor(optional: boolean, bitLength: number) {
+        super(optional);
         this._bitLength = bitLength;
         this._byteLength = Math.ceil(bitLength / 8);
 

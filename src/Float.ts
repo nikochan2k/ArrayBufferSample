@@ -1,8 +1,8 @@
 import Number from "./Number";
 
 class Float extends Number {
-    constructor(isDouble: boolean = true) {
-        super(isDouble ? 64 : 32);
+    constructor(optional: boolean, isDouble: boolean = true) {
+        super(optional, isDouble ? 64 : 32);
     }
 
     setValue(value: number) {

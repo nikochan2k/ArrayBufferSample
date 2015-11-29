@@ -2,6 +2,10 @@ import Text from "./Text";
 import LZString from "lz-string";
 
 class LZText extends Text {
+    constructor(optional: boolean) {
+        super(optional);
+    }
+
     setText(text: string): void {
         this._text = text;
         this._u8 = LZString.compressToUint8Array(text);

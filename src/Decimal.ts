@@ -30,7 +30,7 @@ class Decimal extends Number {
     _step: number;
     _rawMax: number;
 
-    constructor(min: number, max: number, step: number = 1) {
+    constructor(optional: boolean, min: number, max: number, step: number = 1) {
         if (max < min) {
             throw new RangeError("max: " + max + " < min: " + min);
         }
@@ -57,7 +57,7 @@ class Decimal extends Number {
             throw new RangeError("bitsMax: " + this._rawMax
                 + " sould be less than " + Decimal._POW_2_53 + ".");
         }
-        super(bitLength);
+        super(optional, bitLength);
     }
 
     setValue(value: number) {
