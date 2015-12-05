@@ -23,15 +23,6 @@ describe("Decimal", () => {
             }
         });
 
-        it("Invalid step", () => {
-            try {
-                new Decimal(false, 0, 10, 0.3);
-                assert.fail();
-            } catch (e) {
-                assert.ok("Invalid step");
-            }
-        });
-
         it("Valid bits", () => {
             try {
                 new Decimal(false, 0, 9007199254740991);
@@ -48,6 +39,23 @@ describe("Decimal", () => {
             } catch (e) {
                 assert.ok("Invalid step");
             }
+        });
+    });
+
+    context("Step", () => {
+        it("1", () => {
+            const decimal = new Decimal(false, 0, 1);
+            assert.deepEqual(decimal._step, 1);
+        });
+
+        it("0.1", () => {
+            const decimal = new Decimal(false, 0.1, 1);
+            assert.deepEqual(decimal._step, 0.1);
+        });
+
+        it("0.01", () => {
+            const decimal = new Decimal(false, 0.01, 0.1);
+            assert.deepEqual(decimal._step, 0.01);
         });
     });
 

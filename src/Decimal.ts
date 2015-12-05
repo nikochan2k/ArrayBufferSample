@@ -1,7 +1,6 @@
 import Num from "./Num";
 
 class Decimal extends Num {
-    static _LOG2 = Math.log(2);
     static _POW_2_53 = Math.pow(2, 53);
 
     static _toBuffer(value: number, byteLength: number): Uint8Array {
@@ -25,30 +24,43 @@ class Decimal extends Num {
         return rawValue;
     }
 
+    static _getDecimalLen(value: number): number {
+        const str = value.toString();
+        const index = str.indexOf(".");
+        if (index === -1) {
+            return 0;
+        }
+        return str.length - index - 1;
+    }
+
+    static _computeStep(min: number, max: number): number {
+        const minLen = Decimal._getDecimalLen(min);
+        const maxLen = Decimal._getDecimalLen(max);
+        const len = minLen < maxLen ? maxLen : minLen;
+        return Math.pow(10, -len);
+    }
+
     _min: number;
     _max: number;
     _step: number;
     _rawMax: number;
 
-    constructor(optional: boolean, min: number, max: number, step: number = 1) {
+    constructor(optional: boolean, min: number, max: number, step: number = 0) {
         if (max < min) {
             throw new RangeError("max: " + max + " < min: " + min);
+        }
+        if (step === 0) {
+            step = Decimal._computeStep(min, max);
         }
         if (step <= 0) {
             throw new RangeError("step: " + step + " should be greater than 0.");
         }
         const difference = max - min;
-        this._rawMax = difference / step;
-        if (this._rawMax.toString().indexOf(".") !== -1) {
-            throw new RangeError(
-                "Invalid step: " + step + ", the maximum value of the step should be "
-                + Math.floor(this._rawMax) * step + min + "."
-            );
-        }
+        this._rawMax = Math.floor(difference / step);
         this._min = min;
         this._max = max;
         this._step = step;
-        let bitLength = Math.floor(Math.log(this._rawMax) / Decimal._LOG2) + 1;
+        let bitLength = Math.floor(Math.log(this._rawMax) / Math.LN2) + 1;
         if (this._rawMax < Decimal._POW_2_53) {
             if (53 < bitLength) {
                 bitLength = 53;

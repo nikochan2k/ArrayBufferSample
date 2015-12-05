@@ -42,5 +42,8 @@
         "test/Decimal.ts",
         "test/Test.ts",
         "test/Test2.ts"
-    ]
+    ],
+    "atom": {
+        "rewriteTsconfig": true
+    }
 }
