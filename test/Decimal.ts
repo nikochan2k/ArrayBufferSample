@@ -100,19 +100,19 @@ describe("Decimal", () => {
         it("8bit, center value", () => {
             const decimal = new Decimal(false, -128, 127);
             decimal.setValue(0);
-            assert.deepEqual(decimal._u8ToRawValue(), 128);
+            assert.deepEqual(decimal._intValue, 128);
         });
 
         it("8bit, minimum value", () => {
             const decimal = new Decimal(false, -128, 127);
             decimal.setValue(-128);
-            assert.deepEqual(decimal._u8ToRawValue(), 0);
+            assert.deepEqual(decimal._intValue, 0);
         });
 
         it("8bit, maximum value", () => {
             const decimal = new Decimal(false, -128, 127);
             decimal.setValue(127);
-            assert.deepEqual(decimal._u8ToRawValue(), 255);
+            assert.deepEqual(decimal._intValue, 255);
         });
 
         it("8bit, less than minimum value", () => {
@@ -138,7 +138,7 @@ describe("Decimal", () => {
         it("With step", () => {
             const decimal = new Decimal(false, -1, 100, 0.1);
             decimal.setValue(100);
-            assert.deepEqual(decimal._u8ToRawValue(), 1010);
+            assert.deepEqual(decimal._intValue, 1010);
         });
     });
 

@@ -31,6 +31,7 @@
     "files": [
         "src/ArrayBufferManager.ts",
         "src/Bits.ts",
+        "src/BitVarNum.ts",
         "src/Bool.ts",
         "src/Decimal.ts",
         "src/Float.ts",
