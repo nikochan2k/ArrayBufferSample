@@ -24,6 +24,10 @@ class Decimal extends Num {
         return rawValue;
     }
 
+    static _computeBitLength(value: number): number {
+        return Math.floor(Math.log(value) / Math.LN2) + 1;
+    }
+
     _min: number;
     _max: number;
     _step: number;
@@ -42,7 +46,7 @@ class Decimal extends Num {
         this._step = step ? step : this._computeStep();
         const difference = max - min;
         this._intMax = Math.floor(difference / this._step);
-        let bitLength = Math.floor(Math.log(this._intMax) / Math.LN2) + 1;
+        let bitLength = Decimal._computeBitLength(this._intMax);
         if (this._intMax < Decimal._POW_2_53) {
             if (53 < bitLength) {
                 bitLength = 53;
@@ -70,7 +74,7 @@ class Decimal extends Num {
         return Math.pow(10, -len);
     }
 
-    setValue(value: number) {
+    setValue(value: number): void {
         if (value < this._min) {
             throw new RangeError("value is less than minimum value \"" + this._min + "\".");
         }
@@ -82,11 +86,11 @@ class Decimal extends Num {
         this._valueToBuffer();
     }
 
-    _valueToBuffer() {
+    _valueToBuffer(): void {
         this._u8 = Decimal._toBuffer(this._intValue, this._byteLength);
     }
 
-    setBuffer(buffer: ArrayBuffer) {
+    setBuffer(buffer: ArrayBuffer): void {
         this._u8 = new Uint8Array(buffer);
         this._intValue = Decimal._toValue(this._u8);
         if (this._intMax < this._intValue) {

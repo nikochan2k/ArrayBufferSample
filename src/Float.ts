@@ -5,7 +5,7 @@ class Float extends Num {
         super(optional, isDouble ? 64 : 32);
     }
 
-    setValue(value: number) {
+    setValue(value: number): void {
         this._value = value;
         const platform = new ArrayBuffer(this._byteLength);
         const f = this._byteLength === 8
@@ -15,7 +15,7 @@ class Float extends Num {
         this._u8 = this._toNetworkByteOrder(u8platform);
     }
 
-    setBuffer(buffer: ArrayBuffer) {
+    setBuffer(buffer: ArrayBuffer): void {
         this._u8 = new Uint8Array(buffer);
         const u8platform = this._toNetworkByteOrder(this._u8);
         const f = this._byteLength === 8

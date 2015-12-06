@@ -8,8 +8,6 @@ abstract class Num extends Bits {
 
     constructor(optional: boolean, bitLength: number) {
         super(optional, bitLength);
-        this._bitLength = bitLength;
-        this._byteLength = Math.ceil(bitLength / 8);
 
         if (Num._isBigEndian == null) {
             return;
@@ -20,6 +18,11 @@ abstract class Num extends Bits {
         u16[0] = 1;
         const u8 = new Uint8Array(buf);
         Num._isBigEndian = (u8[0] === 0);
+    }
+
+    _setBitLength(bitLength: number): void {
+        this._bitLength = bitLength;
+        this._byteLength = Math.ceil(this._bitLength / 8);
     }
 
     abstract setValue(value: number): void;

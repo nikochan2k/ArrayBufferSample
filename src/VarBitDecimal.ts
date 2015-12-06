@@ -1,29 +1,18 @@
-import Decimal from "./Decimal";
+import VarDecimal from "./VarDecimal";
 
-class VarBitDecimal extends Decimal {
-    _varBitLength: number;
-    _varBitValue: number;
+class VarBitDecimal extends VarDecimal {
 
     constructor(optional: boolean, min: number, max: number, step: number = 0) {
         super(optional, min, max, step);
-        this._varBitLength = Math.floor(Math.log(this._intMax) / Math.LN2) + 1;
-        if (8 < this._varBitLength) {
+        if (8 < this._bitLength) {
             throw new RangeError(
                 "It's effective to use VarByteDecimal for greater than 8bit."
-                + "(" + this._varBitLength + "bits at present.)"
+                + "(" + this._bitLength + "bits at present.)"
             );
         }
+        this._varBitLength = this._bitLength;
     }
 
-    _valueToBuffer() {
-        this._varBitValue = Math.floor(Math.log(this._intValue) / Math.LN2) + 1;
-        const byteLength = Math.ceil(this._varBitValue / 8.0);
-        this._u8 = Decimal._toBuffer(this._intValue, byteLength);
-    }
-
-    getVarBitLength() {
-        return this._varBitLength;
-    }
 }
 
 export default VarBitDecimal;

@@ -5,6 +5,10 @@ abstract class Bits extends Particle {
 
     constructor(optional: boolean, bitLength: number) {
         super(optional);
+        this._setBitLength(bitLength);
+    }
+
+    _setBitLength(bitLength: number): void {
         this._bitLength = bitLength;
     }
 }
