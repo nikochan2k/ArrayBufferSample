@@ -5,8 +5,12 @@ describe("VarBitDecimal", () => {
 
     context("constructor()", () => {
         it("1 byte", () => {
-            const decimal = new VarByteDecimal(false, 0, 1);
-            assert.deepEqual(decimal._varBitLength, 1);
+            try {
+                new VarByteDecimal(false, 0, 1);
+                assert.fail();
+            } catch (e) {
+                assert.ok("less or equal than 8 bits");
+            }
         });
 
         it("2 bytes", () => {
@@ -14,12 +18,12 @@ describe("VarBitDecimal", () => {
             assert.deepEqual(decimal._varBitLength, 2);
         });
 
-        it("2 byte", () => {
+        it("2 bytes", () => {
             const decimal = new VarByteDecimal(false, -32768, 32767);
             assert.deepEqual(decimal._varBitLength, 2);
         });
 
-        it("3 byte", () => {
+        it("3 bytes", () => {
             const decimal = new VarByteDecimal(false, -32768, 32768);
             assert.deepEqual(decimal._varBitLength, 3);
         });
