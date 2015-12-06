@@ -31,7 +31,6 @@
     "files": [
         "src/ArrayBufferManager.ts",
         "src/Bits.ts",
-        "src/BitVarNum.ts",
         "src/Bool.ts",
         "src/Decimal.ts",
         "src/Float.ts",
@@ -39,10 +38,16 @@
         "src/Num.ts",
         "src/Particle.ts",
         "src/Text.ts",
+        "src/VarBitDecimal.ts",
+        "src/VarByteDecimal.ts",
         "test/ArrayBufferManager.ts",
+        "test/Bool.ts",
         "test/Decimal.ts",
+        "test/Float.ts",
         "test/Test.ts",
-        "test/Test2.ts"
+        "test/Test2.ts",
+        "test/VarBitDecimal.ts",
+        "test/VarByteDecimal.ts"
     ],
     "atom": {
         "rewriteTsconfig": true

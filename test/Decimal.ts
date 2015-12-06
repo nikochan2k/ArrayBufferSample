@@ -1,9 +1,8 @@
 import assert from "power-assert";
 import Decimal from "../src/Decimal";
-import Float from "../src/Float";
-import Bool from "../src/Bool";
 
 describe("Decimal", () => {
+
     context("constructor()", () => {
         it("max < min", () => {
             try {
@@ -172,46 +171,4 @@ describe("Decimal", () => {
         });
     });
 
-    describe("Float", () => {
-        context("constructor()", () => {
-            it("double", () => {
-                const float = new Float(false);
-                assert.equal(float._bitLength, 64);
-            });
-
-            it("single", () => {
-                const float = new Float(false, false);
-                assert.equal(float._bitLength, 32);
-            });
-        });
-
-        context("value", () => {
-            it("double", () => {
-                const float = new Float(false);
-                float.setValue(1234567890);
-                float.setBuffer(float.getBuffer());
-                assert.equal(float._value, 1234567890);
-            });
-
-            it("single", () => {
-                const float = new Float(false);
-                float.setValue(1234567);
-                float.setBuffer(float.getBuffer());
-                assert.equal(float._value, 1234567);
-            });
-        });
-    });
-
-    describe("Bool", () => {
-        context("constructor()", () => {
-            it("double", () => {
-                const b = new Bool(false);
-                b.setValue(true);
-                const buffer = b.getBuffer();
-                const u8 = new Uint8Array(buffer);
-                assert.equal(u8[0], 1);
-            });
-        });
-
-    });
 });

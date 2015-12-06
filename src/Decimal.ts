@@ -79,6 +79,10 @@ class Decimal extends Num {
         }
         this._value = value;
         this._intValue = Math.floor((this._value - this._min) / this._step);
+        this._valueToBuffer();
+    }
+
+    _valueToBuffer() {
         this._u8 = Decimal._toBuffer(this._intValue, this._byteLength);
     }
 
