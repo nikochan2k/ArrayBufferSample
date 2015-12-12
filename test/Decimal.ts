@@ -44,17 +44,17 @@ describe("Decimal", () => {
     context("Step", () => {
         it("1", () => {
             const decimal = new Decimal(false, 0, 1);
-            assert.deepEqual(decimal._step, 1);
+            assert.deepEqual(decimal._precision, 1);
         });
 
         it("0.1", () => {
             const decimal = new Decimal(false, 0.1, 1);
-            assert.deepEqual(decimal._step, 0.1);
+            assert.deepEqual(decimal._precision, 0.1);
         });
 
         it("0.01", () => {
             const decimal = new Decimal(false, 0.01, 0.1);
-            assert.deepEqual(decimal._step, 0.01);
+            assert.deepEqual(decimal._precision, 0.01);
         });
     });
 

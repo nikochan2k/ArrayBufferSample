@@ -2,8 +2,8 @@ import VarDecimal from "./VarDecimal";
 
 class VarByteDecimal extends VarDecimal {
 
-    constructor(optional: boolean, min: number, max: number, step: number = 0) {
-        super(optional, min, max, step);
+    constructor(optional: boolean, min: number, max: number, precision: number = 0) {
+        super(optional, min, max, precision);
         if (this._bitLength <= 8) {
             throw new RangeError(
                 "It's effective to use VarBitDecimal for less or equal than 8bit."

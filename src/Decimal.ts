@@ -30,22 +30,22 @@ class Decimal extends Num {
 
     _min: number;
     _max: number;
-    _step: number;
+    _precision: number;
     _intValue: number;
     _intMax: number;
 
-    constructor(optional: boolean, min: number, max: number, step: number = 0) {
+    constructor(optional: boolean, min: number, max: number, precision: number = 0) {
         if (max < min) {
             throw new RangeError("max: " + max + " < min: " + min);
         }
-        if (step < 0) {
-            throw new RangeError("step: " + step + " should be greater than 0.");
+        if (precision < 0) {
+            throw new RangeError("step: " + precision + " should be greater than 0.");
         }
         this._min = min;
         this._max = max;
-        this._step = step ? step : this._computeStep();
+        this._precision = precision ? precision : this._computePrecision();
         const difference = max - min;
-        this._intMax = Math.floor(difference / this._step);
+        this._intMax = Math.floor(difference / this._precision);
         let bitLength = Decimal._computeBitLength(this._intMax);
         if (this._intMax < Decimal._POW_2_53) {
             if (53 < bitLength) {
@@ -67,7 +67,7 @@ class Decimal extends Num {
         return str.length - index - 1;
     }
 
-    _computeStep(): number {
+    _computePrecision(): number {
         const minLen = this._decimalLen(this._min);
         const maxLen = this._decimalLen(this._max);
         const len = minLen < maxLen ? maxLen : minLen;
@@ -82,7 +82,7 @@ class Decimal extends Num {
             throw new RangeError("value is greater than maximum value \"" + this._max + "\".");
         }
         this._value = value;
-        this._intValue = Math.floor((this._value - this._min) / this._step);
+        this._intValue = Math.floor((this._value - this._min) / this._precision);
         this._valueToBuffer();
     }
 
@@ -97,7 +97,7 @@ class Decimal extends Num {
             throw new RangeError("bitsValue should be less equal than "
                 + this._intMax + ".");
         }
-        this._value = this._intValue * this._step + this._min;
+        this._value = this._intValue * this._precision + this._min;
     }
 }
 
