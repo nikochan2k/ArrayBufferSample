@@ -1,16 +1,18 @@
+import Binary from "./Binary";
+
 abstract class Particle {
-    _u8: Uint8Array;
-    _optional: boolean;
+    _nullable: boolean;
+    _isNull: boolean;
 
-    constructor(optional: boolean) {
-        this._optional = optional;
+    constructor(nullable: boolean) {
+        this._nullable = nullable;
+        this._isNull = (nullable ? true : false);
     }
 
-    abstract setBuffer(buffer: ArrayBuffer): void;
+    abstract read(binary: Binary): void;
 
-    getBuffer(): ArrayBuffer {
-        return this._u8.buffer;
-    }
+    abstract write(binary: Binary): void;
+
 }
 
 export default Particle;

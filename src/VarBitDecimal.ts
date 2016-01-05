@@ -2,15 +2,15 @@ import VarDecimal from "./VarDecimal";
 
 class VarBitDecimal extends VarDecimal {
 
-    constructor(optional: boolean, min: number, max: number, precision: number = 0) {
-        super(optional, min, max, precision);
-        if (8 < this._bitLength) {
-            throw new RangeError(
-                "It's effective to use VarByteDecimal for greater than 8bit."
-                + "(" + this._bitLength + "bits at present.)"
-            );
-        }
-        this._varBitLength = this._bitLength;
+    constructor(nullable: boolean, min: number, max: number, precision: number = 0) {
+        super(nullable, min, max, precision);
+    }
+
+    _getRawValue(): number {
+        const rawValue = super._getRawValue();
+        this._controlValue = this._computeBitLength(rawValue);
+        this._valueBitLength = this._controlValue;
+        return rawValue;
     }
 
 }

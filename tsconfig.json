@@ -30,6 +30,7 @@
     },
     "files": [
         "src/ArrayBufferManager.ts",
+        "src/Binary.ts",
         "src/Bits.ts",
         "src/Bool.ts",
         "src/Decimal.ts",
@@ -42,6 +43,7 @@
         "src/VarBitDecimal.ts",
         "src/VarByteDecimal.ts",
         "src/VarDecimal.ts",
+        "src/VarVarBitDecimal.ts",
         "test/ArrayBufferManager.ts",
         "test/Bool.ts",
         "test/Decimal.ts",

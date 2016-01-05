@@ -3,11 +3,10 @@ import Bits from "./Bits";
 abstract class Num extends Bits {
     static _isBigEndian: boolean;
 
-    _value: number;
-    _byteLength: number;
+    private _value: number;
 
-    constructor(optional: boolean, bitLength: number) {
-        super(optional, bitLength);
+    constructor(nullable: boolean, controlBitLength: number) {
+        super(nullable, controlBitLength);
 
         if (Num._isBigEndian == null) {
             return;
@@ -20,15 +19,25 @@ abstract class Num extends Bits {
         Num._isBigEndian = (u8[0] === 0);
     }
 
-    _setBitLength(bitLength: number): void {
-        this._bitLength = bitLength;
-        this._byteLength = Math.ceil(this._bitLength / 8);
+    _decimalLen(value: number): number {
+        const str = value.toString();
+        const index = str.indexOf(".");
+        if (index === -1) {
+            return 0;
+        }
+        return str.length - index - 1;
     }
 
-    abstract setValue(value: number): void;
+    _computeBitLength(value: number): number {
+        return Math.floor(Math.log(value) / Math.LN2) + 1;
+    }
 
     getValue(): number {
         return this._value;
+    }
+
+    setValue(value: number) {
+        this._value = value;
     }
 }
 

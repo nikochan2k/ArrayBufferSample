@@ -5,12 +5,12 @@ describe("Float", () => {
     context("constructor()", () => {
         it("double", () => {
             const float = new Float(false);
-            assert.equal(float._bitLength, 64);
+            assert.equal(float._valueBitLength, 64);
         });
 
         it("single", () => {
             const float = new Float(false, false);
-            assert.equal(float._bitLength, 32);
+            assert.equal(float._valueBitLength, 32);
         });
     });
 
@@ -19,14 +19,14 @@ describe("Float", () => {
             const float = new Float(false);
             float.setValue(1234567890);
             float.setBuffer(float.getBuffer());
-            assert.equal(float._value, 1234567890);
+            assert.equal(float.value, 1234567890);
         });
 
         it("single", () => {
             const float = new Float(false);
             float.setValue(1234567);
             float.setBuffer(float.getBuffer());
-            assert.equal(float._value, 1234567);
+            assert.equal(float.value, 1234567);
         });
     });
 });
