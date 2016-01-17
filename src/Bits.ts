@@ -87,9 +87,6 @@ abstract class Bits<T> extends Particle<T> {
                 temp |= (u8[current] >>> right);
             }
             binary.u8[binary.byteOffset] |= temp;
-            if (current < length) {
-                binary.u8[++binary.byteOffset] = 0;
-            }
         }
     }
 
@@ -107,9 +104,9 @@ abstract class Bits<T> extends Particle<T> {
 
     _writeU8WithoutBitShift(binary: Binary, u8: Uint8Array) {
         let current = 0;
-        binary.u8[binary.byteOffset] |= u8[current];
+        binary.u8[binary.byteOffset++] |= u8[current];
         for (current = 1, length = u8.length; current < length; current++) {
-            binary.u8[++binary.byteOffset] = u8[current];
+            binary.u8[binary.byteOffset++] = u8[current];
         }
     }
 

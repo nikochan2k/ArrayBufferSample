@@ -91,4 +91,28 @@ describe("Bool", () => {
         });
     });
 
+    context("2 bytes", () => {
+        const binary = new Binary(2);
+        const b = new Bool(true);
+        b.setValue(false);
+        b.write(binary);
+        b.write(binary);
+        b.write(binary);
+        b.write(binary);
+        b.write(binary);
+
+        it("byteOffset", () => {
+            assert.equal(binary.byteOffset, 1);
+        });
+
+        it("bitOffset", () => {
+            assert.equal(binary.bitOffset, 2);
+        });
+
+        it("value", () => {
+            assert.equal(binary.u8[0], parseInt("10101010", 2));
+            assert.equal(binary.u8[1], parseInt("10000000", 2));
+        });
+    });
+
 });
