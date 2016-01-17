@@ -48,7 +48,7 @@ class Float extends Num {
                 u8[i] &= (0xFF >>> left);
             }
         }
-        this._forwardBit(binary, bitLength);
+        this._forwardBits(binary, bitLength);
 
         this._changeNetworkByteOrder(u8);
         this.setValue(f[0]);

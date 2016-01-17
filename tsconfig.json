@@ -11,7 +11,8 @@
     "filesGlob": [
         "src/**/*.ts",
         "src/**/*.tsx",
-        "test/**/*.ts"
+        "test/**/*.ts",
+        "typings/**/*.ts"
     ],
     "compileOnSave": true,
     "formatCodeOptions": {
@@ -29,7 +30,6 @@
         "placeOpenBraceOnNewLineForControlBlocks": false
     },
     "files": [
-        "src/ArrayBufferManager.ts",
         "src/Binary.ts",
         "src/Bits.ts",
         "src/Bool.ts",
@@ -43,15 +43,15 @@
         "src/VarBitDecimal.ts",
         "src/VarByteDecimal.ts",
         "src/VarDecimal.ts",
-        "src/VarVarBitDecimal.ts",
-        "test/ArrayBufferManager.ts",
         "test/Bool.ts",
-        "test/Decimal.ts",
-        "test/Float.ts",
-        "test/Test.ts",
-        "test/Test2.ts",
-        "test/VarBitDecimal.ts",
-        "test/VarByteDecimal.ts"
+        "typings/empower/empower.d.ts",
+        "typings/lz-string/lz-string.d.ts",
+        "typings/mocha/mocha.d.ts",
+        "typings/node/node.d.ts",
+        "typings/power-assert-formatter/power-assert-formatter.d.ts",
+        "typings/power-assert/power-assert.d.ts",
+        "typings/sinon/sinon.d.ts",
+        "typings/tsd.d.ts"
     ],
     "atom": {
         "rewriteTsconfig": true

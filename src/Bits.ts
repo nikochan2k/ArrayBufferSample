@@ -1,7 +1,7 @@
 import Particle from "./Particle";
 import Binary from "./Binary";
 
-abstract class Bits extends Particle {
+abstract class Bits<T> extends Particle<T> {
     _controlBitLength: number;
     _controlValue: number;
     _valueBitLength: number;
@@ -32,22 +32,26 @@ abstract class Bits extends Particle {
 
     write(binary: Binary): void {
         this._writeControlValue(binary);
-        this._writeRawValue(binary);
+        if (this.getValue() != null) {
+            this._writeRawValue(binary);
+        }
     }
 
     _writeControlValue(binary: Binary): void {
-        let bitLength = 0, value = 0;
+        let controlBitLength = 0, controlValue = 0;
         if (this._nullable) {
-            bitLength = 1;
-            value = (this._isNull ? 1 : 0);
+            controlBitLength = 1;
+            if (this.getValue() != null) {
+                controlValue = 1;
+            }
         }
         if (0 < this._controlBitLength) {
-            bitLength += this._controlBitLength;
-            value = (value << this._controlBitLength) & this._controlValue;
+            controlBitLength += this._controlBitLength;
+            controlValue = (controlValue << this._controlBitLength) & this._controlValue;
         }
-        if (0 < bitLength) {
-            const u8 = this._valueToU8(bitLength, value);
-            this._writeU8(binary, u8, bitLength);
+        if (0 < controlBitLength) {
+            const u8 = this._valueToU8(controlBitLength, controlValue);
+            this._writeU8(binary, u8, controlBitLength);
         }
     }
 
@@ -58,9 +62,9 @@ abstract class Bits extends Particle {
 
     _writeU8(binary: Binary, u8: Uint8Array, bitLength: number): void {
         // bitOffset     used          sum shift result             next
-        // 1"10000000" - 7"01111111" = 8   0     11111111
-        // 1"10000000" - 5"00011111" = 6   -2    11111100           6
-        // 3"11100000" - 7"01111111" = 10  2     11111111 11000000  2
+        // 1"oxxxxxxx" - 7"xooooooo" = 8   0     oooooooo           0
+        // 1"oxxxxxxx" - 5"xxxooooo" = 6   -2    ooooooxx           6
+        // 3"oooxxxxx" - 7"xooooooo" = 10  2     oooooooo ooxxxxxx  2
         const used = bitLength % 8;
         const sum = binary.bitOffset + used;
         const shift = sum - 8;
@@ -109,6 +113,8 @@ abstract class Bits extends Particle {
         }
     }
 
+    abstract _setRawValue(rawValue: number): void;
+
     read(binary: Binary): void {
         this._readControlValue(binary);
         this._readRawValue(binary);
@@ -121,12 +127,8 @@ abstract class Bits extends Particle {
         if (0 < this._controlBitLength) {
             this._controlValue = this._readValue(binary,
                 this._controlBitLength);
-            this._valueBitLength = this._computeValueBitLength();
+            this._valueBitLength = this._controlValue;
         }
-    }
-
-    _computeValueBitLength(): number {
-        return this._controlValue;
     }
 
     _readRawValue(binary: Binary): void {
@@ -134,19 +136,16 @@ abstract class Bits extends Particle {
         this._setRawValue(rawValue);
     }
 
-    abstract _setRawValue(rawValue: number): void;
-
     _readIsNull(binary: Binary): boolean {
         if (!this._nullable) {
             return false;
         }
 
-        const bit = this._readBit(binary);
-        return !bit;
+        return !this._readBit(binary);
     }
 
     _readValue(binary: Binary, bitLength: number): number {
-        // instance                     bitOffset bitLength bo+bl 8-(bo+bl)%8 (bo+bl)/8
+        // instance                     bitOffset bitLength total 8-(total)%8 (total)/8
         // "xooxxxxx"                   1         2         3     5           0
         // "xxxooooo ooxxxxxx"          3         7         10    6           1
         // "xxxxxxoo oooooooo ooooooox" 6         17        23    1           2
@@ -155,27 +154,27 @@ abstract class Bits extends Particle {
         const right = 8 - left;
         let value = 0;
         for (let i = Math.ceil(total / 8) - 1; 0 <= i; i--) {
-            value = value << 8;
             const byteIndex = binary.byteOffset + i;
             value |= binary.u8[byteIndex] >>> right;
             if (0 < i) {
                 value |= (binary.u8[byteIndex - 1] << left) & 0xFF;
+                value = value << 8;
             } else {
                 value &= (0xFF >>> left);
             }
         }
-        this._forwardBit(binary, bitLength);
+        this._forwardBits(binary, bitLength);
         return value;
     }
 
     _readBit(binary: Binary): number {
         const right = 7 - binary.bitOffset;
         const bit = (binary.u8[binary.byteOffset] >>> right) & 0x1;
-        this._forwardBit(binary, 1);
+        this._forwardBits(binary, 1);
         return bit;
     }
 
-    _forwardBit(binary: Binary, bitLength: number): void {
+    _forwardBits(binary: Binary, bitLength: number): void {
         const bitOffset = binary.bitOffset + bitLength;
         binary.bitOffset = bitOffset % 8;
         binary.byteOffset += (bitOffset / 8) | 0; // To integer

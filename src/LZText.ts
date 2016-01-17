@@ -16,21 +16,17 @@ class LZText extends Text {
 
     write(binary: Binary) {
         this._forward(binary);
-        const u8 = LZString.compressToUint8Array(this._text);
+        const u8 = LZString.compressToUint8Array(this.getValue());
         let i = 0;
         while (i < u8.length) {
             binary.u8[binary.byteOffset++] = u8[i++];
         }
     }
 
-    setText(text: string): void {
-        this._text = text;
-    }
-
     read(binary: Binary): void {
         this._forward(binary);
         const u8 = new Uint8Array(binary.buffer, binary.byteOffset);
-        this._text = LZString.decompressFromUint8Array(u8);
+        this.setValue(LZString.decompressFromUint8Array(u8));
     }
 
 }

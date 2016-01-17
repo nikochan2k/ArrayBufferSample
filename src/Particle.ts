@@ -1,12 +1,19 @@
 import Binary from "./Binary";
 
-abstract class Particle {
+abstract class Particle<T> {
+    _value: T;
     _nullable: boolean;
-    _isNull: boolean;
 
     constructor(nullable: boolean) {
         this._nullable = nullable;
-        this._isNull = (nullable ? true : false);
+    }
+
+    setValue(value: T): void {
+        this._value = value;
+    }
+
+    getValue(): T {
+        return this._value;
     }
 
     abstract read(binary: Binary): void;

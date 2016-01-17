@@ -1,9 +1,7 @@
 import Bits from "./Bits";
 
-abstract class Num extends Bits {
+abstract class Num extends Bits<number> {
     static _isBigEndian: boolean;
-
-    private _value: number;
 
     constructor(nullable: boolean, controlBitLength: number) {
         super(nullable, controlBitLength);
@@ -30,14 +28,6 @@ abstract class Num extends Bits {
 
     _computeBitLength(value: number): number {
         return Math.floor(Math.log(value) / Math.LN2) + 1;
-    }
-
-    getValue(): number {
-        return this._value;
-    }
-
-    setValue(value: number) {
-        this._value = value;
     }
 }
 

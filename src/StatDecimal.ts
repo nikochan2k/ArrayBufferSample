@@ -33,8 +33,8 @@ class StatDecimal extends Num {
         // nullable
         if (this._nullable) {
             controlBitLength = 1;
-            if (this._isNull) {
-                controlValue = 2; // controlValue = 1 << 1;
+            if (this.getValue() != null) {
+                controlValue = 1;
             }
         }
 
