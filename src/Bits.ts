@@ -23,7 +23,7 @@ abstract class Bits<T> extends Particle<T> {
         for (let i = byteLength - 1; 0 <= i; i--) {
             const byteValue = value & 0xFF;
             u8[i] = byteValue;
-            value = value >>> 8;
+            value = value / 8;
         }
         return u8;
     }
@@ -84,7 +84,7 @@ abstract class Bits<T> extends Particle<T> {
         for (let current = 0, length = u8.length; current < length;) {
             let temp = (u8[current++] << left) & 0xFF;
             if (current < length) {
-                temp |= (u8[current] >>> right);
+                temp |= (u8[current] >> right);
             }
             binary.u8[binary.byteOffset] |= temp;
         }
@@ -96,7 +96,7 @@ abstract class Bits<T> extends Particle<T> {
         let temp = binary.u8[binary.byteOffset];
         for (let current = 0, length = u8.length; current < length;
             current++ , binary.byteOffset++) {
-            binary.u8[binary.byteOffset] = temp | (u8[current] >>> right);
+            binary.u8[binary.byteOffset] = temp | (u8[current] >> right);
             temp = (u8[current] << left) & 0xFF;
         }
         binary.u8[binary.byteOffset] = temp;
@@ -147,17 +147,17 @@ abstract class Bits<T> extends Particle<T> {
         // "xxxooooo ooxxxxxx"          3         7         10    6           1
         // "xxxxxxoo oooooooo ooooooox" 6         17        23    1           2
         const total = binary.bitOffset + bitLength;
-        const left = (total % 8);
+        const left = total % 8;
         const right = 8 - left;
         let value = 0;
         for (let i = Math.ceil(total / 8) - 1; 0 <= i; i--) {
             const byteIndex = binary.byteOffset + i;
-            value |= binary.u8[byteIndex] >>> right;
+            value |= binary.u8[byteIndex] >> right;
             if (0 < i) {
                 value |= (binary.u8[byteIndex - 1] << left) & 0xFF;
                 value = value << 8;
             } else {
-                value &= (0xFF >>> left);
+                value &= (0xFF >> left);
             }
         }
         this._forwardBits(binary, bitLength);
@@ -166,7 +166,7 @@ abstract class Bits<T> extends Particle<T> {
 
     _readBit(binary: Binary): number {
         const right = 7 - binary.bitOffset;
-        const bit = (binary.u8[binary.byteOffset] >>> right) & 0x1;
+        const bit = (binary.u8[binary.byteOffset] >> right) & 0x1;
         this._forwardBits(binary, 1);
         return bit;
     }
@@ -174,7 +174,7 @@ abstract class Bits<T> extends Particle<T> {
     _forwardBits(binary: Binary, bitLength: number): void {
         const bitOffset = binary.bitOffset + bitLength;
         binary.bitOffset = bitOffset % 8;
-        binary.byteOffset += (bitOffset / 8) | 0; // To integer
+        binary.byteOffset += bitOffset / 8;
     }
 
 }

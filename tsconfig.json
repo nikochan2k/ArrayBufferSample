@@ -43,6 +43,7 @@
         "src/VarBitDecimal.ts",
         "src/VarByteDecimal.ts",
         "src/VarDecimal.ts",
+        "test/Benchmark.ts",
         "test/Bool.ts",
         "typings/empower/empower.d.ts",
         "typings/lz-string/lz-string.d.ts",
