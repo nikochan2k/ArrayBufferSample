@@ -115,4 +115,59 @@ describe("Bool", () => {
         });
     });
 
+    context("read", () => {
+        const binary = new Binary(2);
+        const u8 = binary.u8;
+        u8[0] = parseInt("10101101", 2);
+        u8[1] = parseInt("01100000", 2);
+
+        it("true", () => {
+            const b1 = new Bool(false);
+            b1.read(binary);
+            assert.equal(b1.getValue(), true);
+        });
+
+        it("false", () => {
+            const b2 = new Bool(false);
+            b2.read(binary);
+            assert.equal(b2.getValue(), false);
+        });
+
+        it("nullable, false", () => {
+            const b3 = new Bool(true);
+            b3.read(binary);
+            assert.equal(b3.getValue(), false);
+        });
+
+        it("nullable, true", () => {
+            const b4 = new Bool(true);
+            b4.read(binary);
+            assert.equal(b4.getValue(), true);
+        });
+
+        it("nullable, null", () => {
+            const b5 = new Bool(true);
+            b5.read(binary);
+            assert.equal(b5.getValue(), undefined);
+        });
+
+        it("nullable, false, again", () => {
+            const b6 = new Bool(true);
+            b6.read(binary);
+            assert.equal(b6.getValue(), false);
+        });
+
+        it("nullable, true, again", () => {
+            const b7 = new Bool(true);
+            b7.read(binary);
+            assert.equal(b7.getValue(), true);
+        });
+
+        it("nullable, null, again", () => {
+            const b8 = new Bool(true);
+            b8.read(binary);
+            assert.equal(b8.getValue(), undefined);
+        });
+    });
+
 });

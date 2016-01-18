@@ -11,7 +11,8 @@ gulp.task("tsd", function(cb) {
 var sources = [
     "src/**/*.ts",
     "src/**/*.tsx",
-    "test/**/*.ts"
+    "test/**/*.ts",
+    "playground/**/*.ts"
 ];
 
 var tsConfig = require("gulp-tsconfig-update");

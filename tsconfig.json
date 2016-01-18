@@ -12,6 +12,7 @@
         "src/**/*.ts",
         "src/**/*.tsx",
         "test/**/*.ts",
+        "playground/**/*.ts",
         "typings/**/*.ts"
     ],
     "compileOnSave": true,
@@ -43,8 +44,9 @@
         "src/VarBitDecimal.ts",
         "src/VarByteDecimal.ts",
         "src/VarDecimal.ts",
-        "test/Benchmark.ts",
         "test/Bool.ts",
+        "playground/Benchmark.ts",
+        "playground/Bool.ts",
         "typings/empower/empower.d.ts",
         "typings/lz-string/lz-string.d.ts",
         "typings/mocha/mocha.d.ts",
