@@ -45,6 +45,7 @@
         "src/VarByteDecimal.ts",
         "src/VarDecimal.ts",
         "test/Bool.ts",
+        "test/Decimal.ts",
         "playground/Benchmark.ts",
         "playground/Bool.ts",
         "typings/empower/empower.d.ts",
