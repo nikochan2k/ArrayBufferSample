@@ -31,27 +31,27 @@ abstract class Bits<T> extends Particle<T> {
     abstract _getRawValue(): number;
 
     write(binary: Binary): void {
-        this._writeControlValue(binary);
+        this._writePreamble(binary);
         if (this.getValue() != null) {
             this._writeRawValue(binary);
         }
     }
 
-    _writeControlValue(binary: Binary): void {
-        let controlBitLength = 0, controlValue = 0;
+    _writePreamble(binary: Binary): void {
+        let preambleBitLength = 0, preambleValue = 0;
         if (this._nullable) {
-            controlBitLength = 1;
+            preambleBitLength = 1;
             if (this.getValue() != null) {
-                controlValue = 1;
+                preambleValue = 1;
             }
         }
         if (0 < this._controlBitLength) {
-            controlBitLength += this._controlBitLength;
-            controlValue = (controlValue << this._controlBitLength) & this._controlValue;
+            preambleBitLength += this._controlBitLength;
+            preambleValue = (preambleValue << this._controlBitLength) & this._controlValue;
         }
-        if (0 < controlBitLength) {
-            const u8 = this._valueToU8(controlBitLength, controlValue);
-            binary.writeU8(u8, controlBitLength);
+        if (0 < preambleBitLength) {
+            const u8 = this._valueToU8(preambleBitLength, preambleValue);
+            binary.writeU8(u8, preambleBitLength);
         }
     }
 
@@ -63,12 +63,12 @@ abstract class Bits<T> extends Particle<T> {
     abstract _setRawValue(rawValue: number): void;
 
     read(binary: Binary): void {
-        if (this._readControlValue(binary)) {
+        if (this._readPreambleValue(binary)) {
             this._readRawValue(binary);
         }
     }
 
-    _readControlValue(binary: Binary): boolean {
+    _readPreambleValue(binary: Binary): boolean {
         if (this._readIsNull(binary)) {
             return false;
         }
