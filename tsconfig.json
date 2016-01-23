@@ -48,6 +48,7 @@
         "test/Decimal.ts",
         "playground/Benchmark.ts",
         "playground/Bool.ts",
+        "playground/Decimal.ts",
         "typings/empower/empower.d.ts",
         "typings/lz-string/lz-string.d.ts",
         "typings/mocha/mocha.d.ts",

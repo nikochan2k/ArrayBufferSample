@@ -17,7 +17,7 @@ class Float extends Num {
         f[0] = this.getValue();
         const u8 = new Uint8Array(platform);
         this._changeNetworkByteOrder(u8);
-        this._writeU8(binary, u8, this._valueBitLength);
+        binary.writeU8(u8, this._valueBitLength);
     }
 
     _getRawValue(): number {
@@ -48,7 +48,7 @@ class Float extends Num {
                 u8[i] &= (0xFF >>> left);
             }
         }
-        this._forwardBits(binary, bitLength);
+        binary._forwardBits(bitLength);
 
         this._changeNetworkByteOrder(u8);
         this.setValue(f[0]);
