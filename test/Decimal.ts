@@ -183,4 +183,25 @@ describe("Decimal", () => {
         });
     });
 
+    context("set interger value and write", () => {
+        const binary = new Binary(2);
+        const decimal = new Decimal(false, 0, 4095);
+        decimal.setValue(4095);
+        decimal.write(binary);
+
+        it("byteOffset", () => {
+            assert.equal(binary.byteOffset, 1);
+        });
+
+        it("bitOffset", () => {
+            assert.equal(binary.bitOffset, 4);
+        });
+
+        it("value", () => {
+            assert.equal(binary.u8[0], parseInt("11111111", 2));
+            assert.equal(binary.u8[1], parseInt("11110000", 2));
+        });
+    });
+
+
 });

@@ -37,8 +37,9 @@ class Binary {
             if (current < length) {
                 temp |= (u8[current] >> right);
             }
-            this.u8[this.byteOffset] |= temp;
+            this.u8[this.byteOffset++] |= temp;
         }
+        this.byteOffset--;
     }
 
     _writeU8WithRightBitShift(u8: Uint8Array, right: number): void {

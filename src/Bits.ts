@@ -23,7 +23,7 @@ abstract class Bits<T> extends Particle<T> {
         for (let i = byteLength - 1; 0 <= i; i--) {
             const byteValue = value & 0xFF;
             u8[i] = byteValue;
-            value = value / 8;
+            value = value >> 8;
         }
         return u8;
     }
