@@ -183,14 +183,16 @@ describe("Decimal", () => {
         });
     });
 
-    context("set interger value and write", () => {
-        const binary = new Binary(2);
-        const decimal = new Decimal(false, 0, 4095);
-        decimal.setValue(4095);
+    context("set short values and write", () => {
+        const binary = new Binary(3);
+        const decimal = new Decimal(false, 0, 1023);
+        decimal.setValue(682);
+        decimal.write(binary);
+        decimal.setValue(1023);
         decimal.write(binary);
 
         it("byteOffset", () => {
-            assert.equal(binary.byteOffset, 1);
+            assert.equal(binary.byteOffset, 2);
         });
 
         it("bitOffset", () => {
@@ -198,10 +200,35 @@ describe("Decimal", () => {
         });
 
         it("value", () => {
-            assert.equal(binary.u8[0], parseInt("11111111", 2));
-            assert.equal(binary.u8[1], parseInt("11110000", 2));
+            assert.equal(binary.u8[0], parseInt("10101010", 2));
+            assert.equal(binary.u8[1], parseInt("10111111", 2));
+            assert.equal(binary.u8[2], parseInt("11110000", 2));
         });
     });
 
+    context("set integer values and write", () => {
+        const binary = new Binary(7);
+        const decimal = new Decimal(false, 0, 9007199254740991);
+        decimal.setValue(9007199254740991);
+        decimal.write(binary);
+
+        it("byteOffset", () => {
+            assert.equal(binary.byteOffset, 6);
+        });
+
+        it("bitOffset", () => {
+            assert.equal(binary.bitOffset, 5);
+        });
+
+        it("value", () => {
+            assert.equal(binary.u8[0], parseInt("11111111", 2));
+            assert.equal(binary.u8[1], parseInt("11111111", 2));
+            assert.equal(binary.u8[2], parseInt("11111111", 2));
+            assert.equal(binary.u8[3], parseInt("11111111", 2));
+            assert.equal(binary.u8[4], parseInt("11111111", 2));
+            assert.equal(binary.u8[5], parseInt("11111111", 2));
+            assert.equal(binary.u8[6], parseInt("11111000", 2));
+        });
+    });
 
 });
