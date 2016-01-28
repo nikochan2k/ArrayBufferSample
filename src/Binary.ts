@@ -73,20 +73,16 @@ class Binary {
         const left = total % 8;
         const right = (left !== 0 ? 8 - left : 0);
         const byteLength = Math.ceil(total / 8);
-        const buffer = new ArrayBuffer(byteLength);
-        const u8 = new Uint8Array(buffer);
+        let value = 0;
         let temp = this.u8[this.byteOffset] & (0xFF >> this.bitOffset);
         for (let i = 0; i < byteLength;) {
-            u8[i++] |= temp >> right;
+            value += temp >> right;
+            i++;
             if (i < byteLength) {
-                u8[i] = temp << left;
+                value = value << 8;
+                value += (temp << left) & 0xFF;
                 temp = this.u8[++this.byteOffset];
             }
-        }
-        let value = 0;
-        for (let i = 0; i < byteLength; i++) {
-            value = value << 8;
-            value += u8[i];
         }
         this._forwardBits(bitLength);
         return value;
