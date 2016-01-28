@@ -206,7 +206,7 @@ describe("Decimal", () => {
         });
     });
 
-    context("set integer values and write", () => {
+    context("set long value and write", () => {
         const binary = new Binary(7);
         const decimal = new Decimal(false, 0, 9007199254740991);
         decimal.setValue(9007199254740991);
@@ -229,6 +229,99 @@ describe("Decimal", () => {
             assert.equal(binary.u8[5], parseInt("11111111", 2));
             assert.equal(binary.u8[6], parseInt("11111000", 2));
         });
+    });
+
+    context("nullable, set short values and write", () => {
+        const binary = new Binary(3);
+        const decimal = new Decimal(true, 0, 1023);
+        decimal.write(binary);
+        decimal.setValue(682);
+        decimal.write(binary);
+        decimal.setValue(1023);
+        decimal.write(binary);
+
+        it("byteOffset", () => {
+            assert.equal(binary.byteOffset, 2);
+        });
+
+        it("bitOffset", () => {
+            assert.equal(binary.bitOffset, 7);
+        });
+
+        it("value", () => {
+            assert.equal(binary.u8[0], parseInt("01101010", 2));
+            assert.equal(binary.u8[1], parseInt("10101111", 2));
+            assert.equal(binary.u8[2], parseInt("11111110", 2));
+        });
+    });
+
+    context("read", () => {
+        const binary = new Binary(2);
+        const u8 = binary.u8;
+        u8[0] = parseInt("11111111", 2);
+        u8[1] = parseInt("11100000", 2);
+
+        it("nullable, null", () => {
+            const d = new Decimal(false, -1024, 1023);
+            d.read(binary);
+            assert.equal(binary.byteOffset, 1);
+            assert.equal(binary.bitOffset, 3);
+            assert.equal(d.getValue(), 1023);
+        });
+    });
+
+    context("read", () => {
+        const binary = new Binary(11);
+        const u8 = binary.u8;
+        u8[0] = parseInt("00000011", 2);
+        u8[1] = parseInt("11111111", 2);
+        u8[2] = parseInt("11000000", 2);
+        u8[3] = parseInt("00000000", 2);
+        u8[4] = parseInt("00111111", 2);
+        u8[5] = parseInt("11111111", 2);
+        u8[6] = parseInt("11111111", 2);
+        u8[7] = parseInt("11111111", 2);
+        u8[8] = parseInt("11111111", 2);
+        u8[9] = parseInt("11111111", 2);
+        u8[10] = parseInt("11111110", 2);
+
+        it("nullable, null", () => {
+            const d = new Decimal(true, 0, 255);
+            d.read(binary);
+            assert.equal(binary.byteOffset, 0);
+            assert.equal(binary.bitOffset, 1);
+            assert.equal(d.getValue(), undefined);
+        });
+
+        it("byte value, min", () => {
+            const d = new Decimal(false, -16, 15);
+            d.read(binary);
+            assert.equal(binary.byteOffset, 0);
+            assert.equal(binary.bitOffset, 6);
+            assert.equal(d.getValue(), -16);
+        });
+
+        it("nullable, short value, max", () => {
+            const d = new Decimal(true, -1024, 1023);
+            d.read(binary);
+            assert.equal(binary.byteOffset, 2);
+            assert.equal(binary.bitOffset, 2);
+            assert.equal(d.getValue(), 1023);
+        });
+
+        /*
+        it("integer value, center", () => {
+            const d = new Decimal(false, -65536, 65535);
+            d.read(binary);
+            assert.equal(d.getValue(), 0);
+        });
+
+        it("long value, max", () => {
+            const d = new Decimal(false, 0, 9007199254740991);
+            d.read(binary);
+            assert.equal(d.getValue(), 9007199254740991);
+        });
+        */
     });
 
 });

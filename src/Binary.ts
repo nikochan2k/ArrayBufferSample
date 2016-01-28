@@ -62,25 +62,31 @@ class Binary {
     }
 
     readValue(bitLength: number): number {
-        //                                                        left
-        // instance                     bitOffset bitLength total total&8 right (total)/8
-        // "xooxxxxx"                   1         2         3     3       5     0
-        // "xxxooooo ooxxxxxx"          3         7         10    2       6     1
-        // "xxxxxxoo oooooooo ooooooox" 6         17        23    7       1     2
+        //                                                        left          byteLength
+        // instance                     bitOffset bitLength total total%8 right Math.ceil(total/8)
+        // "xooxxxxx"                   1         2         3     3       5     1
+        // "oooooooo"                   0         8         8     0       8     1
+        // "xxxooooo oooxxxxx"          3         8         11    3       5     2
+        // "xxxxxxxo oooooooo oxxxxxxx" 7         10        17    1       7     3
+        // "xxxxxxoo oooooooo ooooooox" 6         17        23    7       1     3
         const total = this.bitOffset + bitLength;
         const left = total % 8;
-        const right = 8 - left;
-        const mask = 0xFF >> (8 - (bitLength % 8));
-        let value = 0;
-        for (let i = Math.ceil(total / 8) - 1; 0 <= i; i--) {
-            const byteIndex = this.byteOffset + i;
-            value |= this.u8[byteIndex] >> right;
-            if (0 < i) {
-                value |= (this.u8[byteIndex - 1] << left) & mask;
-                value = value << 8;
-            } else {
-                value &= mask;
+        const right = (left !== 0 ? 8 - left : 0);
+        const byteLength = Math.ceil(total / 8);
+        const buffer = new ArrayBuffer(byteLength);
+        const u8 = new Uint8Array(buffer);
+        let temp = this.u8[this.byteOffset] & (0xFF >> this.bitOffset);
+        for (let i = 0; i < byteLength;) {
+            u8[i++] |= temp >> right;
+            if (i < byteLength) {
+                u8[i] = temp << left;
+                temp = this.u8[++this.byteOffset];
             }
+        }
+        let value = 0;
+        for (let i = 0; i < byteLength; i++) {
+            value = value << 8;
+            value += u8[i];
         }
         this._forwardBits(bitLength);
         return value;
@@ -90,13 +96,15 @@ class Binary {
         const right = 7 - this.bitOffset;
         const bit = (this.u8[this.byteOffset] >> right) & 0x1;
         this._forwardBits(1);
+        if (this.bitOffset === 0) {
+            this.byteOffset++;
+        }
         return bit;
     }
 
     _forwardBits(bitLength: number): void {
         const bitOffset = this.bitOffset + bitLength;
         this.bitOffset = bitOffset % 8;
-        this.byteOffset += Math.floor(bitOffset / 8);
     }
 
 }
