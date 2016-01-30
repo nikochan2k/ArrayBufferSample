@@ -88,19 +88,19 @@ class Binary {
 
     _readU8WithBitShift(temp: number, u8: Uint8Array, left: number): void {
         const right = 8 - left;
-        for (let i = 0; i < u8.byteLength;) {
+        let i = 0;
+        u8[i++] |= temp >> right;
+        while (i < u8.byteLength) {
+            u8[i] = (temp << left) & 0xFF;
+            temp = this.u8[++this.byteOffset];
             u8[i++] |= temp >> right;
-            if (i < u8.byteLength) {
-                u8[i] = (temp << left) & 0xFF;
-                temp = this.u8[++this.byteOffset];
-            }
         }
     }
 
     _readU8WithoutBitShift(first: number, u8: Uint8Array): void {
         let i = 0;
         u8[i++] = first;
-        while(i < u8.length) {
+        while (i < u8.length) {
             u8[i++] = this.u8[++this.byteOffset];
         }
     }
