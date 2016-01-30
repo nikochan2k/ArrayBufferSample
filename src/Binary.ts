@@ -35,32 +35,31 @@ class Binary {
 
     _writeU8WithLeftBitShift(u8: Uint8Array, left: number): void {
         const right = 8 - left;
-        for (let current = 0, length = u8.length; current < length;) {
-            let temp = (u8[current++] << left) & 0xFF;
-            if (current < length) {
-                temp |= (u8[current] >> right);
-            }
+        let i = 0;
+        let temp = (u8[i++] << left) & 0xFF;
+        while (i < u8.length) {
+            temp |= (u8[i] >> right);
             this.u8[this.byteOffset++] |= temp;
+            temp = (u8[i++] << left) & 0xFF;
         }
-        this.byteOffset--;
+        this.u8[this.byteOffset] |= temp;
     }
 
     _writeU8WithRightBitShift(u8: Uint8Array, right: number): void {
         const left = 8 - right;
         let temp = this.u8[this.byteOffset];
-        for (let current = 0, length = u8.length; current < length;
-            current++ , this.byteOffset++) {
-            this.u8[this.byteOffset] = temp | (u8[current] >> right);
-            temp = (u8[current] << left) & 0xFF;
+        for (let i = 0; i < u8.length; i++ , this.byteOffset++) {
+            this.u8[this.byteOffset] = temp | (u8[i] >> right);
+            temp = (u8[i] << left) & 0xFF;
         }
         this.u8[this.byteOffset] = temp;
     }
 
     _writeU8WithoutBitShift(u8: Uint8Array) {
-        let current = 0;
-        this.u8[this.byteOffset++] |= u8[current];
-        for (current = 1, length = u8.length; current < length; current++) {
-            this.u8[this.byteOffset++] = u8[current];
+        let i = 0;
+        this.u8[this.byteOffset++] |= u8[i];
+        for (i = 1; i < u8.length; i++) {
+            this.u8[this.byteOffset++] = u8[i];
         }
     }
 
@@ -101,9 +100,9 @@ class Binary {
     _readU8WithoutBitShift(first: number, u8: Uint8Array): void {
         let i = 0;
         u8[i++] = first;
-        do {
+        while(i < u8.length) {
             u8[i++] = this.u8[++this.byteOffset];
-        } while (i < u8.length);
+        }
     }
 
     readBit(): number {
