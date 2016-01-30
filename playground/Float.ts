@@ -5,3 +5,6 @@ const binary = new Binary(4);
 const fw = new Float(false, false);
 fw.setValue(1234567);
 fw.write(binary);
+binary.byteOffset = 0;
+const fr = new Float(false, false);
+fr.read(binary);

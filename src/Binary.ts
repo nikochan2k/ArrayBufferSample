@@ -74,20 +74,36 @@ class Binary {
         // "xxxxxxoo oooooooo ooooooox" 6         17        23    7       1     3
         const total = this.bitOffset + bitLength;
         const left = total % 8;
-        const right = (left !== 0 ? 8 - left : 0);
         const byteLength = Math.ceil(total / 8);
         const buffer = new ArrayBuffer(byteLength);
         const u8 = new Uint8Array(buffer);
-        let temp = this.u8[this.byteOffset] & (0xFF >> this.bitOffset);
-        for (let i = 0; i < byteLength;) {
-            u8[i++] |= temp >> right;
-            if (i < byteLength) {
-                u8[i] = temp << left;
-                temp = this.u8[++this.byteOffset];
-            }
+        const first = this.u8[this.byteOffset] & (0xFF >> this.bitOffset);
+        if (0 < left) {
+            this._readU8WithBitShift(first, u8, left);
+        } else {
+            this._readU8WithoutBitShift(first, u8);
         }
         this._forwardBits(bitLength);
         return u8;
+    }
+
+    _readU8WithBitShift(temp: number, u8: Uint8Array, left: number): void {
+        const right = 8 - left;
+        for (let i = 0; i < u8.byteLength;) {
+            u8[i++] |= temp >> right;
+            if (i < u8.byteLength) {
+                u8[i] = (temp << left) & 0xFF;
+                temp = this.u8[++this.byteOffset];
+            }
+        }
+    }
+
+    _readU8WithoutBitShift(first: number, u8: Uint8Array): void {
+        let i = 0;
+        u8[i++] = first;
+        do {
+            u8[i++] = this.u8[++this.byteOffset];
+        } while (i < u8.length);
     }
 
     readBit(): number {
