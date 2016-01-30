@@ -42,10 +42,10 @@ class Decimal extends Num {
 
     setValue(value: number): void {
         if (value < this._min) {
-            throw new RangeError("value is less than minimum value \"" + this._min + "\".");
+            throw new RangeError("\"" + value + "\" is less than minimum value \"" + this._min + "\".");
         }
         if (this._max < value) {
-            throw new RangeError("value is greater than maximum value \"" + this._max + "\".");
+            throw new RangeError("\"" + value + "\" is greater than maximum value \"" + this._max + "\".");
         }
         super.setValue(value);
     }

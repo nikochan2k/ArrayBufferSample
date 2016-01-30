@@ -19,15 +19,18 @@ class Binary {
         // 3"oooxxxxx" - 7"xooooooo" = 10  2     oooooooo ooxxxxxx  2
         const used = bitLength % 8;
         const sum = this.bitOffset + used;
-        const shift = sum - 8;
-        if (shift < 0) {
-            this._writeU8WithLeftBitShift(u8, -shift);
-        } else if (0 < shift) {
-            this._writeU8WithRightBitShift(u8, shift);
+        const nextBitOffset = sum % 8;
+        if (nextBitOffset !== 0) {
+            const shift = sum - 8;
+            if (shift < 0) {
+                this._writeU8WithLeftBitShift(u8, -shift);
+            } else {
+                this._writeU8WithRightBitShift(u8, shift);
+            }
         } else {
             this._writeU8WithoutBitShift(u8);
         }
-        this.bitOffset = sum % 8;
+        this.bitOffset = nextBitOffset;
     }
 
     _writeU8WithLeftBitShift(u8: Uint8Array, left: number): void {
@@ -61,7 +64,7 @@ class Binary {
         }
     }
 
-    readValue(bitLength: number): number {
+    readU8(bitLength: number): Uint8Array {
         //                                                        left          byteLength
         // instance                     bitOffset bitLength total total%8 right Math.ceil(total/8)
         // "xooxxxxx"                   1         2         3     3       5     1
@@ -73,19 +76,18 @@ class Binary {
         const left = total % 8;
         const right = (left !== 0 ? 8 - left : 0);
         const byteLength = Math.ceil(total / 8);
-        let value = 0;
+        const buffer = new ArrayBuffer(byteLength);
+        const u8 = new Uint8Array(buffer);
         let temp = this.u8[this.byteOffset] & (0xFF >> this.bitOffset);
         for (let i = 0; i < byteLength;) {
-            value += temp >> right;
-            i++;
+            u8[i++] |= temp >> right;
             if (i < byteLength) {
-                value = value << 8;
-                value += (temp << left) & 0xFF;
+                u8[i] = temp << left;
                 temp = this.u8[++this.byteOffset];
             }
         }
         this._forwardBits(bitLength);
-        return value;
+        return u8;
     }
 
     readBit(): number {

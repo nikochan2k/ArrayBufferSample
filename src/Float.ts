@@ -1,5 +1,4 @@
 import Num from "./Num";
-import Binary from "./Binary";
 
 class Float extends Num {
     _byteLength: number;
@@ -7,58 +6,35 @@ class Float extends Num {
     constructor(nullable: boolean, isDouble: boolean = true) {
         super(nullable, 0);
         this._valueBitLength = (isDouble ? 64 : 32);
-        this._byteLength = (this._valueBitLength / 8) | 0;
+        this._byteLength = Math.floor(this._valueBitLength / 8);
     }
 
-    _writeRawValue(binary: Binary): void {
-        const platform = new ArrayBuffer(this._byteLength);
+    _valueToU8(bitLength: number, value: number): Uint8Array {
+        const buffer = new ArrayBuffer(this._byteLength);
         const f = this._byteLength === 8
-            ? new Float64Array(platform) : new Float32Array(platform);
-        f[0] = this.getValue();
-        const u8 = new Uint8Array(platform);
-        this._changeNetworkByteOrder(u8);
-        binary.writeU8(u8, this._valueBitLength);
+            ? new Float64Array(buffer) : new Float32Array(buffer);
+        f[0] = value;
+        const u8 = new Uint8Array(buffer);
+        this._toNetworkByteOrder(u8);
+        return u8;
     }
 
     _getRawValue(): number {
-        // override _writeRawValue method, so this method is no sence.
-        return undefined;
+        return this.getValue();
     }
 
-    _readRawValue(binary: Binary): void {
-        const bitLength = this._valueBitLength;
-        const platform = new ArrayBuffer(this._byteLength);
-        const f = (this._byteLength === 8)
-            ? new Float64Array(platform) : new Float32Array(platform);
-        const u8 = new Uint8Array(platform);
-
-        // instance                     bitOffset bitLength bo+bl 8-(bo+bl)%8 (bo+bl)/8
-        // "xooxxxxx"                   1         2         3     5           0
-        // "xxxooooo ooxxxxxx"          3         7         10    6           1
-        // "xxxxxxoo oooooooo ooooooox" 6         17        23    1           2
-        const total = binary.bitOffset + bitLength;
-        const left = (total % 8);
-        const right = 8 - left;
-        for (let i = Math.ceil(total / 8) - 1; 0 <= i; i--) {
-            const byteIndex = binary.byteOffset + i;
-            u8[i] = binary.u8[byteIndex] >>> right;
-            if (0 < i) {
-                u8[i] |= (binary.u8[byteIndex - 1] << left) & 0xFF;
-            } else {
-                u8[i] &= (0xFF >>> left);
-            }
-        }
-        binary._forwardBits(bitLength);
-
-        this._changeNetworkByteOrder(u8);
-        this.setValue(f[0]);
+    _u8ToValue(byteLength: number, u8: Uint8Array): number {
+        this._toNetworkByteOrder(u8);
+        const f = (byteLength === 8)
+            ? new Float64Array(u8.buffer) : new Float32Array(u8.buffer);
+        return f[0];
     }
 
     _setRawValue(rawValue: number): void {
-        // override _readRawValue method, so this method is no sence.
+        this.setValue(rawValue);
     }
 
-    protected _changeNetworkByteOrder(u8: Uint8Array): void {
+    protected _toNetworkByteOrder(u8: Uint8Array): void {
         if (Num._isBigEndian) {
             return;
         }

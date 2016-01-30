@@ -73,14 +73,18 @@ abstract class Bits<T> extends Particle<T> {
             return false;
         }
         if (0 < this._controlBitLength) {
-            this._controlValue = binary.readValue(this._controlBitLength);
+            const u8 = binary.readU8(this._controlBitLength);
+            const byteLength = Math.ceil(this._controlBitLength / 8);
+            this._controlValue = this._u8ToRawValue(byteLength, u8);
             this._valueBitLength = this._controlValue;
         }
         return true;
     }
 
     _readRawValue(binary: Binary): void {
-        const rawValue = binary.readValue(this._valueBitLength);
+        const u8 = binary.readU8(this._valueBitLength);
+        const byteLength = Math.ceil(this._valueBitLength / 8);
+        const rawValue = this._u8ToValue(byteLength, u8);
         this._setRawValue(rawValue);
     }
 
@@ -90,6 +94,19 @@ abstract class Bits<T> extends Particle<T> {
         }
 
         return !binary.readBit();
+    }
+
+    _u8ToValue(byteLength: number, u8: Uint8Array): number {
+        return this._u8ToRawValue(byteLength, u8);
+    }
+
+    _u8ToRawValue(byteLength: number, u8: Uint8Array): number {
+        let value = 0;
+        for (let i = 0; i < u8.byteLength; i++) {
+            value *= 256;
+            value += u8[i];
+        }
+        return value;
     }
 
 }

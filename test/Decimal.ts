@@ -275,7 +275,7 @@ describe("Decimal", () => {
         const u8 = binary.u8;
         u8[0] = parseInt("00000011", 2);
         u8[1] = parseInt("11111111", 2);
-        u8[2] = parseInt("11000000", 2);
+        u8[2] = parseInt("11100000", 2);
         u8[3] = parseInt("00000000", 2);
         u8[4] = parseInt("00111111", 2);
         u8[5] = parseInt("11111111", 2);
@@ -309,9 +309,8 @@ describe("Decimal", () => {
             assert.equal(d.getValue(), 1023);
         });
 
-        /*
         it("integer value, center", () => {
-            const d = new Decimal(false, -65536, 65535);
+            const d = new Decimal(false, -32768, 32767);
             d.read(binary);
             assert.equal(d.getValue(), 0);
         });
@@ -321,7 +320,7 @@ describe("Decimal", () => {
             d.read(binary);
             assert.equal(d.getValue(), 9007199254740991);
         });
-        */
+
     });
 
 });

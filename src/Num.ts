@@ -6,7 +6,7 @@ abstract class Num extends Bits<number> {
     constructor(nullable: boolean, controlBitLength: number) {
         super(nullable, controlBitLength);
 
-        if (Num._isBigEndian == null) {
+        if (Num._isBigEndian != null) {
             return;
         }
 
