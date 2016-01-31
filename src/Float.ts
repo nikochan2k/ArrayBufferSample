@@ -34,7 +34,7 @@ class Float extends Num {
         this.setValue(rawValue);
     }
 
-    protected _toNetworkByteOrder(u8: Uint8Array): void {
+    _toNetworkByteOrder(u8: Uint8Array): void {
         if (Num._isBigEndian) {
             return;
         }
@@ -46,7 +46,7 @@ class Float extends Num {
         }
     }
 
-    protected _swap(u8platform: Uint8Array, lhs: number, rhs: number): void {
+    _swap(u8platform: Uint8Array, lhs: number, rhs: number): void {
         const temp = u8platform[lhs];
         u8platform[lhs] = u8platform[rhs];
         u8platform[rhs] = temp;
