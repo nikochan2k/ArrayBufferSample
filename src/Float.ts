@@ -9,7 +9,7 @@ class Float extends Num {
         this._byteLength = Math.floor(this._valueBitLength / 8);
     }
 
-    _valueToU8(bitLength: number, value: number): Uint8Array {
+    _valueToU8(value: number, bitLength: number): Uint8Array {
         const buffer = new ArrayBuffer(this._byteLength);
         const f = this._byteLength === 8
             ? new Float64Array(buffer) : new Float32Array(buffer);
@@ -23,7 +23,7 @@ class Float extends Num {
         return this.getValue();
     }
 
-    _u8ToValue(byteLength: number, u8: Uint8Array): number {
+    _u8ToValue(u8: Uint8Array, byteLength: number): number {
         this._toNetworkByteOrder(u8);
         const f = (byteLength === 8)
             ? new Float64Array(u8.buffer) : new Float32Array(u8.buffer);

@@ -60,11 +60,11 @@ class StatDecimal extends Num {
         controlValue += tempValue;
 
         // write control value
-        const u8Control = this._valueToU8(controlBitLength, controlValue);
+        const u8Control = this._valueToU8(controlValue, controlBitLength);
         binary.writeU8(u8Control, controlBitLength);
 
         // write value
-        const u8Value = this._valueToU8(valueBitLength, value);
+        const u8Value = this._valueToU8(value, valueBitLength);
         binary.writeU8(u8Value, this._valueBitLength);
     }
 
@@ -84,12 +84,14 @@ class StatDecimal extends Num {
         let valueBitLength = 0;
         let temp: number;
         do {
-            temp = binary.readValue(this._bitGroupLength);
+            const u8 = binary.readU8(this._bitGroupLength);
+            temp = this._u8ToValue(u8, this._bitGroupLength);
             valueBitLength += temp;
         } while (temp === threshold);
 
         const sign = signBit ? -1 : 1;
-        const rawValue = binary.readValue(valueBitLength);
+        const u8 = binary.readU8(valueBitLength);
+        const rawValue = this._u8ToValue(u8, valueBitLength);
         const difference = sign * rawValue * this._sigma * this._precision;
         const value = difference + this._mean;
         this.setValue(value);

@@ -15,7 +15,7 @@ abstract class Bits<T> extends Particle<T> {
         this._controlBitLength = controlBitLength;
     }
 
-    _valueToU8(bitLength: number, value: number): Uint8Array {
+    _valueToU8(value: number, bitLength: number): Uint8Array {
         const byteLength = Math.ceil(bitLength / 8);
         const buffer = new ArrayBuffer(byteLength);
         const u8 = new Uint8Array(buffer);
@@ -50,13 +50,13 @@ abstract class Bits<T> extends Particle<T> {
             preambleValue = (preambleValue << this._controlBitLength) & this._controlValue;
         }
         if (0 < preambleBitLength) {
-            const u8 = this._valueToU8(preambleBitLength, preambleValue);
+            const u8 = this._valueToU8(preambleValue, preambleBitLength);
             binary.writeU8(u8, preambleBitLength);
         }
     }
 
     _writeRawValue(binary: Binary): void {
-        const u8 = this._valueToU8(this._valueBitLength, this._getRawValue());
+        const u8 = this._valueToU8(this._getRawValue(), this._valueBitLength);
         binary.writeU8(u8, this._valueBitLength);
     }
 
@@ -75,7 +75,7 @@ abstract class Bits<T> extends Particle<T> {
         if (0 < this._controlBitLength) {
             const u8 = binary.readU8(this._controlBitLength);
             const byteLength = Math.ceil(this._controlBitLength / 8);
-            this._controlValue = this._u8ToRawValue(byteLength, u8);
+            this._controlValue = this._u8ToRawValue(u8, byteLength);
             this._valueBitLength = this._controlValue;
         }
         return true;
@@ -84,7 +84,7 @@ abstract class Bits<T> extends Particle<T> {
     _readRawValue(binary: Binary): void {
         const u8 = binary.readU8(this._valueBitLength);
         const byteLength = Math.ceil(this._valueBitLength / 8);
-        const rawValue = this._u8ToValue(byteLength, u8);
+        const rawValue = this._u8ToValue(u8, byteLength);
         this._setRawValue(rawValue);
     }
 
@@ -96,11 +96,11 @@ abstract class Bits<T> extends Particle<T> {
         return !binary.readBit();
     }
 
-    _u8ToValue(byteLength: number, u8: Uint8Array): number {
-        return this._u8ToRawValue(byteLength, u8);
+    _u8ToValue(u8: Uint8Array, byteLength: number): number {
+        return this._u8ToRawValue(u8, byteLength);
     }
 
-    _u8ToRawValue(byteLength: number, u8: Uint8Array): number {
+    _u8ToRawValue(u8: Uint8Array, byteLength: number): number {
         let value = 0;
         for (let i = 0; i < u8.byteLength; i++) {
             value *= 256;
