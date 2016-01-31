@@ -1,16 +1,16 @@
-import VarDecimal from "./VarDecimal";
+import Decimal from "./Decimal";
 
-class VarBitDecimal extends VarDecimal {
+class VarBitDecimal extends Decimal {
 
     constructor(nullable: boolean, min: number, max: number, precision: number = 0) {
         super(nullable, min, max, precision);
+        this._controlBitLength = this._computeBitLength(this._valueBitLength);
     }
 
-    _getRawValue(): number {
-        const rawValue = super._getRawValue();
-        this._controlValue = this._computeBitLength(rawValue);
-        this._valueBitLength = this._controlValue;
-        return rawValue;
+    _setRawValue(rawValue: number): void {
+        this._valueBitLength = this._computeBitLength(rawValue);
+        this._controlValue = this._computeBitLength(this._valueBitLength);
+        super._setRawValue(rawValue);
     }
 
 }

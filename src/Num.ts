@@ -3,8 +3,9 @@ import Bits from "./Bits";
 abstract class Num extends Bits<number> {
     static _isBigEndian: boolean;
 
-    constructor(nullable: boolean, controlBitLength: number) {
-        super(nullable, controlBitLength);
+    constructor(nullable: boolean) {
+        super(nullable);
+        this._controlBitLength = 0;
 
         if (Num._isBigEndian != null) {
             return;
@@ -27,7 +28,7 @@ abstract class Num extends Bits<number> {
     }
 
     _computeBitLength(value: number): number {
-        return Math.floor(Math.log(value) / Math.LN2) + 1;
+        return Math.ceil(Math.log(value) / Math.LN2);
     }
 }
 

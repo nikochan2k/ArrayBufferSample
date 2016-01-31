@@ -1,15 +1,15 @@
 import Num from "./Num";
 
 class Decimal extends Num {
-    static _POW_2_53 = Math.pow(2, 53);
+    static _DECIMAL_MAX = 9007199254740991;
 
     _min: number;
     _max: number;
     _precision: number;
     _rawMax: number;
 
-    constructor(nullable: boolean, min: number, max: number, precision: number = 0) {
-        super(nullable, 0);
+    constructor(nullable: boolean, min: number, max: number, precision = 0) {
+        super(nullable);
         if (max < min) {
             throw new RangeError("max: " + max + " < min: " + min);
         }
@@ -21,14 +21,14 @@ class Decimal extends Num {
         this._precision = precision ? precision : this._computePrecision();
         const difference = max - min;
         this._rawMax = Math.floor(difference / this._precision);
-        let valueBitLength = this._computeBitLength(this._rawMax);
-        if (this._rawMax < Decimal._POW_2_53) {
+        let valueBitLength = this._computeBitLength(this._rawMax + 1);
+        if (this._rawMax <= Decimal._DECIMAL_MAX) {
             if (53 < valueBitLength) {
                 valueBitLength = 53;
             }
         } else {
             throw new RangeError("bitsMax: " + this._rawMax
-                + " sould be less than " + Decimal._POW_2_53 + ".");
+                + " sould be less than " + Decimal._DECIMAL_MAX + ".");
         }
         this._valueBitLength = valueBitLength;
     }

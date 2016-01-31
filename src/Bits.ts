@@ -6,13 +6,8 @@ abstract class Bits<T> extends Particle<T> {
     _controlValue: number;
     _valueBitLength: number;
 
-    constructor(nullable: boolean, controlBitLength: number) {
-        if (8 < controlBitLength) {
-            throw new RangeError("controlBitLength: " + controlBitLength
-                + " less equal than 8");
-        }
+    constructor(nullable: boolean) {
         super(nullable);
-        this._controlBitLength = controlBitLength;
     }
 
     _valueToU8(value: number, bitLength: number): Uint8Array {
@@ -47,7 +42,7 @@ abstract class Bits<T> extends Particle<T> {
         }
         if (0 < this._controlBitLength) {
             preambleBitLength += this._controlBitLength;
-            preambleValue = (preambleValue << this._controlBitLength) & this._controlValue;
+            preambleValue = (preambleValue << this._controlBitLength) | this._controlValue;
         }
         if (0 < preambleBitLength) {
             const u8 = this._valueToU8(preambleValue, preambleBitLength);
@@ -76,7 +71,6 @@ abstract class Bits<T> extends Particle<T> {
             const u8 = binary.readU8(this._controlBitLength);
             const byteLength = Math.ceil(this._controlBitLength / 8);
             this._controlValue = this._u8ToRawValue(u8, byteLength);
-            this._valueBitLength = this._controlValue;
         }
         return true;
     }

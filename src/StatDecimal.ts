@@ -9,7 +9,8 @@ class StatDecimal extends Num {
 
     constructor(nullable: boolean, mean: number, sigma: number,
         precision: number, bitGroupLength = 2) {
-        super(nullable, 3);
+        super(nullable);
+        this._controlBitLength = 3;
         if (sigma <= 0) {
             throw new RangeError("sigma: " + sigma + " must be greater than 0.");
         }
@@ -49,7 +50,7 @@ class StatDecimal extends Num {
         // value
         const absDifference = Math.abs(difference);
         const value = Math.round(absDifference / this._sigma / this._precision);
-        const valueBitLength = this._computeBitLength(value);
+        const valueBitLength = this._computeBitLength(value + 1);
 
         // control value and bit length
         const threshold = (1 << this._bitGroupLength) - 1;

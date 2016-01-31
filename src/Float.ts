@@ -4,7 +4,7 @@ class Float extends Num {
     _byteLength: number;
 
     constructor(nullable: boolean, isDouble: boolean = true) {
-        super(nullable, 0);
+        super(nullable);
         this._valueBitLength = (isDouble ? 64 : 32);
         this._byteLength = Math.floor(this._valueBitLength / 8);
     }

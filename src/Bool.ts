@@ -2,7 +2,8 @@ import Bits from "./Bits";
 
 class Bool extends Bits<boolean> {
     constructor(nullable: boolean) {
-        super(nullable, 0);
+        super(nullable);
+        this._controlBitLength = 0;
         this._valueBitLength = 1;
     }
 
