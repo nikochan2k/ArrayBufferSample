@@ -22,11 +22,7 @@ class Decimal extends Num {
         const difference = max - min;
         this._rawMax = Math.floor(difference / this._precision);
         let valueBitLength = this._computeBitLength(this._rawMax + 1);
-        if (this._rawMax <= Decimal._DECIMAL_MAX) {
-            if (53 < valueBitLength) {
-                valueBitLength = 53;
-            }
-        } else {
+        if (53 < valueBitLength) {
             throw new RangeError("bitsMax: " + this._rawMax
                 + " sould be less than " + Decimal._DECIMAL_MAX + ".");
         }
