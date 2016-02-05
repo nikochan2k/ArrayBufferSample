@@ -27,8 +27,8 @@ abstract class Num extends Bits<number> {
         return str.length - index - 1;
     }
 
-    _computeBitLength(value: number): number {
-        return Math.ceil(Math.log(value) / Math.LN2);
+    _computeBitLength(num: number): number {
+        return Math.ceil(Math.log(num) / Math.LN2);
     }
 }
 
