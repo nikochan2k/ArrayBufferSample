@@ -22,7 +22,7 @@ abstract class Bits<T> extends Particle<T> {
         const u8 = new Uint8Array(buffer);
 
         for (let i = byteLength - 1; 0 <= i; i--) {
-            const byteValue = rawValue & 0xFF;
+            const byteValue = rawValue % 256;
             u8[i] = byteValue;
             rawValue = Math.floor(rawValue / 256);
         }

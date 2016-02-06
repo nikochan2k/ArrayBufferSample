@@ -24,6 +24,13 @@ class Decimal extends Num {
         super(nullable);
     }
 
+    _computePrecision(): number {
+        const minLen = this._decimalLen(this._min);
+        const maxLen = this._decimalLen(this._max);
+        const len = minLen < maxLen ? maxLen : minLen;
+        return Math.pow(10, -len);
+    }
+
     _validateRawMax(): void {
         if (Decimal._DECIMAL_MAX < this._rawMax) {
             throw new RangeError("rawMax: " + this._rawMax
@@ -36,17 +43,10 @@ class Decimal extends Num {
         this._controlBitLength = 0;
     }
 
-    _computePrecision(): number {
-        const minLen = this._decimalLen(this._min);
-        const maxLen = this._decimalLen(this._max);
-        const len = minLen < maxLen ? maxLen : minLen;
-        return Math.pow(10, -len);
-    }
-
     _setRawValue(rawValue: number): void {
-        this._rawValue = rawValue;
         const value = rawValue * this._precision + this._min;
         this._validateValue(value);
+        this._rawValue = rawValue;
         super.setValue(value);
     }
 

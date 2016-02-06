@@ -35,7 +35,7 @@ class Float extends Num {
     }
 
     _setRawValue(rawValue: number) {
-
+        // do nothing.
     }
 
     _swap(u8: Uint8Array): void {
