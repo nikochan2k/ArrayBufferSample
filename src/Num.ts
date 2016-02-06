@@ -4,18 +4,15 @@ abstract class Num extends Bits<number> {
     static _isBigEndian: boolean;
 
     constructor(nullable: boolean) {
-        super(nullable);
-        this._controlBitLength = 0;
-
-        if (Num._isBigEndian != null) {
-            return;
+        if (Num._isBigEndian == null) {
+            const buf = new ArrayBuffer(2);
+            const u16 = new Uint16Array(buf);
+            u16[0] = 1;
+            const u8 = new Uint8Array(buf);
+            Num._isBigEndian = (u8[0] === 0);
         }
 
-        const buf = new ArrayBuffer(2);
-        const u16 = new Uint16Array(buf);
-        u16[0] = 1;
-        const u8 = new Uint8Array(buf);
-        Num._isBigEndian = (u8[0] === 0);
+        super(nullable);
     }
 
     _decimalLen(value: number): number {

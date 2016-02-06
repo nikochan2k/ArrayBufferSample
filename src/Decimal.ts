@@ -9,7 +9,6 @@ class Decimal extends Num {
     _rawMax: number;
 
     constructor(nullable: boolean, min: number, max: number, precision = 0) {
-        super(nullable);
         if (max < min) {
             throw new RangeError("max: " + max + " < min: " + min);
         }
@@ -21,12 +20,20 @@ class Decimal extends Num {
         this._precision = precision ? precision : this._computePrecision();
         const difference = max - min;
         this._rawMax = Math.floor(difference / this._precision);
-        let valueBitLength = this._computeBitLength(this._rawMax + 1);
-        if (53 < valueBitLength) {
-            throw new RangeError("bitsMax: " + this._rawMax
+        this._validateRawMax();
+        super(nullable);
+    }
+
+    _validateRawMax(): void {
+        if (Decimal._DECIMAL_MAX < this._rawMax) {
+            throw new RangeError("rawMax: " + this._rawMax
                 + " sould be less than " + Decimal._DECIMAL_MAX + ".");
         }
-        this._valueBitLength = valueBitLength;
+    }
+
+    _constructBitLength(): void {
+        this._valueBitLength = this._computeBitLength(this._rawMax + 1);
+        this._controlBitLength = 0;
     }
 
     _computePrecision(): number {

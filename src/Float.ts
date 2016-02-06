@@ -2,17 +2,23 @@ import Binary from "./Binary";
 import Num from "./Num";
 
 class Float extends Num {
-    _byteLength: number;
+    _double: boolean;
+    _valueByteLength: number;
 
-    constructor(nullable: boolean, isDouble: boolean = true) {
+    constructor(nullable: boolean, double: boolean = true) {
+        this._double = double;
         super(nullable);
-        this._valueBitLength = (isDouble ? 64 : 32);
-        this._byteLength = Math.floor(this._valueBitLength / 8);
+    }
+
+    _constructBitLength(): void {
+        this._valueBitLength = (this._double ? 64 : 32);
+        this._valueByteLength = (this._double ? 8 : 4);
+        this._controlBitLength = 0;
     }
 
     _writeRawValue(binary: Binary): void {
-        const buffer = new ArrayBuffer(this._byteLength);
-        const f = this._byteLength === 8
+        const buffer = new ArrayBuffer(this._valueByteLength);
+        const f = this._valueByteLength === 8
             ? new Float64Array(buffer) : new Float32Array(buffer);
         f[0] = this.getValue();
         const u8 = new Uint8Array(buffer);
@@ -23,12 +29,12 @@ class Float extends Num {
     _readRawValue(binary: Binary): void {
         const u8 = binary.readU8(this._valueBitLength);
         this._swap(u8);
-        const f = (this._byteLength === 8)
+        const f = (this._valueByteLength === 8)
             ? new Float64Array(u8.buffer) : new Float32Array(u8.buffer);
         super.setValue(f[0]);
     }
 
-    _setRawValue(rawValue: number)  {
+    _setRawValue(rawValue: number) {
 
     }
 
@@ -37,9 +43,9 @@ class Float extends Num {
             return;
         }
 
-        const end = this._byteLength / 2;
+        const end = this._valueByteLength / 2;
         for (let lhs = 0; lhs < end; lhs++) {
-            const rhs = this._byteLength - lhs - 1;
+            const rhs = this._valueByteLength - lhs - 1;
             this._swapByte(u8, lhs, rhs);
         }
     }

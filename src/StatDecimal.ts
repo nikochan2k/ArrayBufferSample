@@ -10,7 +10,6 @@ class StatDecimal extends Num {
     constructor(nullable: boolean, mean: number, sigma: number,
         precision: number, bitGroupLength = 2) {
         super(nullable);
-        this._controlBitLength = 3;
         if (sigma <= 0) {
             throw new RangeError("sigma: " + sigma + " must be greater than 0.");
         }
@@ -26,6 +25,11 @@ class StatDecimal extends Num {
         this._sigma = sigma;
         this._precision = precision;
         this._bitGroupLength = bitGroupLength;
+    }
+
+    _constructBitLength(): void  {
+        this._valueBitLength = 1;
+        this._controlBitLength = 3;
     }
 
     write(binary: Binary): void {
@@ -67,11 +71,6 @@ class StatDecimal extends Num {
         // write value
         const u8Value = this._rawValueToU8(value, valueBitLength);
         binary.writeU8(u8Value, this._valueBitLength);
-    }
-
-    _getRawValue(): number {
-        // No implementation
-        return undefined;
     }
 
     _read(binary: Binary): void {

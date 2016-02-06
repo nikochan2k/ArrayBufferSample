@@ -1,6 +1,8 @@
 import Decimal from "../src/Decimal";
 import Binary from "../src/Binary";
 
+const decimal = new Decimal(false, 0, 2);
+
 const binary = new Binary(11);
 const u8 = binary.u8;
 u8[0] = parseInt("00000011", 2);

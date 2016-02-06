@@ -43,6 +43,7 @@
         "src/Text.ts",
         "src/VarBitDecimal.ts",
         "src/VarByteDecimal.ts",
+        "src/VarDecimal.ts",
         "test/Bool.ts",
         "test/Decimal.ts",
         "test/Float.ts",
