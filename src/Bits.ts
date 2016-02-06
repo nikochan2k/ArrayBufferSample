@@ -5,29 +5,29 @@ abstract class Bits<T> extends Particle<T> {
     _controlBitLength: number;
     _controlValue: number;
     _valueBitLength: number;
+    _rawValue: number;
 
     constructor(nullable: boolean) {
         super(nullable);
+        this._rawValue = 0;
     }
 
-    _valueToU8(value: number, bitLength: number): Uint8Array {
+    _rawValueToU8(rawValue: number, bitLength: number): Uint8Array {
         const byteLength = Math.ceil(bitLength / 8);
         const buffer = new ArrayBuffer(byteLength);
         const u8 = new Uint8Array(buffer);
 
         for (let i = byteLength - 1; 0 <= i; i--) {
-            const byteValue = value & 0xFF;
+            const byteValue = rawValue & 0xFF;
             u8[i] = byteValue;
-            value = Math.floor(value / 256);
+            rawValue = Math.floor(rawValue / 256);
         }
         return u8;
     }
 
-    abstract _getRawValue(): number;
-
     write(binary: Binary): void {
         this._writePreamble(binary);
-        if (this.getValue() != null) {
+        if (!this._nullable || this.getValue() != null) {
             this._writeRawValue(binary);
         }
     }
@@ -45,13 +45,13 @@ abstract class Bits<T> extends Particle<T> {
             preambleValue = (preambleValue << this._controlBitLength) | this._controlValue;
         }
         if (0 < preambleBitLength) {
-            const u8 = this._valueToU8(preambleValue, preambleBitLength);
+            const u8 = this._rawValueToU8(preambleValue, preambleBitLength);
             binary.writeU8(u8, preambleBitLength);
         }
     }
 
     _writeRawValue(binary: Binary): void {
-        const u8 = this._valueToU8(this._getRawValue(), this._valueBitLength);
+        const u8 = this._rawValueToU8(this._rawValue, this._valueBitLength);
         binary.writeU8(u8, this._valueBitLength);
     }
 

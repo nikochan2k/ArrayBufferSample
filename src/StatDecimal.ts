@@ -61,11 +61,11 @@ class StatDecimal extends Num {
         controlValue += tempValue;
 
         // write control value
-        const u8Control = this._valueToU8(controlValue, controlBitLength);
+        const u8Control = this._rawValueToU8(controlValue, controlBitLength);
         binary.writeU8(u8Control, controlBitLength);
 
         // write value
-        const u8Value = this._valueToU8(value, valueBitLength);
+        const u8Value = this._rawValueToU8(value, valueBitLength);
         binary.writeU8(u8Value, this._valueBitLength);
     }
 

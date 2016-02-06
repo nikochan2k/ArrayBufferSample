@@ -1,3 +1,4 @@
+import Binary from "./Binary";
 import Num from "./Num";
 
 class Float extends Num {
@@ -9,32 +10,29 @@ class Float extends Num {
         this._byteLength = Math.floor(this._valueBitLength / 8);
     }
 
-    _valueToU8(value: number, bitLength: number): Uint8Array {
+    _writeRawValue(binary: Binary): void {
         const buffer = new ArrayBuffer(this._byteLength);
         const f = this._byteLength === 8
             ? new Float64Array(buffer) : new Float32Array(buffer);
-        f[0] = value;
+        f[0] = this.getValue();
         const u8 = new Uint8Array(buffer);
-        this._toNetworkByteOrder(u8);
-        return u8;
+        this._swap(u8);
+        binary.writeU8(u8, this._valueBitLength);
     }
 
-    _getRawValue(): number {
-        return this.getValue();
-    }
-
-    _u8ToValue(u8: Uint8Array, byteLength: number): number {
-        this._toNetworkByteOrder(u8);
-        const f = (byteLength === 8)
+    _readRawValue(binary: Binary): void {
+        const u8 = binary.readU8(this._valueBitLength);
+        this._swap(u8);
+        const f = (this._byteLength === 8)
             ? new Float64Array(u8.buffer) : new Float32Array(u8.buffer);
-        return f[0];
+        super.setValue(f[0]);
     }
 
-    _setRawValue(rawValue: number): void {
-        this.setValue(rawValue);
+    _setRawValue(rawValue: number)  {
+
     }
 
-    _toNetworkByteOrder(u8: Uint8Array): void {
+    _swap(u8: Uint8Array): void {
         if (Num._isBigEndian) {
             return;
         }
@@ -42,11 +40,11 @@ class Float extends Num {
         const end = this._byteLength / 2;
         for (let lhs = 0; lhs < end; lhs++) {
             const rhs = this._byteLength - lhs - 1;
-            this._swap(u8, lhs, rhs);
+            this._swapByte(u8, lhs, rhs);
         }
     }
 
-    _swap(u8platform: Uint8Array, lhs: number, rhs: number): void {
+    _swapByte(u8platform: Uint8Array, lhs: number, rhs: number): void {
         const temp = u8platform[lhs];
         u8platform[lhs] = u8platform[rhs];
         u8platform[rhs] = temp;

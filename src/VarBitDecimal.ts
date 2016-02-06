@@ -8,9 +8,18 @@ class VarBitDecimal extends Decimal {
     }
 
     _setRawValue(rawValue: number): void {
-        this._valueBitLength = this._computeBitLength(rawValue);
-        this._controlValue = this._computeBitLength(this._valueBitLength);
         super._setRawValue(rawValue);
+        this._computeControlValue();
+    }
+
+    setValue(value: number): void {
+        super.setValue(value);
+        this._computeControlValue();
+    }
+
+    _computeControlValue() {
+        this._valueBitLength = this._computeBitLength(this._rawValue + 1);
+        this._controlValue = this._computeBitLength(this._valueBitLength);
     }
 
 }

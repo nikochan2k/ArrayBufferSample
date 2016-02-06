@@ -7,12 +7,14 @@ class Bool extends Bits<boolean> {
         this._valueBitLength = 1;
     }
 
-    _getRawValue() {
-        return this.getValue() ? 1 : 0;
+    _setRawValue(rawValue: number) {
+        this._rawValue = rawValue;
+        super.setValue(rawValue === 1);
     }
 
-    _setRawValue(rawValue: number) {
-        this.setValue(rawValue === 1);
+    setValue(value: boolean)  {
+        super.setValue(value);
+        this._rawValue = value ? 1 : 0;
     }
 
 }

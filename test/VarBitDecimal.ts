@@ -40,4 +40,23 @@ describe("VarBitDecimal", () => {
             assert.equal(decimal._controlBitLength, 6);
         });
     });
+
+    context("write and read float value", () => {
+        const binary = new Binary(1);
+        const dw = new VarBitDecimal(false, 0, 255);
+        dw.setValue(1);
+        dw.write(binary);
+
+        it("byteOffset", () => {
+            assert.equal(binary.byteOffset, 0);
+        });
+
+        it("bitOffset", () => {
+            assert.equal(binary.bitOffset, 4);
+        });
+
+        it("value", () => {
+            assert.equal(binary.u8[0], parseInt("00110000", 2));
+        });
+    });
 });

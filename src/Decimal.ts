@@ -36,24 +36,28 @@ class Decimal extends Num {
         return Math.pow(10, -len);
     }
 
+    _setRawValue(rawValue: number): void {
+        this._rawValue = rawValue;
+        const value = rawValue * this._precision + this._min;
+        this._validateValue(value);
+        super.setValue(value);
+    }
+
     setValue(value: number): void {
+        this._validateValue(value);
+        super.setValue(value);
+        this._rawValue = Math.floor((value - this._min) / this._precision);
+    }
+
+    _validateValue(value: number): void {
         if (value < this._min) {
             throw new RangeError("\"" + value + "\" is less than minimum value \"" + this._min + "\".");
         }
         if (this._max < value) {
             throw new RangeError("\"" + value + "\" is greater than maximum value \"" + this._max + "\".");
         }
-        super.setValue(value);
     }
 
-    _getRawValue(): number {
-        return Math.floor((this.getValue() - this._min) / this._precision);
-    }
-
-    _setRawValue(rawValue: number): void {
-        const value = rawValue * this._precision + this._min;
-        this.setValue(value);
-    }
 }
 
 export default Decimal;
