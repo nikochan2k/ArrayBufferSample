@@ -75,8 +75,13 @@ abstract class Bits<T> extends Particle<T> {
             const u8 = binary.readU8(this._controlBitLength);
             const byteLength = Math.ceil(this._controlBitLength / 8);
             this._controlValue = this._u8ToRawValue(u8, byteLength);
+            this._controlValueToValueBitLength();
         }
         return true;
+    }
+
+    _controlValueToValueBitLength(): void {
+
     }
 
     _readRawValue(binary: Binary): void {

@@ -7,8 +7,14 @@ class VarByteDecimal extends VarDecimal {
     }
 
     _computeControlValue(): void {
-        this._valueBitLength = this._computeBitLength(this._rawValue + 1);
-        this._controlValue = Math.ceil(this._valueBitLength / 8);
+        const valueBitLength = this._computeBitLength(this._rawValue + 1);
+        const controlValue = Math.ceil(valueBitLength / 8)
+        this._valueBitLength = controlValue * 8;
+        this._controlValue = controlValue - 1;
+    }
+
+    _controlValueToValueBitLength(): void {
+        this._valueBitLength = (this._controlValue + 1) * 8;
     }
 
 }

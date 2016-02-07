@@ -41,11 +41,11 @@ describe("VarBitDecimal", () => {
         });
     });
 
-    context("write and read float value", () => {
+    context("write value", () => {
         const binary = new Binary(1);
-        const dw = new VarBitDecimal(false, 0, 255);
-        dw.setValue(1);
-        dw.write(binary);
+        const d = new VarBitDecimal(false, 0, 255);
+        d.setValue(1);
+        d.write(binary);
 
         it("byteOffset", () => {
             assert.equal(binary.byteOffset, 0);
@@ -56,7 +56,63 @@ describe("VarBitDecimal", () => {
         });
 
         it("value", () => {
-            assert.equal(binary.u8[0], parseInt("00110000", 2));
+            assert.equal(binary.u8[0], parseInt("00010000", 2));
+        });
+    });
+
+    context("write values", () => {
+        const binary = new Binary(4);
+        const d = new VarBitDecimal(false, 0, 65535);
+
+        it("write 1", () => {
+            d.setValue(1);
+            d.write(binary);
+            assert.equal(binary.u8[0], parseInt("00001000", 2));
+        });
+
+        it("write 2", () => {
+            d.setValue(2);
+            d.write(binary);
+            assert.equal(binary.u8[0], parseInt("00001000", 2));
+            assert.equal(binary.u8[1], parseInt("11000000", 2));
+        });
+
+        it("write 5", () => {
+            d.setValue(5);
+            d.write(binary);
+            assert.equal(binary.u8[0], parseInt("00001000", 2));
+            assert.equal(binary.u8[1], parseInt("11000101", 2));
+            assert.equal(binary.u8[2], parseInt("01000000", 2));
+        });
+    });
+
+    context("read values", () => {
+        const binary = new Binary(5);
+        binary.u8[0] = parseInt("00001000", 2);
+        binary.u8[1] = parseInt("11000101", 2);
+        binary.u8[2] = parseInt("01111111", 2);
+        binary.u8[3] = parseInt("11111111", 2);
+        binary.u8[4] = parseInt("11111100", 2);
+        const d = new VarBitDecimal(false, 0, 65535);
+
+        it("read 1", () => {
+            d.read(binary);
+            assert.equal(d.getValue(), 1);
+        });
+
+        it("read 2", () => {
+            d.read(binary);
+            assert.equal(d.getValue(), 2);
+        });
+
+        it("read 5", () => {
+            d.read(binary);
+            assert.equal(d.getValue(), 5);
+        });
+
+        it("read 65535", () => {
+            d.read(binary);
+            assert.equal(d.getValue(), 65535);
         });
     });
 });

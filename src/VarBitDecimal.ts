@@ -8,7 +8,11 @@ class VarBitDecimal extends VarDecimal {
 
     _computeControlValue(): void {
         this._valueBitLength = this._computeBitLength(this._rawValue + 1);
-        this._controlValue = this._valueBitLength;
+        this._controlValue = this._valueBitLength - 1;
+    }
+
+    _controlValueToValueBitLength(): void {
+        this._valueBitLength = this._controlValue + 1;
     }
 
 }
