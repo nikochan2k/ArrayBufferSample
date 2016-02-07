@@ -115,4 +115,39 @@ describe("VarBitDecimal", () => {
             assert.equal(d.getValue(), 65535);
         });
     });
+
+    context("write and read values", () => {
+        const binary = new Binary(5);
+        const d = new VarBitDecimal(false, 0, 65535);
+        d.setValue(1);
+        d.write(binary);
+        d.setValue(2);
+        d.write(binary);
+        d.setValue(5);
+        d.write(binary);
+        d.setValue(65535);
+        d.write(binary);
+        binary.byteOffset = 0;
+        binary.bitOffset = 0;
+
+        it("read 1", () => {
+            d.read(binary);
+            assert.equal(d.getValue(), 1);
+        });
+
+        it("read 2", () => {
+            d.read(binary);
+            assert.equal(d.getValue(), 2);
+        });
+
+        it("read 5", () => {
+            d.read(binary);
+            assert.equal(d.getValue(), 5);
+        });
+
+        it("read 65535", () => {
+            d.read(binary);
+            assert.equal(d.getValue(), 65535);
+        });
+    });
 });

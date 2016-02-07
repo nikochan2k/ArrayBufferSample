@@ -13,15 +13,16 @@ class Binary {
     }
 
     writeU8(u8: Uint8Array, bitLength: number): void {
-        // bitOffset     used          sum shift result             next
-        // 1"oxxxxxxx" - 7"xooooooo" = 8   0     oooooooo           0
-        // 1"oxxxxxxx" - 5"xxxooooo" = 6   -2    ooooooxx           6
-        // 3"oooxxxxx" - 7"xooooooo" = 10  2     oooooooo ooxxxxxx  2
-        const used = bitLength % 8;
-        const sum = this.bitOffset + used;
+        // bitOffset    bitLength              sum shift result             next
+        // 1"oxxxxxxx"  7"xooooooo"          = 8   0     oooooooo           0
+        // 1"oxxxxxxx"  5"xxxooooo"          = 6   -2    ooooooxx           6
+        // 3"oooxxxxx"  7"xooooooo"          = 10  2     oooooooo ooxxxxxx  2
+        // 6"ooooooxx"  8"oooooooo"          = 14  6     oooooooo ooooooxx  6
+        // 0"xxxxxxxx" 10"xxxxxxoo oooooooo" = 10  -6    oooooooo ooxxxxxx  2
+        const sum = this.bitOffset + bitLength;
         const nextBitOffset = sum % 8;
         if (nextBitOffset !== 0) {
-            const shift = sum - 8;
+            const shift = sum - u8.byteLength * 8;
             if (shift < 0) {
                 this._writeU8WithLeftBitShift(u8, -shift);
             } else {
