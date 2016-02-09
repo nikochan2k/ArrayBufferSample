@@ -110,15 +110,15 @@ class Binary {
         const right = 7 - this.bitOffset;
         const bit = (this.u8[this.byteOffset] >> right) & 0x1;
         this._forwardBits(1);
-        if (this.bitOffset === 0) {
-            this.byteOffset++;
-        }
         return bit;
     }
 
     _forwardBits(bitLength: number): void {
         const bitOffset = this.bitOffset + bitLength;
         this.bitOffset = bitOffset % 8;
+        if (this.bitOffset === 0) {
+            this.byteOffset++;
+        }
     }
 
 }

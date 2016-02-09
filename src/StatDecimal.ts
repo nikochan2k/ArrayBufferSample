@@ -85,13 +85,13 @@ class StatDecimal extends Num {
         let temp: number;
         do {
             const u8 = binary.readU8(this._bitGroupLength);
-            temp = this._u8ToValue(u8, this._bitGroupLength);
+            temp = this._u8ToRawValue(u8);
             valueBitLength += temp;
         } while (temp === threshold);
 
         const sign = signBit ? -1 : 1;
         const u8 = binary.readU8(valueBitLength);
-        const rawValue = this._u8ToValue(u8, valueBitLength);
+        const rawValue = this._u8ToRawValue(u8);
         const difference = sign * rawValue * this._sigma * this._precision;
         const value = difference + this._mean;
         this.setValue(value);
