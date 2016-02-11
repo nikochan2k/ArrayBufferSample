@@ -66,8 +66,19 @@ function log2OrNlz()  {
     });
 }
 
+function shiftOrPow(){
+    benchmark("shift", () => {
+        1 << 8;
+    });
+
+    benchmark("pow", () => {
+        Math.pow(2, 8);
+    });
+}
+
 benchmark(null, () => {  });
 log2OrNlz();
 modOrMask();
 divideOrRightShift();
 multiplyOrLeftShift();
+shiftOrPow();
