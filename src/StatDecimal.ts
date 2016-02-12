@@ -31,9 +31,12 @@ class StatDecimal extends Num {
     }
 
     _constructBitLength(): void {
-        this._baseValueBitLength = this._computeBitLength(this._sigma + 1);
+        this._baseValueBitLength = Math.floor(Math.log(this._sigma + 1) / Math.LN2);
+        if (this._baseValueBitLength === 0) {
+            this._baseValueBitLength = 1;
+        }
         this._valueBitLength = this._baseValueBitLength;
-        this._controlBitLength = 3; // sign bit and variable control bits
+        this._controlBitLength = 3; // variable control bits and sign bit
     }
 
     write(binary: Binary): void {
@@ -61,9 +64,9 @@ class StatDecimal extends Num {
         if (this._baseValueBitLength < this._valueBitLength) {
             const bitLengthDifference = this._valueBitLength - this._baseValueBitLength;
             const bitGroupCount = Math.ceil(bitLengthDifference / this._bitGroupMax);
-            variableBitLength += bitGroupCount * this._bitGroupLength;
+            variableBitLength = bitGroupCount * this._bitGroupLength;
             variableBitValue = Math.pow(2, variableBitLength) - 1
-                - this._bitGroupMax + (value % this._bitGroupMax);
+                - this._bitGroupMax + (bitLengthDifference % this._bitGroupMax);
         } else {
             this._valueBitLength = this._baseValueBitLength;
         }
