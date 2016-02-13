@@ -10,7 +10,7 @@ function benchmark(description: string, action: Action): void {
         action();
     }
     const end = new Date();
-    if  (description ) {
+    if (description) {
         console.log(description + ": " + (end.getTime() - start.getTime()) + "ms");
     }
 }
@@ -48,7 +48,7 @@ function multiplyOrLeftShift() {
     });
 }
 
-function log2OrNlz()  {
+function log2OrNlz() {
     'use strict';
     const buffer = new ArrayBuffer(8);
     const f64 = new Float64Array(buffer);
@@ -66,7 +66,8 @@ function log2OrNlz()  {
     });
 }
 
-function shiftOrPow(){
+function shiftOrPow() {
+    "use strict";
     benchmark("shift", () => {
         1 << 8;
     });
@@ -76,7 +77,7 @@ function shiftOrPow(){
     });
 }
 
-benchmark(null, () => {  });
+benchmark(null, () => { });
 log2OrNlz();
 modOrMask();
 divideOrRightShift();

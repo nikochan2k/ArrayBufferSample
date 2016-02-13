@@ -12,11 +12,11 @@ class Bool extends Bits<boolean> {
 
     _setRawValue(rawValue: number) {
         this._rawValue = rawValue;
-        super.setValue(rawValue === 1);
+        super._setValue(rawValue === 1);
     }
 
     setValue(value: boolean) {
-        super.setValue(value);
+        super._setValue(value);
         this._rawValue = value ? 1 : 0;
     }
 

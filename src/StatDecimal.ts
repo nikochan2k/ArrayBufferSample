@@ -46,12 +46,12 @@ class StatDecimal extends Num {
         // nullable
         if (this._nullable) {
             this._controlBitLength = 1;
-            if (this.getValue() != null) {
+            if (this.value != null) {
                 this._controlValue = 2; // 1 << 1
             }
         }
 
-        const difference = this.getValue() - this._mean;
+        const difference = this.value - this._mean;
 
         // value
         const absDifference = Math.abs(difference);
@@ -110,7 +110,7 @@ class StatDecimal extends Num {
         this._rawValue = sign * this._u8ToRawValue(u8);
         const difference = this._rawValue * this._precision;
         const value = difference + this._mean;
-        this.setValue(value);
+        this.value = value;
     }
 
     _setRawValue(rawValue: number): void {

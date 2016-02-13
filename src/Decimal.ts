@@ -47,12 +47,12 @@ class Decimal extends Num {
         const value = rawValue * this._precision + this._min;
         this._validateValue(value);
         this._rawValue = rawValue;
-        super.setValue(value);
+        super._setValue(value);
     }
 
-    setValue(value: number): void {
+    _setValue(value: number): void {
         this._validateValue(value);
-        super.setValue(value);
+        super._setValue(value);
         this._rawValue = Math.floor((value - this._min) / this._precision);
     }
 

@@ -8,11 +8,19 @@ abstract class Particle<T> {
         this._nullable = nullable;
     }
 
-    setValue(value: T): void {
+    get value(): T {
+        return this._getValue();
+    }
+
+    set value(v: T) {
+        this._setValue(v);
+    }
+
+    _setValue(value: T): void {
         this._value = value;
     }
 
-    getValue(): T {
+    _getValue(): T {
         return this._value;
     }
 

@@ -10,7 +10,7 @@ class Binary {
         if (typeof data === "number") {
             this._u8 = new Uint8Array(data as number);
         } else if (data instanceof ArrayBuffer) {
-            this._u8 = new Uint8Array(data as ArrayBuffer)
+            this._u8 = new Uint8Array(data as ArrayBuffer);
         } else {
             throw new RangeError("Illegal data type");
         }

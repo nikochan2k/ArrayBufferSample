@@ -99,26 +99,26 @@ describe("Decimal", () => {
     context("value", () => {
         it("8bit, center value", () => {
             const decimal = new Decimal(false, -128, 127);
-            decimal.setValue(0);
+            decimal.value = 0;
             assert.equal(decimal._rawValue, 128);
         });
 
         it("8bit, minimum value", () => {
             const decimal = new Decimal(false, -128, 127);
-            decimal.setValue(-128);
+            decimal.value = -128;
             assert.equal(decimal._rawValue, 0);
         });
 
         it("8bit, maximum value", () => {
             const decimal = new Decimal(false, -128, 127);
-            decimal.setValue(127);
+            decimal.value = 127;
             assert.equal(decimal._rawValue, 255);
         });
 
         it("8bit, less than minimum value", () => {
             const decimal = new Decimal(false, -128, 127);
             try {
-                decimal.setValue(-129);
+                decimal.value = -129;
                 assert.fail();
             } catch (e) {
                 assert.ok("Catch exception");
@@ -128,7 +128,7 @@ describe("Decimal", () => {
         it("8bit, more than maximum value", () => {
             const decimal = new Decimal(false, -128, 127);
             try {
-                decimal.setValue(128);
+                decimal.value = 128;
                 assert.fail();
             } catch (e) {
                 assert.ok("Catch exception");
@@ -137,7 +137,7 @@ describe("Decimal", () => {
 
         it("With step", () => {
             const decimal = new Decimal(false, -1, 100, 0.1);
-            decimal.setValue(100);
+            decimal.value = 100;
             assert.equal(decimal._rawValue, 1010);
         });
     });
@@ -145,7 +145,7 @@ describe("Decimal", () => {
     context("set byte value and write", () => {
         const binary = new Binary(2);
         const decimal = new Decimal(false, -16, 15);
-        decimal.setValue(0);
+        decimal.value = 0;
         decimal.write(binary);
 
         it("byteOffset", () => {
@@ -164,9 +164,9 @@ describe("Decimal", () => {
     context("set byte values and write", () => {
         const binary = new Binary(2);
         const decimal = new Decimal(false, -16, 15);
-        decimal.setValue(-16);
+        decimal.value = -16;
         decimal.write(binary);
-        decimal.setValue(15);
+        decimal.value = 15;
         decimal.write(binary);
 
         it("byteOffset", () => {
@@ -186,9 +186,9 @@ describe("Decimal", () => {
     context("set short values and write", () => {
         const binary = new Binary(3);
         const decimal = new Decimal(false, 0, 1023);
-        decimal.setValue(682);
+        decimal.value = 682;
         decimal.write(binary);
-        decimal.setValue(1023);
+        decimal.value = 1023;
         decimal.write(binary);
 
         it("byteOffset", () => {
@@ -209,7 +209,7 @@ describe("Decimal", () => {
     context("set long value and write", () => {
         const binary = new Binary(7);
         const decimal = new Decimal(false, 0, 9007199254740991);
-        decimal.setValue(9007199254740991);
+        decimal.value = 9007199254740991;
         decimal.write(binary);
 
         it("byteOffset", () => {
@@ -235,9 +235,9 @@ describe("Decimal", () => {
         const binary = new Binary(3);
         const decimal = new Decimal(true, 0, 1023);
         decimal.write(binary);
-        decimal.setValue(682);
+        decimal.value = 682;
         decimal.write(binary);
-        decimal.setValue(1023);
+        decimal.value = 1023;
         decimal.write(binary);
 
         it("byteOffset", () => {
@@ -266,7 +266,7 @@ describe("Decimal", () => {
             d.read(binary);
             assert.equal(binary._byteOffset, 1);
             assert.equal(binary._bitOffset, 3);
-            assert.equal(d.getValue(), 1023);
+            assert.equal(d.value, 1023);
         });
     });
 
@@ -290,7 +290,7 @@ describe("Decimal", () => {
             d.read(binary);
             assert.equal(binary._byteOffset, 0);
             assert.equal(binary._bitOffset, 1);
-            assert.equal(d.getValue(), undefined);
+            assert.equal(d.value, undefined);
         });
 
         it("byte value, min", () => {
@@ -298,7 +298,7 @@ describe("Decimal", () => {
             d.read(binary);
             assert.equal(binary._byteOffset, 0);
             assert.equal(binary._bitOffset, 6);
-            assert.equal(d.getValue(), -16);
+            assert.equal(d.value, -16);
         });
 
         it("nullable, short value, max", () => {
@@ -306,19 +306,19 @@ describe("Decimal", () => {
             d.read(binary);
             assert.equal(binary._byteOffset, 2);
             assert.equal(binary._bitOffset, 2);
-            assert.equal(d.getValue(), 1023);
+            assert.equal(d.value, 1023);
         });
 
         it("integer value, center", () => {
             const d = new Decimal(false, -32768, 32767);
             d.read(binary);
-            assert.equal(d.getValue(), 0);
+            assert.equal(d.value, 0);
         });
 
         it("long value, max", () => {
             const d = new Decimal(false, 0, 9007199254740991);
             d.read(binary);
-            assert.equal(d.getValue(), 9007199254740991);
+            assert.equal(d.value, 9007199254740991);
         });
 
     });

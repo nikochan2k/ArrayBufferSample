@@ -18,7 +18,7 @@ describe("Float", () => {
     context("write and read float value", () => {
         const binary = new Binary(4);
         const fw = new Float(false, false);
-        fw.setValue(1234567);
+        fw.value = 1234567;
         fw.write(binary);
 
         it("byteOffset", () => {
@@ -33,7 +33,7 @@ describe("Float", () => {
             binary._byteOffset = 0;
             const fr = new Float(false, false);
             fr.read(binary);
-            assert.equal(fr.getValue(), fw.getValue());
+            assert.equal(fr.value, fw.value);
         });
     });
 });

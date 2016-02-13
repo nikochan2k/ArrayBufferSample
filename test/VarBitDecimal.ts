@@ -97,22 +97,22 @@ describe("VarBitDecimal", () => {
 
         it("read 1", () => {
             d.read(binary);
-            assert.equal(d.getValue(), 1);
+            assert.equal(d.value, 1);
         });
 
         it("read 2", () => {
             d.read(binary);
-            assert.equal(d.getValue(), 2);
+            assert.equal(d.value, 2);
         });
 
         it("read 5", () => {
             d.read(binary);
-            assert.equal(d.getValue(), 5);
+            assert.equal(d.value, 5);
         });
 
         it("read 65535", () => {
             d.read(binary);
-            assert.equal(d.getValue(), 65535);
+            assert.equal(d.value, 65535);
         });
     });
 
@@ -132,22 +132,22 @@ describe("VarBitDecimal", () => {
 
         it("read 1", () => {
             d.read(binary);
-            assert.equal(d.getValue(), 1);
+            assert.equal(d.value, 1);
         });
 
         it("read 2", () => {
             d.read(binary);
-            assert.equal(d.getValue(), 2);
+            assert.equal(d.value, 2);
         });
 
         it("read 5", () => {
             d.read(binary);
-            assert.equal(d.getValue(), 5);
+            assert.equal(d.value, 5);
         });
 
         it("read 65535", () => {
             d.read(binary);
-            assert.equal(d.getValue(), 65535);
+            assert.equal(d.value, 65535);
         });
     });
 
@@ -170,32 +170,32 @@ describe("VarBitDecimal", () => {
 
         it("read null", () => {
             d.read(binary);
-            assert.equal(d.getValue(), undefined);
+            assert.equal(d.value, undefined);
         });
 
         it("read 1", () => {
             d.read(binary);
-            assert.equal(d.getValue(), 1);
+            assert.equal(d.value, 1);
         });
 
         it("read 2", () => {
             d.read(binary);
-            assert.equal(d.getValue(), 2);
+            assert.equal(d.value, 2);
         });
 
         it("read 5", () => {
             d.read(binary);
-            assert.equal(d.getValue(), 5);
+            assert.equal(d.value, 5);
         });
 
         it("read 65535", () => {
             d.read(binary);
-            assert.equal(d.getValue(), 65535);
+            assert.equal(d.value, 65535);
         });
 
         it("read 9007199254740991", () => {
             d.read(binary);
-            assert.equal(d.getValue(), 9007199254740991);
+            assert.equal(d.value, 9007199254740991);
         });
     });
 });

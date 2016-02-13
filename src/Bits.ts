@@ -31,7 +31,7 @@ abstract class Bits<T> extends Particle<T> {
 
     write(binary: Binary): void {
         this._writePreamble(binary);
-        if (!this._nullable || this.getValue() != null) {
+        if (!this._nullable || this.value != null) {
             this._writeRawValue(binary);
         }
     }
@@ -40,7 +40,7 @@ abstract class Bits<T> extends Particle<T> {
         let preambleBitLength = 0, preambleValue = 0, hasValue = false;
         if (this._nullable) {
             preambleBitLength = 1;
-            if (this.getValue() != null) {
+            if (this.value != null) {
                 preambleValue = 1;
                 hasValue = true;
             }
@@ -99,7 +99,7 @@ abstract class Bits<T> extends Particle<T> {
 
         const isNull = (binary.readBit() === 0);
         if (isNull) {
-            this.setValue(null);
+            this.value = null;
         }
         return isNull;
     }

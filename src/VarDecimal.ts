@@ -18,7 +18,7 @@ abstract class VarDecimal extends Decimal {
     }
 
     setValue(value: number): void {
-        super.setValue(value);
+        super._setValue(value);
         this._computeControlValue();
     }
 

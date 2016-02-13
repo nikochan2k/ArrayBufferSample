@@ -20,7 +20,7 @@ class Float extends Num {
         const buffer = new ArrayBuffer(this._valueByteLength);
         const f = this._valueByteLength === 8
             ? new Float64Array(buffer) : new Float32Array(buffer);
-        f[0] = this.getValue();
+        f[0] = this.value;
         const u8 = new Uint8Array(buffer);
         this._swap(u8);
         binary.writeU8(u8, this._valueBitLength);
@@ -31,7 +31,7 @@ class Float extends Num {
         this._swap(u8);
         const f = (this._valueByteLength === 8)
             ? new Float64Array(u8.buffer) : new Float32Array(u8.buffer);
-        super.setValue(f[0]);
+        super._setValue(f[0]);
     }
 
     _setRawValue(rawValue: number) {
