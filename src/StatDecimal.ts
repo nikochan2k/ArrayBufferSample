@@ -31,7 +31,7 @@ class StatDecimal extends Num {
     }
 
     _constructBitLength(): void {
-        this._baseValueBitLength = Math.floor(Math.log(this._sigma + 1) / Math.LN2);
+        this._baseValueBitLength = Math.floor(Math.log(this._sigma + 1) / Math.LN2) - 1;
         if (this._baseValueBitLength === 0) {
             this._baseValueBitLength = 1;
         }
@@ -63,7 +63,7 @@ class StatDecimal extends Num {
         let variableBitValue = 0;
         if (this._baseValueBitLength < this._valueBitLength) {
             const bitLengthDifference = this._valueBitLength - this._baseValueBitLength;
-            const bitGroupCount = Math.ceil(bitLengthDifference / this._bitGroupMax);
+            const bitGroupCount = Math.floor(bitLengthDifference / this._bitGroupMax) + 1;
             variableBitLength = bitGroupCount * this._bitGroupLength;
             variableBitValue = Math.pow(2, variableBitLength) - 1
                 - this._bitGroupMax + (bitLengthDifference % this._bitGroupMax);
@@ -90,13 +90,10 @@ class StatDecimal extends Num {
         binary.writeU8(u8Value, this._valueBitLength);
     }
 
-    _read(binary: Binary): void {
+    read(binary: Binary): void {
         if (this._readIsNull(binary)) {
             return;
         }
-
-        const signBit = binary.readBit();
-        const sign = signBit ? -1 : 1;
 
         this._valueBitLength = this._baseValueBitLength;
         let variableBitValue: number;
@@ -105,6 +102,9 @@ class StatDecimal extends Num {
             variableBitValue = this._u8ToRawValue(u8);
             this._valueBitLength += variableBitValue;
         } while (variableBitValue === this._bitGroupMax);
+
+        const signBit = binary.readBit();
+        const sign = signBit ? -1 : 1;
 
         const u8 = binary.readU8(this._valueBitLength);
         this._rawValue = sign * this._u8ToRawValue(u8);
