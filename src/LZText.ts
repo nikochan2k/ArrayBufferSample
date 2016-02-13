@@ -8,9 +8,9 @@ class LZText extends Text {
     }
 
     _forward(binary: Binary) {
-        if (0 < binary.bitOffset) {
-            binary.bitOffset = 0;
-            binary.byteOffset++;
+        if (0 < binary._bitOffset) {
+            binary._bitOffset = 0;
+            binary._byteOffset++;
         }
     }
 
@@ -19,13 +19,13 @@ class LZText extends Text {
         const u8 = LZString.compressToUint8Array(this.getValue());
         let i = 0;
         while (i < u8.length) {
-            binary.u8[binary.byteOffset++] = u8[i++];
+            binary._u8[binary._byteOffset++] = u8[i++];
         }
     }
 
     read(binary: Binary): void {
         this._forward(binary);
-        const u8 = new Uint8Array(binary.buffer, binary.byteOffset);
+        const u8 = new Uint8Array(binary._u8.buffer, binary._byteOffset);
         this.setValue(LZString.decompressFromUint8Array(u8));
     }
 

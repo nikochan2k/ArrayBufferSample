@@ -1,15 +1,21 @@
 class Binary {
 
-    buffer: ArrayBuffer;
-    u8: Uint8Array;
-    byteOffset: number;
-    bitOffset: number;
+    _u8: Uint8Array;
+    _byteOffset: number;
+    _bitOffset: number;
 
-    constructor(byteLength: number) {
-        this.buffer = new ArrayBuffer(byteLength);
-        this.u8 = new Uint8Array(this.buffer);
-        this.byteOffset = 0;
-        this.bitOffset = 0;
+    constructor(buffer: ArrayBuffer);
+    constructor(byteLength: number);
+    constructor(data: any) {
+        if (typeof data === "number") {
+            this._u8 = new Uint8Array(data as number);
+        } else if (data instanceof ArrayBuffer) {
+            this._u8 = new Uint8Array(data as ArrayBuffer)
+        } else {
+            throw new RangeError("Illegal data type");
+        }
+        this._byteOffset = 0;
+        this._bitOffset = 0;
     }
 
     writeU8(u8: Uint8Array, bitLength: number): void {
@@ -19,7 +25,7 @@ class Binary {
         // 3"oooxxxxx"  7"xooooooo"          = 10  2     oooooooo ooxxxxxx  2
         // 6"ooooooxx"  8"oooooooo"          = 14  6     oooooooo ooooooxx  6
         // 0"xxxxxxxx" 10"xxxxxxoo oooooooo" = 10  -6    oooooooo ooxxxxxx  2
-        const sum = this.bitOffset + bitLength;
+        const sum = this._bitOffset + bitLength;
         const nextBitOffset = sum % 8;
         if (nextBitOffset !== 0) {
             const shift = sum - u8.byteLength * 8;
@@ -31,7 +37,7 @@ class Binary {
         } else {
             this._writeU8WithoutBitShift(u8);
         }
-        this.bitOffset = nextBitOffset;
+        this._bitOffset = nextBitOffset;
     }
 
     _writeU8WithLeftBitShift(u8: Uint8Array, left: number): void {
@@ -40,27 +46,27 @@ class Binary {
         let temp = (u8[i++] << left) & 0xFF;
         while (i < u8.length) {
             temp |= (u8[i] >> right);
-            this.u8[this.byteOffset++] |= temp;
+            this._u8[this._byteOffset++] |= temp;
             temp = (u8[i++] << left) & 0xFF;
         }
-        this.u8[this.byteOffset] |= temp;
+        this._u8[this._byteOffset] |= temp;
     }
 
     _writeU8WithRightBitShift(u8: Uint8Array, right: number): void {
         const left = 8 - right;
-        let temp = this.u8[this.byteOffset];
-        for (let i = 0; i < u8.length; i++ , this.byteOffset++) {
-            this.u8[this.byteOffset] = temp | (u8[i] >> right);
+        let temp = this._u8[this._byteOffset];
+        for (let i = 0; i < u8.length; i++ , this._byteOffset++) {
+            this._u8[this._byteOffset] = temp | (u8[i] >> right);
             temp = (u8[i] << left) & 0xFF;
         }
-        this.u8[this.byteOffset] = temp;
+        this._u8[this._byteOffset] = temp;
     }
 
     _writeU8WithoutBitShift(u8: Uint8Array) {
         let i = 0;
-        this.u8[this.byteOffset++] |= u8[i];
+        this._u8[this._byteOffset++] |= u8[i];
         for (i = 1; i < u8.length; i++) {
-            this.u8[this.byteOffset++] = u8[i];
+            this._u8[this._byteOffset++] = u8[i];
         }
     }
 
@@ -72,12 +78,11 @@ class Binary {
         // "xxxooooo oooxxxxx"          3         8         11    3       5     2
         // "xxxxxxxo oooooooo oxxxxxxx" 7         10        17    1       7     3
         // "xxxxxxoo oooooooo ooooooox" 6         17        23    7       1     3
-        const total = this.bitOffset + bitLength;
+        const total = this._bitOffset + bitLength;
         const left = total % 8;
         const byteLength = Math.ceil(total / 8);
-        const buffer = new ArrayBuffer(byteLength);
-        const u8 = new Uint8Array(buffer);
-        const first = this.u8[this.byteOffset] & (0xFF >> this.bitOffset);
+        const u8 = new Uint8Array(byteLength);
+        const first = this._u8[this._byteOffset] & (0xFF >> this._bitOffset);
         if (0 < left) {
             this._readU8WithBitShift(first, u8, left);
         } else {
@@ -93,7 +98,7 @@ class Binary {
         u8[i++] |= temp >> right;
         while (i < u8.byteLength) {
             u8[i] = (temp << left) & 0xFF;
-            temp = this.u8[++this.byteOffset];
+            temp = this._u8[++this._byteOffset];
             u8[i++] |= temp >> right;
         }
     }
@@ -102,22 +107,22 @@ class Binary {
         let i = 0;
         u8[i++] = first;
         while (i < u8.length) {
-            u8[i++] = this.u8[++this.byteOffset];
+            u8[i++] = this._u8[++this._byteOffset];
         }
     }
 
     readBit(): number {
-        const right = 7 - this.bitOffset;
-        const bit = (this.u8[this.byteOffset] >> right) & 0x1;
+        const right = 7 - this._bitOffset;
+        const bit = (this._u8[this._byteOffset] >> right) & 0x1;
         this._forwardBits(1);
         return bit;
     }
 
     _forwardBits(bitLength: number): void {
-        const bitOffset = this.bitOffset + bitLength;
-        this.bitOffset = bitOffset % 8;
-        if (this.bitOffset === 0) {
-            this.byteOffset++;
+        const bitOffset = this._bitOffset + bitLength;
+        this._bitOffset = bitOffset % 8;
+        if (this._bitOffset === 0) {
+            this._byteOffset++;
         }
     }
 

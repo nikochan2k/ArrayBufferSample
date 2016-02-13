@@ -149,15 +149,15 @@ describe("Decimal", () => {
         decimal.write(binary);
 
         it("byteOffset", () => {
-            assert.equal(binary.byteOffset, 0);
+            assert.equal(binary._byteOffset, 0);
         });
 
         it("bitOffset", () => {
-            assert.equal(binary.bitOffset, 5);
+            assert.equal(binary._bitOffset, 5);
         });
 
         it("value", () => {
-            assert.equal(binary.u8[0], parseInt("10000000", 2));
+            assert.equal(binary._u8[0], parseInt("10000000", 2));
         });
     });
 
@@ -170,16 +170,16 @@ describe("Decimal", () => {
         decimal.write(binary);
 
         it("byteOffset", () => {
-            assert.equal(binary.byteOffset, 1);
+            assert.equal(binary._byteOffset, 1);
         });
 
         it("bitOffset", () => {
-            assert.equal(binary.bitOffset, 2);
+            assert.equal(binary._bitOffset, 2);
         });
 
         it("value", () => {
-            assert.equal(binary.u8[0], parseInt("00000111", 2));
-            assert.equal(binary.u8[1], parseInt("11000000", 2));
+            assert.equal(binary._u8[0], parseInt("00000111", 2));
+            assert.equal(binary._u8[1], parseInt("11000000", 2));
         });
     });
 
@@ -192,17 +192,17 @@ describe("Decimal", () => {
         decimal.write(binary);
 
         it("byteOffset", () => {
-            assert.equal(binary.byteOffset, 2);
+            assert.equal(binary._byteOffset, 2);
         });
 
         it("bitOffset", () => {
-            assert.equal(binary.bitOffset, 4);
+            assert.equal(binary._bitOffset, 4);
         });
 
         it("value", () => {
-            assert.equal(binary.u8[0], parseInt("10101010", 2));
-            assert.equal(binary.u8[1], parseInt("10111111", 2));
-            assert.equal(binary.u8[2], parseInt("11110000", 2));
+            assert.equal(binary._u8[0], parseInt("10101010", 2));
+            assert.equal(binary._u8[1], parseInt("10111111", 2));
+            assert.equal(binary._u8[2], parseInt("11110000", 2));
         });
     });
 
@@ -213,21 +213,21 @@ describe("Decimal", () => {
         decimal.write(binary);
 
         it("byteOffset", () => {
-            assert.equal(binary.byteOffset, 6);
+            assert.equal(binary._byteOffset, 6);
         });
 
         it("bitOffset", () => {
-            assert.equal(binary.bitOffset, 5);
+            assert.equal(binary._bitOffset, 5);
         });
 
         it("value", () => {
-            assert.equal(binary.u8[0], parseInt("11111111", 2));
-            assert.equal(binary.u8[1], parseInt("11111111", 2));
-            assert.equal(binary.u8[2], parseInt("11111111", 2));
-            assert.equal(binary.u8[3], parseInt("11111111", 2));
-            assert.equal(binary.u8[4], parseInt("11111111", 2));
-            assert.equal(binary.u8[5], parseInt("11111111", 2));
-            assert.equal(binary.u8[6], parseInt("11111000", 2));
+            assert.equal(binary._u8[0], parseInt("11111111", 2));
+            assert.equal(binary._u8[1], parseInt("11111111", 2));
+            assert.equal(binary._u8[2], parseInt("11111111", 2));
+            assert.equal(binary._u8[3], parseInt("11111111", 2));
+            assert.equal(binary._u8[4], parseInt("11111111", 2));
+            assert.equal(binary._u8[5], parseInt("11111111", 2));
+            assert.equal(binary._u8[6], parseInt("11111000", 2));
         });
     });
 
@@ -241,38 +241,38 @@ describe("Decimal", () => {
         decimal.write(binary);
 
         it("byteOffset", () => {
-            assert.equal(binary.byteOffset, 2);
+            assert.equal(binary._byteOffset, 2);
         });
 
         it("bitOffset", () => {
-            assert.equal(binary.bitOffset, 7);
+            assert.equal(binary._bitOffset, 7);
         });
 
         it("value", () => {
-            assert.equal(binary.u8[0], parseInt("01101010", 2));
-            assert.equal(binary.u8[1], parseInt("10101111", 2));
-            assert.equal(binary.u8[2], parseInt("11111110", 2));
+            assert.equal(binary._u8[0], parseInt("01101010", 2));
+            assert.equal(binary._u8[1], parseInt("10101111", 2));
+            assert.equal(binary._u8[2], parseInt("11111110", 2));
         });
     });
 
     context("read", () => {
         const binary = new Binary(2);
-        const u8 = binary.u8;
+        const u8 = binary._u8;
         u8[0] = parseInt("11111111", 2);
         u8[1] = parseInt("11100000", 2);
 
         it("nullable, null", () => {
             const d = new Decimal(false, -1024, 1023);
             d.read(binary);
-            assert.equal(binary.byteOffset, 1);
-            assert.equal(binary.bitOffset, 3);
+            assert.equal(binary._byteOffset, 1);
+            assert.equal(binary._bitOffset, 3);
             assert.equal(d.getValue(), 1023);
         });
     });
 
     context("read", () => {
         const binary = new Binary(11);
-        const u8 = binary.u8;
+        const u8 = binary._u8;
         u8[0] = parseInt("00000011", 2);
         u8[1] = parseInt("11111111", 2);
         u8[2] = parseInt("11100000", 2);
@@ -288,24 +288,24 @@ describe("Decimal", () => {
         it("nullable, null", () => {
             const d = new Decimal(true, 0, 255);
             d.read(binary);
-            assert.equal(binary.byteOffset, 0);
-            assert.equal(binary.bitOffset, 1);
+            assert.equal(binary._byteOffset, 0);
+            assert.equal(binary._bitOffset, 1);
             assert.equal(d.getValue(), undefined);
         });
 
         it("byte value, min", () => {
             const d = new Decimal(false, -16, 15);
             d.read(binary);
-            assert.equal(binary.byteOffset, 0);
-            assert.equal(binary.bitOffset, 6);
+            assert.equal(binary._byteOffset, 0);
+            assert.equal(binary._bitOffset, 6);
             assert.equal(d.getValue(), -16);
         });
 
         it("nullable, short value, max", () => {
             const d = new Decimal(true, -1024, 1023);
             d.read(binary);
-            assert.equal(binary.byteOffset, 2);
-            assert.equal(binary.bitOffset, 2);
+            assert.equal(binary._byteOffset, 2);
+            assert.equal(binary._bitOffset, 2);
             assert.equal(d.getValue(), 1023);
         });
 

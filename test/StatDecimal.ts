@@ -11,7 +11,7 @@ describe("StatDecimal", () => {
             const d = new StatDecimal(false, 100, 15, 1);
             d.setValue(109);
             d.write(binary);
-            assert.equal(binary.u8[0], parseInt("01010010", 2));
+            assert.equal(binary._u8[0], parseInt("01010010", 2));
         });
 
         it("mean=100, sigma=15, value=93", () => {
@@ -19,7 +19,7 @@ describe("StatDecimal", () => {
             const d = new StatDecimal(false, 100, 15, 1);
             d.setValue(93);
             d.write(binary);
-            assert.equal(binary.u8[0], parseInt("00111100", 2));
+            assert.equal(binary._u8[0], parseInt("00111100", 2));
         });
 
         it("mean=100, sigma=15, value=120", () => {
@@ -27,7 +27,7 @@ describe("StatDecimal", () => {
             const d = new StatDecimal(false, 100, 15, 1);
             d.setValue(120);
             d.write(binary);
-            assert.equal(binary.u8[0], parseInt("10010100", 2));
+            assert.equal(binary._u8[0], parseInt("10010100", 2));
         });
 
         it("mean=100, sigma=15, value=143", () => {
@@ -35,8 +35,8 @@ describe("StatDecimal", () => {
             const d = new StatDecimal(false, 100, 15, 1);
             d.setValue(143);
             d.write(binary);
-            assert.equal(binary.u8[0], parseInt("11000101", 2));
-            assert.equal(binary.u8[1], parseInt("01100000", 2));
+            assert.equal(binary._u8[0], parseInt("11000101", 2));
+            assert.equal(binary._u8[1], parseInt("01100000", 2));
         });
 
     });
@@ -48,8 +48,8 @@ describe("StatDecimal", () => {
             const d = new StatDecimal(false, 100, 15, 1);
             d.setValue(109);
             d.write(binary);
-            binary.byteOffset = 0;
-            binary.bitOffset = 0;
+            binary._byteOffset = 0;
+            binary._bitOffset = 0;
             d.read(binary);
             assert.equal(d.getValue(), 109);
         });
@@ -59,8 +59,8 @@ describe("StatDecimal", () => {
             const d = new StatDecimal(false, 100, 15, 1);
             d.setValue(93);
             d.write(binary);
-            binary.byteOffset = 0;
-            binary.bitOffset = 0;
+            binary._byteOffset = 0;
+            binary._bitOffset = 0;
             d.read(binary);
             assert.equal(d.getValue(), 93);
         });
@@ -70,8 +70,8 @@ describe("StatDecimal", () => {
             const d = new StatDecimal(false, 100, 15, 1);
             d.setValue(120);
             d.write(binary);
-            binary.byteOffset = 0;
-            binary.bitOffset = 0;
+            binary._byteOffset = 0;
+            binary._bitOffset = 0;
             d.read(binary);
             assert.equal(d.getValue(), 120);
         });
@@ -81,8 +81,8 @@ describe("StatDecimal", () => {
             const d = new StatDecimal(false, 100, 15, 1);
             d.setValue(143);
             d.write(binary);
-            binary.byteOffset = 0;
-            binary.bitOffset = 0;
+            binary._byteOffset = 0;
+            binary._bitOffset = 0;
             d.read(binary);
             assert.equal(d.getValue(), 143);
         });
@@ -100,8 +100,8 @@ describe("StatDecimal", () => {
         d.write(binary);
         d.setValue(143);
         d.write(binary);
-        binary.byteOffset = 0;
-        binary.bitOffset = 0;
+        binary._byteOffset = 0;
+        binary._bitOffset = 0;
 
         it("mean=100, sigma=15, value=109", () => {
             d.read(binary);

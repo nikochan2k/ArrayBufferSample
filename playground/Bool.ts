@@ -2,7 +2,7 @@ import Bool from "../src/Bool";
 import Binary from "../src/Binary";
 
 const binary = new Binary(2);
-const u8 = binary.u8;
+const u8 = binary._u8;
 u8[0] = parseInt("10101101", 2);
 u8[1] = parseInt("01100000", 2);
 

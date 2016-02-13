@@ -22,15 +22,15 @@ describe("Float", () => {
         fw.write(binary);
 
         it("byteOffset", () => {
-            assert.equal(binary.byteOffset, 4);
+            assert.equal(binary._byteOffset, 4);
         });
 
         it("bitOffset", () => {
-            assert.equal(binary.bitOffset, 0);
+            assert.equal(binary._bitOffset, 0);
         });
 
         it("value", () => {
-            binary.byteOffset = 0;
+            binary._byteOffset = 0;
             const fr = new Float(false, false);
             fr.read(binary);
             assert.equal(fr.getValue(), fw.getValue());

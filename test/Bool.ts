@@ -33,15 +33,15 @@ describe("Bool", () => {
         b.write(binary);
 
         it("byteOffset", () => {
-            assert.equal(binary.byteOffset, 0);
+            assert.equal(binary._byteOffset, 0);
         });
 
         it("bitOffset", () => {
-            assert.equal(binary.bitOffset, 1);
+            assert.equal(binary._bitOffset, 1);
         });
 
         it("value", () => {
-            assert.equal(binary.u8[0], parseInt("10000000", 2));
+            assert.equal(binary._u8[0], parseInt("10000000", 2));
         });
     });
 
@@ -55,15 +55,15 @@ describe("Bool", () => {
         b2.write(binary);
 
         it("byteOffset", () => {
-            assert.equal(binary.byteOffset, 0);
+            assert.equal(binary._byteOffset, 0);
         });
 
         it("bitOffset", () => {
-            assert.equal(binary.bitOffset, 2);
+            assert.equal(binary._bitOffset, 2);
         });
 
         it("value", () => {
-            assert.equal(binary.u8[0], parseInt("01000000", 2));
+            assert.equal(binary._u8[0], parseInt("01000000", 2));
         });
     });
 
@@ -79,15 +79,15 @@ describe("Bool", () => {
         b2.write(binary);
 
         it("byteOffset", () => {
-            assert.equal(binary.byteOffset, 0);
+            assert.equal(binary._byteOffset, 0);
         });
 
         it("bitOffset", () => {
-            assert.equal(binary.bitOffset, 5);
+            assert.equal(binary._bitOffset, 5);
         });
 
         it("value", () => {
-            assert.equal(binary.u8[0], parseInt("10011000", 2));
+            assert.equal(binary._u8[0], parseInt("10011000", 2));
         });
     });
 
@@ -102,22 +102,22 @@ describe("Bool", () => {
         b.write(binary);
 
         it("byteOffset", () => {
-            assert.equal(binary.byteOffset, 1);
+            assert.equal(binary._byteOffset, 1);
         });
 
         it("bitOffset", () => {
-            assert.equal(binary.bitOffset, 2);
+            assert.equal(binary._bitOffset, 2);
         });
 
         it("value", () => {
-            assert.equal(binary.u8[0], parseInt("10101010", 2));
-            assert.equal(binary.u8[1], parseInt("10000000", 2));
+            assert.equal(binary._u8[0], parseInt("10101010", 2));
+            assert.equal(binary._u8[1], parseInt("10000000", 2));
         });
     });
 
     context("read", () => {
         const binary = new Binary(2);
-        const u8 = binary.u8;
+        const u8 = binary._u8;
         u8[0] = parseInt("10101101", 2);
         u8[1] = parseInt("01100000", 2);
 

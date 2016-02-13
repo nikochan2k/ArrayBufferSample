@@ -48,15 +48,15 @@ describe("VarBitDecimal", () => {
         d.write(binary);
 
         it("byteOffset", () => {
-            assert.equal(binary.byteOffset, 0);
+            assert.equal(binary._byteOffset, 0);
         });
 
         it("bitOffset", () => {
-            assert.equal(binary.bitOffset, 4);
+            assert.equal(binary._bitOffset, 4);
         });
 
         it("value", () => {
-            assert.equal(binary.u8[0], parseInt("00010000", 2));
+            assert.equal(binary._u8[0], parseInt("00010000", 2));
         });
     });
 
@@ -67,32 +67,32 @@ describe("VarBitDecimal", () => {
         it("write 1", () => {
             d.setValue(1);
             d.write(binary);
-            assert.equal(binary.u8[0], parseInt("00001000", 2));
+            assert.equal(binary._u8[0], parseInt("00001000", 2));
         });
 
         it("write 2", () => {
             d.setValue(2);
             d.write(binary);
-            assert.equal(binary.u8[0], parseInt("00001000", 2));
-            assert.equal(binary.u8[1], parseInt("11000000", 2));
+            assert.equal(binary._u8[0], parseInt("00001000", 2));
+            assert.equal(binary._u8[1], parseInt("11000000", 2));
         });
 
         it("write 5", () => {
             d.setValue(5);
             d.write(binary);
-            assert.equal(binary.u8[0], parseInt("00001000", 2));
-            assert.equal(binary.u8[1], parseInt("11000101", 2));
-            assert.equal(binary.u8[2], parseInt("01000000", 2));
+            assert.equal(binary._u8[0], parseInt("00001000", 2));
+            assert.equal(binary._u8[1], parseInt("11000101", 2));
+            assert.equal(binary._u8[2], parseInt("01000000", 2));
         });
     });
 
     context("read values", () => {
         const binary = new Binary(5);
-        binary.u8[0] = parseInt("00001000", 2);
-        binary.u8[1] = parseInt("11000101", 2);
-        binary.u8[2] = parseInt("01111111", 2);
-        binary.u8[3] = parseInt("11111111", 2);
-        binary.u8[4] = parseInt("11111100", 2);
+        binary._u8[0] = parseInt("00001000", 2);
+        binary._u8[1] = parseInt("11000101", 2);
+        binary._u8[2] = parseInt("01111111", 2);
+        binary._u8[3] = parseInt("11111111", 2);
+        binary._u8[4] = parseInt("11111100", 2);
         const d = new VarBitDecimal(false, 0, 65535);
 
         it("read 1", () => {
@@ -127,8 +127,8 @@ describe("VarBitDecimal", () => {
         d.write(binary);
         d.setValue(65535);
         d.write(binary);
-        binary.byteOffset = 0;
-        binary.bitOffset = 0;
+        binary._byteOffset = 0;
+        binary._bitOffset = 0;
 
         it("read 1", () => {
             d.read(binary);
@@ -165,8 +165,8 @@ describe("VarBitDecimal", () => {
         d.write(binary);
         d.setValue(9007199254740991);
         d.write(binary);
-        binary.byteOffset = 0;
-        binary.bitOffset = 0;
+        binary._byteOffset = 0;
+        binary._bitOffset = 0;
 
         it("read null", () => {
             d.read(binary);
