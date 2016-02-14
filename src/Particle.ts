@@ -12,8 +12,8 @@ abstract class Particle<T> {
         return this._getValue();
     }
 
-    set value(v: T) {
-        this._setValue(v);
+    set value(value: T) {
+        this._setValue(value);
     }
 
     _setValue(value: T): void {

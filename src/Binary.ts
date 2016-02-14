@@ -4,15 +4,11 @@ class Binary {
     _byteOffset: number;
     _bitOffset: number;
 
-    constructor(buffer: ArrayBuffer);
-    constructor(byteLength: number);
-    constructor(data: any) {
+    constructor(data: ArrayBuffer | number) {
         if (typeof data === "number") {
             this._u8 = new Uint8Array(data as number);
-        } else if (data instanceof ArrayBuffer) {
-            this._u8 = new Uint8Array(data as ArrayBuffer);
         } else {
-            throw new RangeError("Illegal data type");
+            this._u8 = new Uint8Array(data as ArrayBuffer);
         }
         this._byteOffset = 0;
         this._bitOffset = 0;
