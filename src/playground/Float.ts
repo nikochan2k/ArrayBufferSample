@@ -1,5 +1,5 @@
-import Binary from "../src/Binary";
-import Float from "../src/Float";
+import Binary from "../main/Binary";
+import Float from "../main/Float";
 
 const binary = new Binary(4);
 const fw = new Float(false, false);

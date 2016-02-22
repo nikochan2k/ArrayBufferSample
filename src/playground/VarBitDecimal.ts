@@ -1,5 +1,5 @@
-import Binary from "../src/Binary";
-import VarBitDecimal from "../src/VarBitDecimal";
+import Binary from "../main/Binary";
+import VarBitDecimal from "../main/VarBitDecimal";
 
 function toBinary(value: number): string {
     'use strict';

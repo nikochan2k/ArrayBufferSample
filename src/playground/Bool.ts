@@ -1,5 +1,5 @@
-import Bool from "../src/Bool";
-import Binary from "../src/Binary";
+import Bool from "../main/Bool";
+import Binary from "../main/Binary";
 
 const binary = new Binary(2);
 const u8 = binary._u8;

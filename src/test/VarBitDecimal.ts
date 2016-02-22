@@ -1,6 +1,6 @@
 import assert from "power-assert";
-import Binary from "../src/Binary";
-import VarBitDecimal from "../src/VarBitDecimal";
+import Binary from "../main/Binary";
+import VarBitDecimal from "../main/VarBitDecimal";
 
 describe("VarBitDecimal", () => {
     context("control bit length", () => {

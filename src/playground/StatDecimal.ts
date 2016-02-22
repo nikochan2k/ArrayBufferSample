@@ -1,5 +1,5 @@
-import Binary from "../src/Binary";
-import StatDecimal from "../src/StatDecimal";
+import Binary from "../main/Binary";
+import StatDecimal from "../main/StatDecimal";
 
 const binary = new Binary(1);
 const d = new StatDecimal(false, 100, 15, 1);

@@ -1,6 +1,6 @@
 import assert from "power-assert";
-import Binary from "../src/Binary";
-import StatDecimal from "../src/StatDecimal";
+import Binary from "../main/Binary";
+import StatDecimal from "../main/StatDecimal";
 
 describe("StatDecimal", () => {
 

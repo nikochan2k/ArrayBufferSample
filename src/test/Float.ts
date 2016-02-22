@@ -1,6 +1,6 @@
 import assert from "power-assert";
-import Binary from "../src/Binary";
-import Float from "../src/Float";
+import Binary from "../main/Binary";
+import Float from "../main/Float";
 
 describe("Float", () => {
     context("constructor()", () => {

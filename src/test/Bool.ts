@@ -1,6 +1,6 @@
 import assert from "power-assert";
-import Bool from "../src/Bool";
-import Binary from "../src/Binary";
+import Bool from "../main/Bool";
+import Binary from "../main/Binary";
 
 describe("Bool", () => {
 
