@@ -13,18 +13,22 @@ gulp.task("tsd", function(cb) {
 
 var tsMainGlob = [
     "src/*main/**/*.ts",
-    "src/*main/**/*.tsx",
+    "src/*main/**/*.tsx"
+];
+var tsMain = null;
+
+var tsPlaygroundGlob = [
     "src/*playground/**/*.ts",
     "src/*playground/**/*.tsx"
 ];
-var tsMain = null;
+var tsPlayground = null;
 
 var tsTestGlob = [
     "src/*test/**/*.ts",
 ];
 var tsTest = null;
 
-var tsGlob = tsMainGlob.concat(tsTestGlob);
+var tsGlob = tsMainGlob.concat(tsPlaygroundGlob).concat(tsTestGlob);
 var ts = null;
 var tsConfig = null;
 var tsProject = null;
@@ -77,6 +81,18 @@ gulp.task("compile", ["tsconfig"], function(cb) {
     }
     return tsCompile(tsMainNewer);
 });
+var tsPlaygroundNewer = null;
+gulp.task("compile:playground", ["compile"], function(cb) {
+    if (tsPlaygroundNewer == null) {
+        var tsPlaygroundSrc = gulp.src(tsPlaygroundGlob);
+        tsPlaygroundNewer = tsPlaygroundSrc
+            .pipe(newer({
+                dest: "transpiled",
+                ext: ".js"
+            }));
+    }
+    return tsCompile(tsPlaygroundNewer);
+});
 var tsTestNewer = null;
 gulp.task("compile:test", ["compile"], function(cb) {
     if (tsTestNewer == null) {
@@ -106,6 +122,9 @@ function lint(tsNewer){
 }
 gulp.task("tslint", ["compile"], function() {
     return lint(tsMainNewer);
+});
+gulp.task("tslint:playground", ["compile:playground"], function() {
+    return lint(tsPlaygroundNewer);
 });
 gulp.task("tslint:test", ["compile:test"], function() {
     return lint(tsTestNewer);

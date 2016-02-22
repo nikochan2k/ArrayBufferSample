@@ -11,9 +11,9 @@
     "filesGlob": [
         "src/**/*.ts",
         "src/**/*.tsx",
-        "test/**/*.ts",
         "playground/**/*.ts",
-        "typings/**/*.ts"
+        "playground/**/*.tsx",
+        "test/**/*.ts"
     ],
     "compileOnSave": true,
     "formatCodeOptions": {
@@ -53,15 +53,7 @@
         "src/test/Decimal.ts",
         "src/test/Float.ts",
         "src/test/StatDecimal.ts",
-        "src/test/VarBitDecimal.ts",
-        "typings/empower/empower.d.ts",
-        "typings/lz-string/lz-string.d.ts",
-        "typings/mocha/mocha.d.ts",
-        "typings/node/node.d.ts",
-        "typings/power-assert-formatter/power-assert-formatter.d.ts",
-        "typings/power-assert/power-assert.d.ts",
-        "typings/sinon/sinon.d.ts",
-        "typings/tsd.d.ts"
+        "src/test/VarBitDecimal.ts"
     ],
     "atom": {
         "rewriteTsconfig": true
