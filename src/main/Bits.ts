@@ -11,10 +11,7 @@ abstract class Bits<T> extends Particle<T> {
         super(nullable);
         this._rawValue = 0;
         this._controlValue = 0;
-        this._constructBitLength();
     }
-
-    abstract _constructBitLength(): void;
 
     _rawValueToU8(rawValue: number, bitLength: number): Uint8Array {
         const byteLength = Math.ceil(bitLength / 8);

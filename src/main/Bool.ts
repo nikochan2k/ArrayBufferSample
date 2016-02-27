@@ -3,9 +3,6 @@ import Bits from "./Bits";
 class Bool extends Bits<boolean> {
     constructor(nullable: boolean) {
         super(nullable);
-    }
-
-    _constructBitLength(): void {
         this._valueBitLength = 1;
         this._controlBitLength = 0;
     }

@@ -11,24 +11,21 @@ gulp.task("tsd", function(cb) {
 });
 
 
-var tsMainGlob = [
+var mainGlob = [
     "src/*main/**/*.ts",
     "src/*main/**/*.tsx"
 ];
-var tsMain = null;
 
-var tsPlaygroundGlob = [
+var playgroundGlob = [
     "src/*playground/**/*.ts",
     "src/*playground/**/*.tsx"
 ];
-var tsPlayground = null;
 
-var tsTestGlob = [
+var testGlob = [
     "src/*test/**/*.ts",
 ];
-var tsTest = null;
 
-var tsGlob = tsMainGlob.concat(tsPlaygroundGlob).concat(tsTestGlob);
+var tsGlob = mainGlob.concat(playgroundGlob).concat(testGlob);
 var ts = null;
 var tsConfig = null;
 var tsProject = null;
@@ -44,71 +41,79 @@ gulp.task("tsconfig", function() {
         tsProject = ts.createProject("tsconfig.json", {
             sortOutput: true
         });
-        tsMain = null;
-        tsTest = null;
+        main = null;
+        test = null;
         return result;
     }
 });
 
 var sourcemaps = null;
-function tsCompile(newer) {
+var babel = null;
+
+function compile(newer) {
     if (tsProject.options.sourceMap) {
         if (sourcemaps == null) {
             sourcemaps = require("gulp-sourcemaps");
+            babel = require("gulp-babel");
         }
         return newer
             .pipe(sourcemaps.init())
             .pipe(ts(tsProject))
-            .js
+            .pipe(babel({
+                presets: ['es2015']
+            }))
             .pipe(sourcemaps.write("."))
             .pipe(gulp.dest("transpiled"));
     } else {
         return newer
             .pipe(ts(tsProject))
-            .js
+            .pipe(babel({
+                presets: ['es2015']
+            }))
             .pipe(gulp.dest("transpiled"));
     }
 }
-var tsMainNewer = null;
+var mainNewer = null;
 gulp.task("compile", ["tsconfig"], function(cb) {
-    if (tsMainNewer == null) {
-        var tsMainSrc = gulp.src(tsMainGlob);
-        tsMainNewer = tsMainSrc
+    if (mainNewer == null) {
+        var mainSrc = gulp.src(mainGlob);
+        mainNewer = mainSrc
             .pipe(newer({
                 dest: "transpiled",
                 ext: ".js"
             }));
     }
-    return tsCompile(tsMainNewer);
+    return compile(mainNewer);
 });
-var tsPlaygroundNewer = null;
+var playgroundNewer = null;
 gulp.task("compile:playground", ["compile"], function(cb) {
-    if (tsPlaygroundNewer == null) {
-        var tsPlaygroundSrc = gulp.src(tsPlaygroundGlob);
-        tsPlaygroundNewer = tsPlaygroundSrc
+    if (playgroundNewer == null) {
+        var playgroundSrc = gulp.src(playgroundGlob);
+        playgroundNewer = playgroundSrc
             .pipe(newer({
                 dest: "transpiled",
                 ext: ".js"
             }));
     }
-    return tsCompile(tsPlaygroundNewer);
+    return compile(playgroundNewer);
 });
-var tsTestNewer = null;
+var testNewer = null;
 gulp.task("compile:test", ["compile"], function(cb) {
-    if (tsTestNewer == null) {
-        var tsTestSrc = gulp.src(tsTestGlob);
-        tsTestNewer = tsTestSrc
+    if (testNewer == null) {
+        var testSrc = gulp.src(testGlob);
+        testNewer = testSrc
             .pipe(newer({
                 dest: "transpiled",
                 ext: ".js"
             }));
         testJsNewer = null;
     }
-    return tsCompile(tsTestNewer);
+    return compile(testNewer);
 });
 
 var tslint = null;
-function lint(tsNewer){
+
+function lint(tsNewer) {
     if (tslint == null) {
         tslint = require("gulp-tslint");
     }
@@ -121,13 +126,13 @@ function lint(tsNewer){
         }));
 }
 gulp.task("tslint", ["compile"], function() {
-    return lint(tsMainNewer);
+    return lint(mainNewer);
 });
 gulp.task("tslint:playground", ["compile:playground"], function() {
-    return lint(tsPlaygroundNewer);
+    return lint(playgroundNewer);
 });
 gulp.task("tslint:test", ["compile:test"], function() {
-    return lint(tsTestNewer);
+    return lint(testNewer);
 });
 
 var staticGlob = [
@@ -171,7 +176,7 @@ gulp.task("test", ["espower"], function() {
     if (mocha == null) {
         mocha = require("gulp-mocha");
     }
-    if(espoweredJsNewer == null){
+    if (espoweredJsNewer == null) {
         var espoweredJsGlob = [
             "transpiled/main/**/*.js",
             "transpiled/espowered/**/*.js"
@@ -191,7 +196,7 @@ gulp.task("typedoc", function() {
     return tsNewer
         .pipe(typedoc({
             module: "commonjs",
-            target: "es5",
+            target: "es6",
             out: "docs/",
             name: "Sample Project",
             readme: "README.md"
@@ -207,8 +212,8 @@ gulp.task("watch", function() {
         path = require("path");
     }
 
-    var tsMainWatcher = gulp.watch(tsMainGlob, ["tslint"]);
-    tsMainWatcher.on("change", function(event) {
+    var mainWatcher = gulp.watch(mainGlob, ["tslint"]);
+    mainWatcher.on("change", function(event) {
         console.log('File "' + event.path + '" was ' + event.type + ", running tasks...");
         switch (event.type) {
             case "added":
@@ -244,8 +249,8 @@ gulp.task("watch", function() {
         }
     });
 
-    var tsTestWatcher = gulp.watch(tsTestGlob, ["tslint:test"]);
-    tsTestWatcher.on("change", function(event) {
+    var testWatcher = gulp.watch(testGlob, ["tslint:test"]);
+    testWatcher.on("change", function(event) {
         console.log('File "' + event.path + '" was ' + event.type + ", running tasks...");
         switch (event.type) {
             case "added":

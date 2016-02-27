@@ -1,12 +1,16 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es5",
+        "target": "es6",
         "noImplicitAny": true,
         "preserveConstEnums": true,
         "outDir": "transpiled",
         "listFiles": true,
-        "sourceMap": true
+        "sourceMap": true,
+        "removeComments": true,
+        "jsx": "preserve",
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true
     },
     "filesGlob": [
         "src/**/*.ts",
@@ -15,10 +19,10 @@
         "playground/**/*.tsx",
         "test/**/*.ts"
     ],
-    "compileOnSave": true,
+    "compileOnSave": false,
     "formatCodeOptions": {
-        "indentSize": 4,
-        "tabSize": 4,
+        "indentSize": 2,
+        "tabSize": 2,
         "newLineCharacter": "\r\n",
         "convertTabsToSpaces": true,
         "insertSpaceAfterCommaDelimiter": true,

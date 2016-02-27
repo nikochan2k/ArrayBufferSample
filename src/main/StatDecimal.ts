@@ -11,6 +11,7 @@ class StatDecimal extends Num {
 
     constructor(nullable: boolean, mean: number, sigma: number,
         precision: number, bitGroupLength = 2) {
+        super(nullable);
         if (sigma <= 0) {
             throw new RangeError("sigma: " + sigma + " must be greater than 0.");
         }
@@ -27,10 +28,6 @@ class StatDecimal extends Num {
         this._precision = precision;
         this._bitGroupLength = bitGroupLength;
         this._bitGroupMax = Math.pow(2, this._bitGroupLength) - 1;
-        super(nullable);
-    }
-
-    _constructBitLength(): void {
         this._baseValueBitLength = Math.floor(Math.log(this._sigma + 1) / Math.LN2) - 1;
         if (this._baseValueBitLength === 0) {
             this._baseValueBitLength = 1;

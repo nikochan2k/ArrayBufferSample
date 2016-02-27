@@ -6,11 +6,8 @@ class Float extends Num {
     _valueByteLength: number;
 
     constructor(nullable: boolean, double: boolean = true) {
-        this._double = double;
         super(nullable);
-    }
-
-    _constructBitLength(): void {
+        this._double = double;
         this._valueBitLength = (this._double ? 64 : 32);
         this._valueByteLength = (this._double ? 8 : 4);
         this._controlBitLength = 0;

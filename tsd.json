@@ -6,22 +6,25 @@
     "bundle": "typings/tsd.d.ts",
     "installed": {
         "node/node.d.ts": {
-            "commit": "eb59a40d3c2f3257e34ec2ede181046230814a41"
+            "commit": "b10e5ade29708bb0a7d21916a9fe289973520e89"
         },
         "mocha/mocha.d.ts": {
-            "commit": "708609e0764daeb5eb64104af7aca50c520c4e6e"
+            "commit": "b10e5ade29708bb0a7d21916a9fe289973520e89"
         },
         "power-assert-formatter/power-assert-formatter.d.ts": {
-            "commit": "708609e0764daeb5eb64104af7aca50c520c4e6e"
+            "commit": "b10e5ade29708bb0a7d21916a9fe289973520e89"
         },
         "power-assert/power-assert.d.ts": {
-            "commit": "708609e0764daeb5eb64104af7aca50c520c4e6e"
+            "commit": "b10e5ade29708bb0a7d21916a9fe289973520e89"
         },
         "empower/empower.d.ts": {
-            "commit": "708609e0764daeb5eb64104af7aca50c520c4e6e"
+            "commit": "b10e5ade29708bb0a7d21916a9fe289973520e89"
         },
         "sinon/sinon.d.ts": {
-            "commit": "708609e0764daeb5eb64104af7aca50c520c4e6e"
+            "commit": "b10e5ade29708bb0a7d21916a9fe289973520e89"
+        },
+        "lz-string/lz-string.d.ts": {
+            "commit": "b10e5ade29708bb0a7d21916a9fe289973520e89"
         }
     }
 }

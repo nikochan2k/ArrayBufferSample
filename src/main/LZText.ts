@@ -1,6 +1,7 @@
+/// <reference path="../../typings/lz-string/lz-string.d.ts"/>
+
 import Text from "./Text";
 import Binary from "./Binary";
-import LZString from "lz-string";
 
 class LZText extends Text {
     constructor(optional: boolean) {
