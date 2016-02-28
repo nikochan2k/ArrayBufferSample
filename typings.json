@@ -1,6 +1,7 @@
 {
   "name": "ts-es6-starter",
   "ambientDependencies": {
+    "lz-string": "npm:lz-string/typings/lz-string.d.ts",
     "node": "github:DefinitelyTyped/DefinitelyTyped/node/node.d.ts#48c1e3c1d6baefa4f1a126f188c27c4fefd36bff",
     "power-assert": "github:DefinitelyTyped/DefinitelyTyped/power-assert/power-assert.d.ts#0c0597f60f1aa4f7e34cbfdc45323ff13b4940c4"
   }
