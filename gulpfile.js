@@ -2,15 +2,6 @@ var gulp = require("gulp");
 var newer = require("gulp-newer");
 
 
-gulp.task("tsd", function(cb) {
-    var tsd = require("gulp-tsd");
-    return tsd({
-        command: "reinstall",
-        config: "tsd.json"
-    }, cb);
-});
-
-
 var mainGlob = [
     "src/*main/**/*.ts",
     "src/*main/**/*.tsx"
