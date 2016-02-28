@@ -1,4 +1,4 @@
-/// <reference path="../../typings/lz-string/lz-string.d.ts"/>
+/// <reference path="../../typings/main/ambient/lz-string/lz-string.d.ts"/>
 
 import Text from "./Text";
 import Binary from "./Binary";
