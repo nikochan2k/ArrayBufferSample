@@ -1,270 +1,229 @@
 var gulp = require("gulp");
+var plumber = require("gulp-plumber");
 var newer = require("gulp-newer");
 
-
-var mainGlob = [
-    "src/*main/**/*.ts",
-    "src/*main/**/*.tsx"
+var tsGlob = [
+  "src/typings/*.d.ts",
+  "src/*main/isomorphic/**/*.ts",
+  "src/*main/isomorphic/**/*.tsx",
+  "src/*main/server/**/*.ts",
+  "src/*main/server/**/*.tsx",
+  "src/*main/client/**/*.ts",
+  "src/*main/client/**/*.tsx",
+  "src/*test/isomorphic/**/*.ts",
+  "src/*test/server/**/*.ts",
+  "src/*test/client/**/*.ts",
+  "src/*playground/**/*.ts",
+  "src/*playground/**/*.tsx"
 ];
 
-var playgroundGlob = [
-    "src/*playground/**/*.ts",
-    "src/*playground/**/*.tsx"
-];
-
-var testGlob = [
-    "src/*test/**/*.ts",
-];
-
-var tsGlob = mainGlob.concat(playgroundGlob).concat(testGlob);
-var ts = null;
+var ts = require("gulp-typescript");
+var tsConfigUpdate = require("gulp-tsconfig-update");
 var tsConfig = null;
 var tsProject = null;
 gulp.task("tsconfig", function() {
-    if (ts == null) {
-        ts = require("gulp-typescript");
-        tsConfig = require("gulp-tsconfig-update");
-    }
-    if (tsProject == null) {
-        var tsSrc = gulp.src(tsGlob);
-        var result = tsSrc
-            .pipe(tsConfig());
-        tsProject = ts.createProject("tsconfig.json", {
-            sortOutput: true
-        });
-        main = null;
-        test = null;
-        return result;
-    }
+  if (tsConfig == null) {
+    tsConfig = gulp.src(tsGlob).pipe(tsConfigUpdate());
+    tsProject = ts.createProject("tsconfig.json", {
+      sortOutput: true
+    });
+    tsNewer = null;
+  }
+  return tsConfig;
 });
 
-var sourcemaps = null;
-var babel = null;
+var sourcemaps = require("gulp-sourcemaps");
+var babel = require("gulp-babel");
 
-function compile(newer) {
-    if (tsProject.options.sourceMap) {
-        if (sourcemaps == null) {
-            sourcemaps = require("gulp-sourcemaps");
-            babel = require("gulp-babel");
-        }
-        return newer
-            .pipe(sourcemaps.init())
-            .pipe(ts(tsProject))
-            .pipe(babel({
-                presets: ['es2015']
-            }))
-            .pipe(sourcemaps.write("."))
-            .pipe(gulp.dest("transpiled"));
-    } else {
-        return newer
-            .pipe(ts(tsProject))
-            .pipe(babel({
-                presets: ['es2015']
-            }))
-            .pipe(gulp.dest("transpiled"));
-    }
-}
-var mainNewer = null;
-gulp.task("compile", ["tsconfig"], function(cb) {
-    if (mainNewer == null) {
-        var mainSrc = gulp.src(mainGlob);
-        mainNewer = mainSrc
-            .pipe(newer({
-                dest: "transpiled",
-                ext: ".js"
-            }));
-    }
-    return compile(mainNewer);
+var srcStaticGlob = [
+  "src/**/*",
+  "!src/**/*.ts",
+  "!src/**/*.tsx"
+];
+var srcStaticNewer = null;
+gulp.task("src2transpiled", function(cb) {
+  if (srcStaticNewer == null) {
+    srcStaticNewer = gulp.src(srcStaticGlob)
+      .pipe(newer("transpiled"));
+  }
+  return srcStaticNewer
+    .pipe(gulp.dest("transpiled"));
 });
-var playgroundNewer = null;
-gulp.task("compile:playground", ["compile"], function(cb) {
-    if (playgroundNewer == null) {
-        var playgroundSrc = gulp.src(playgroundGlob);
-        playgroundNewer = playgroundSrc
-            .pipe(newer({
-                dest: "transpiled",
-                ext: ".js"
-            }));
-    }
-    return compile(playgroundNewer);
-});
-var testNewer = null;
-gulp.task("compile:test", ["compile"], function(cb) {
-    if (testNewer == null) {
-        var testSrc = gulp.src(testGlob);
-        testNewer = testSrc
-            .pipe(newer({
-                dest: "transpiled",
-                ext: ".js"
-            }));
-        testJsNewer = null;
-    }
-    return compile(testNewer);
+
+var tsNewer = null;
+gulp.task("transpile", ["tsconfig", "src2transpiled"], function(cb) {
+  if (tsNewer == null) {
+    tsNewer = gulp.src(tsGlob)
+      .pipe(newer({
+        dest: "transpiled",
+        ext: ".js"
+      }));
+    jsNewer = null;
+  }
+  return tsNewer
+    .pipe(sourcemaps.init())
+    .pipe(ts(tsProject))
+    .pipe(babel({
+      presets: ['es2015']
+    }))
+    .pipe(sourcemaps.write("."))
+    .pipe(gulp.dest("transpiled"));
 });
 
 var tslint = null;
-
-function lint(tsNewer) {
-    if (tslint == null) {
-        tslint = require("gulp-tslint");
-    }
-    return tsNewer
-        .pipe(tslint({
-            config: "tslint.json"
-        }))
-        .pipe(tslint.report("verbose", {
-            emitError: false
-        }));
-}
-gulp.task("tslint", ["compile"], function() {
-    return lint(mainNewer);
-});
-gulp.task("tslint:playground", ["compile:playground"], function() {
-    return lint(playgroundNewer);
-});
-gulp.task("tslint:test", ["compile:test"], function() {
-    return lint(testNewer);
+gulp.task("tslint", ["transpile"], function() {
+  if (tslint == null) {
+    tslint = require("gulp-tslint");
+  }
+  return tsNewer
+    .pipe(tslint({
+      config: "tslint.json"
+    }))
+    .pipe(tslint.report("verbose", {
+      emitError: false
+    }));
 });
 
-var staticGlob = [
-    "src/**/*",
-    "!src/**/*.ts",
-    "!src/**/*.tsx"
-];
-var staticNewer = null;
-gulp.task("copy", function(cb) {
-    if (staticNewer == null) {
-        var staticSrc = gulp.src(staticGlob)
-        staticNewer = staticSrc
-            .pipe(newer("transpiled"));
-    }
-    return staticNewer
-        .pipe(gulp.dest("transpiled"));
+var transpiledStaticNewer = null;
+gulp.task("transpiled2dist", function(cb) {
+  if (transpiledStaticNewer == null) {
+    transpiledStaticNewer = gulp.src([
+      "transpiled/main/client/**/*",
+      "!transpiled/main/client/**/*.js",
+      "!transpiled/main/client/**/*.map"
+    ])
+      .pipe(newer("dist/client"));
+  }
+  return transpiledStaticNewer
+    .pipe(gulp.dest("dist/client"));
 });
 
-gulp.task("build", ["tslint", "copy"]);
+
+var webpack = require("gulp-webpack");
+
+var jsNewer = null;
+gulp.task("build", ["tslint", "transpiled2dist"], function(cb) {
+  if (jsNewer == null) {
+    jsNewer = gulp.src([
+      "transpiled/main/isomorphic/**/*.js",
+      "transpiled/main/client/**/*.js"
+    ])
+      .pipe(newer("dist/client/main.js"));
+  }
+
+  return jsNewer
+    .pipe(plumber())
+    .pipe(webpack({
+      output: {
+        filename: 'main.js',
+      }
+    }))
+    .pipe(gulp.dest("dist/client"));
+});
 
 var espower = null;
-var testJsNewer = null;
-gulp.task("espower", ["tslint:test"], function() {
-    if (espower == null) {
-        espower = require("gulp-espower");
-    }
-    if (testJsNewer == null) {
-        var testJsGlob = ["transpiled/test/**/*.js"];
-        var testJsSrc = gulp.src(testJsGlob);
-        testJsNewer = testJsSrc.pipe(newer("transpiled/espowered"));
-        espoweredJsNewer = null;
-    }
-    return testJsNewer
-        .pipe(espower())
-        .pipe(gulp.dest("transpiled/espowered"));
+var testNewer = null;
+gulp.task("espower", ["tslint"], function() {
+  if (espower == null) {
+    espower = require("gulp-espower");
+  }
+  if (testNewer == null) {
+    testNewer = gulp.src(["transpiled/test/**/*.js"])
+      .pipe(newer("transpiled/espowered"));
+  }
+  return testNewer
+    .pipe(espower())
+    .pipe(gulp.dest("transpiled/espowered"));
 });
 
 var mocha = null;
-var espoweredJsSrc = null;
+var espoweredSrc = null;
 gulp.task("test", ["espower"], function() {
-    if (mocha == null) {
-        mocha = require("gulp-mocha");
-    }
-    if (espoweredJsNewer == null) {
-        var espoweredJsGlob = [
-            "transpiled/main/**/*.js",
-            "transpiled/espowered/**/*.js"
-        ];
-        espoweredJsSrc = gulp.src(espoweredJsGlob);
-    }
-    return espoweredJsSrc
-        .pipe(mocha());
+  if (mocha == null) {
+    mocha = require("gulp-mocha");
+  }
+  return gulp.src([
+    "transpiled/main/**/*.js",
+    "transpiled/espowered/**/*.js"
+  ]).pipe(mocha());
 });
-
 
 var typedoc = null;
 gulp.task("typedoc", function() {
-    if (typedoc == null) {
-        typedoc = require("gulp-typedoc");
-    }
-    return tsNewer
-        .pipe(typedoc({
-            module: "commonjs",
-            target: "es6",
-            out: "docs/",
-            name: "Sample Project",
-            readme: "README.md"
-        }));
+  if (typedoc == null) {
+    typedoc = require("gulp-typedoc");
+  }
+  return tsNewer
+    .pipe(typedoc({
+      module: "commonjs",
+      target: "es6",
+      out: "docs/",
+      name: "Sample Project",
+      readme: "README.md"
+    }));
 });
 
+function watch(glob, tasks, action) {
+  var watcher = gulp.watch(glob, tasks);
+  if (!action) {
+    return;
+  }
+  watcher.on("change", function(event) {
+    console.log('File "' + event.path + '" was ' + event.type + ", running tasks...");
+    switch (event.type) {
+      case "added":
+        action.onAdded && action.onAdded(event);
+        break;
+      case "changed":
+        action.onChanged && action.onChanged(event);
+        break;
+      case "deleted":
+        action.onDeleted && action.onDelete(event);
+        break;
+    }
+  });
+}
 
 var fs = null,
-    path = null;
+  path = null;
 gulp.task("watch", function() {
-    if (fs == null) {
-        fs = require('fs');
-        path = require("path");
+  if (fs == null) {
+    fs = require('fs');
+    path = require("path");
+  }
+
+  watch(["src/**/*"], ["build"], {
+    onAdded: function(event) {
+      if (event.path.match(/\.tsx?$/)) {
+        tsConfig = null;
+      }
+    },
+    onDeleted: function(event) {
+      var deleted = event.path.substr(__dirname.length);
+      console.log(deleted);
+      if (deleted.match(/\.tsx?$/)) {
+        var delTarget = deleted.replace(/.tsx?$/, ".js");
+        var delJs = __dirname + path.sep + "transpiled" + delTarget;
+        var delJsMap = delJs + ".map";
+        fs.unlink(delJs);
+        fs.unlink(delJsMap);
+        tsConfig = null;
+      } else {
+        var delFile = __dirname + path.sep + "transpiled" + deleted;
+        fs.unlink(delFile);
+      }
     }
+  });
 
-    var mainWatcher = gulp.watch(mainGlob, ["tslint"]);
-    mainWatcher.on("change", function(event) {
-        console.log('File "' + event.path + '" was ' + event.type + ", running tasks...");
-        switch (event.type) {
-            case "added":
-                tsProject = null;
-                break;
-            case "changed":
-                break;
-            case "deleted":
-                var delTarget = event.path.substr(__dirname.length)
-                    .replace(/.ts$/, ".js");
-                var delJs = __dirname + path.sep + "transpiled" + delTarget;
-                var delJsMap = delJs + ".map";
-                fs.unlink(delJs);
-                fs.unlink(delJsMap);
-                tsProject = null;
-                break;
-        }
-    });
-
-    var staticWatcher = gulp.watch(staticGlob, ["copy"]);
-    staticWatcher.on("change", function(event) {
-        console.log('File "' + event.path + '" was ' + event.type + ", running tasks...");
-        switch (event.type) {
-            case "added":
-                break;
-            case "changed":
-                break;
-            case "deleted":
-                var delTarget = event.path.substr(__dirname.length)
-                var delFile = __dirname + path.sep + "transpiled" + delTarget;
-                fs.unlink(delFile);
-                break;
-        }
-    });
-
-    var testWatcher = gulp.watch(testGlob, ["tslint:test"]);
-    testWatcher.on("change", function(event) {
-        console.log('File "' + event.path + '" was ' + event.type + ", running tasks...");
-        switch (event.type) {
-            case "added":
-                tsProject = null;
-                break;
-            case "changed":
-                break;
-            case "deleted":
-                var delTarget = event.path.substr(__dirname.length)
-                    .replace(/.ts$/, ".js");
-                var delJs = __dirname + path.sep + "transpiled" + delTarget;
-                var delJsMap = delJs + ".map";
-                fs.unlink(delJs);
-                fs.unlink(delJsMap);
-                tsProject = null;
-                break;
-        }
-    });
+  watch(srcStaticGlob, ["transpiled2dist"], {
+    onDeleted: function(event) {
+    }
+  });
 });
 
 gulp.task("clean", function(cb) {
-    var del = require("del");
-    del(["transpiled", "dest", "docs"], cb);
+  var del = require("del");
+  del(["transpiled", "dist", "docs"], cb);
 });
 gulp.task("rebuild", ["clean", "build"]);
 gulp.task("retest", ["clean", "test"]);

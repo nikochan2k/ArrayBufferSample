@@ -14,10 +14,7 @@
     },
     "filesGlob": [
         "src/**/*.ts",
-        "src/**/*.tsx",
-        "playground/**/*.ts",
-        "playground/**/*.tsx",
-        "test/**/*.ts"
+        "src/**/*.tsx"
     ],
     "compileOnSave": false,
     "formatCodeOptions": {
@@ -35,29 +32,12 @@
         "placeOpenBraceOnNewLineForControlBlocks": false
     },
     "files": [
-        "src/main/Binary.ts",
-        "src/main/Bits.ts",
-        "src/main/Bool.ts",
-        "src/main/Decimal.ts",
-        "src/main/Float.ts",
-        "src/main/LZText.ts",
-        "src/main/Num.ts",
-        "src/main/Particle.ts",
-        "src/main/StatDecimal.ts",
-        "src/main/Text.ts",
-        "src/main/VarBitDecimal.ts",
-        "src/main/VarDecimal.ts",
         "src/playground/Benchmark.ts",
         "src/playground/Bool.ts",
         "src/playground/Decimal.ts",
         "src/playground/Float.ts",
         "src/playground/StatDecimal.ts",
-        "src/playground/VarBitDecimal.ts",
-        "src/test/Bool.ts",
-        "src/test/Decimal.ts",
-        "src/test/Float.ts",
-        "src/test/StatDecimal.ts",
-        "src/test/VarBitDecimal.ts"
+        "src/playground/VarBitDecimal.ts"
     ],
     "atom": {
         "rewriteTsconfig": true
